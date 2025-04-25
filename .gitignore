@@ -43,3 +43,6 @@ _docker_volumes
 test-report
 # stryker temp files
 .stryker-tmp
+
+# Ignore generated prisma
+src/core/db/prisma/**/*

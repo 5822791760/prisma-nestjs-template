@@ -4,6 +4,8 @@ WORKDIR /usr/src/app
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 COPY . .
+
+RUN yarn prisma generate
 RUN yarn build
 
 # Stage 2: Production
