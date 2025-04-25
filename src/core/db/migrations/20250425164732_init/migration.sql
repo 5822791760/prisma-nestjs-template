@@ -2,8 +2,7 @@
 CREATE TABLE "posts" (
     "id" SERIAL NOT NULL,
     "title" VARCHAR(250),
-    "chad" VARCHAR(250),
-    "details" TEXT NOT NULL DEFAULT '',
+    "details" VARCHAR(250) NOT NULL DEFAULT '',
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "created_by" INTEGER,
@@ -27,4 +26,4 @@ CREATE TABLE "users" (
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- AddForeignKey
-ALTER TABLE "posts" ADD CONSTRAINT "FK_5e508187fcc1b87d59e3673c766" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE NO ACTION;
+ALTER TABLE "posts" ADD CONSTRAINT "posts_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;

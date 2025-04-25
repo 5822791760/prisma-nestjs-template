@@ -1,10 +1,6 @@
 generator kysely {
-  provider = "prisma-kysely"
-  camelCase = true
-}
-
-generator dbml {
-  provider = "prisma-dbml-generator"
+  provider  = "prisma-kysely"
+  camelCase = "true"
 }
 
 generator client {
@@ -20,11 +16,11 @@ datasource db {
 model Posts {
   id        Int      @id @default(autoincrement())
   title     String?  @db.VarChar(250)
-  details   String   @default("")
+  details   String   @default("") @db.VarChar(250)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
   createdBy Int?     @map("created_by")
-  users     Users?   @relation(fields: [createdBy], references: [id], onUpdate: NoAction, map: "FK_5e508187fcc1b87d59e3673c766")
+  users     Users?   @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("posts")
 }

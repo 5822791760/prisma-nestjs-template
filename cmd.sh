@@ -31,11 +31,15 @@ function cli() {
 }
 
 function db:up() {
-  yarn typeorm migration:run
+  yarn prisma migrate deploy
 }
 
-function db:prev() {
-  yarn typeorm migration:revert
+function db:gen() {
+  yarn prisma migrate dev --create-only
+}
+
+function db:push() {
+  yarn prisma migrate dev
 }
 
 function db:drop() {
@@ -44,13 +48,8 @@ function db:drop() {
   docker-compose exec postgres createdb -U postgres postgres
 }
 
-function db:gen() {
-  if [ -z "$1" ]; then
-    echo "Error: Please provide a name for the migration."
-    exit 1
-  fi
-
-  docker-compose exec postgres dropdb -U postgres --if-exists temp --force
+function sync() {
+  docker-compose exec postgres dropdb -U postgres --if-exists temp --force > /dev/null 2>&1
   docker-compose exec postgres createdb -U postgres temp
 
   yarn dbml2sql db.dbml -o _docker_volumes/postgres/dbml.sql
@@ -59,7 +58,9 @@ function db:gen() {
 
   DATABASE_URL="postgresql://postgres:postgres@localhost:5432/temp" yarn prisma db pull
 
-  yarn prisma migrate dev --name $1
+  docker-compose exec postgres dropdb -U postgres --if-exists temp --force
+  yarn format:prisma
+  yarn prisma generate
 }
 
 test() {
