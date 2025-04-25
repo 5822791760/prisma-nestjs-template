@@ -1,4 +1,4 @@
-import { Users } from '@core/db/entities/Users';
+import { Users } from '@core/db/prisma';
 
 // Model
 export interface NewUserData {

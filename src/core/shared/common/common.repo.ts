@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, EntityTarget, ObjectLiteral, Repository } from 'typeorm';
 
+import { CoreDB } from '@core/db/db.common';
 import { TransactionService } from '@core/global/transaction/transaction.service';
 
 import { ExceptionErr, Ok, Res } from './common.neverthrow';
@@ -8,7 +8,7 @@ import { ExceptionErr, Ok, Res } from './common.neverthrow';
 @Injectable()
 export abstract class BaseRepo {
   constructor(
-    private dataSource: DataSource,
+    private coreDb: CoreDB,
     private transactionService: TransactionService,
   ) {}
 
@@ -16,7 +16,7 @@ export abstract class BaseRepo {
     callback: () => Promise<T>,
   ): Promise<Res<T, 'internal'>> {
     try {
-      const res = await this.shardDb.main.transaction((tx) => {
+      const res = await this.shardDb.main.$transaction((tx) => {
         this.transactionService.setTransaction(tx);
         return callback();
       });
@@ -27,13 +27,8 @@ export abstract class BaseRepo {
     }
   }
 
-  from<T extends ObjectLiteral>(entity: EntityTarget<T>): Repository<T> {
-    return this.db.getRepository(entity);
-  }
-
-  protected get db(): DataSource {
-    let mainDb: DataSource =
-      this._currentTransaction() as unknown as DataSource;
+  get db(): CoreDB {
+    let mainDb: CoreDB = this._currentTransaction() as unknown as CoreDB;
     if (!mainDb) {
       mainDb = this.shardDb.replica ?? this.shardDb.main;
     }
@@ -41,8 +36,8 @@ export abstract class BaseRepo {
     return mainDb;
   }
 
-  private get shardDb(): { main: DataSource; replica?: DataSource } {
-    return { main: this.dataSource };
+  private get shardDb(): { main: CoreDB; replica?: CoreDB } {
+    return { main: this.coreDb };
   }
 
   private _currentTransaction() {

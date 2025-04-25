@@ -1,8 +1,9 @@
 import { Global, Module, Provider } from '@nestjs/common';
-import { DataSource } from 'typeorm';
 
-const MockDataSourceProvider: Provider = {
-  provide: DataSource,
+import { CoreDB } from '@core/db/db.common';
+
+const MockPrismaProvider: Provider = {
+  provide: CoreDB,
   useValue: {
     transaction: jest.fn().mockImplementation(() => ({
       execute: jest.fn(),
@@ -12,7 +13,7 @@ const MockDataSourceProvider: Provider = {
 
 @Global()
 @Module({
-  providers: [MockDataSourceProvider],
-  exports: [MockDataSourceProvider],
+  providers: [MockPrismaProvider],
+  exports: [MockPrismaProvider],
 })
 export class MockDBModule {}

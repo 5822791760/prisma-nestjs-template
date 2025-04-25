@@ -2,8 +2,8 @@ import { DynamicModule, Provider, Type } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Dayjs } from 'dayjs';
-import { DataSource } from 'typeorm';
 
+import { CoreDB } from '@core/db/db.common';
 import { TransactionService } from '@core/global/transaction/transaction.service';
 import { QueueModule } from '@core/queue/queue.module';
 import { setupApp } from '@core/shared/http/http.setup';
@@ -69,7 +69,7 @@ export async function createRepoTestingModule(repo: Provider) {
       repo,
       TransactionService,
       {
-        provide: DataSource,
+        provide: CoreDB,
         useFactory: async () => {
           return globalThis.dataSource;
         },

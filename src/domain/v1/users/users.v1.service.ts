@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { Users } from '@core/db/entities/Users';
+import { Users } from '@core/db/prisma';
 import { UsersQueueService } from '@core/queue/users/users.queue.service';
 import { hashString } from '@core/shared/common/common.crypto';
 import tzDayjs from '@core/shared/common/common.dayjs';

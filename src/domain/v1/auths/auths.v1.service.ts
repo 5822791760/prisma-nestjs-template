@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { AppConfig } from '@core/config';
-import { Users } from '@core/db/entities/Users';
+import { Users } from '@core/db/prisma';
 import {
   encodeUserJwt,
   hashString,

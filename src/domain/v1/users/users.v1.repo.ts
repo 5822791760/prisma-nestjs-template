@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { FindOptionsWhere, Not } from 'typeorm';
 
-import { Users } from '@core/db/entities/Users';
+import { Users } from '@core/db/prisma';
 import {
   PaginationOptions,
   getLimit,
@@ -13,48 +12,49 @@ import { NewUser } from './users.v1.type';
 
 @Injectable()
 export class UsersV1Repo extends BaseRepo {
-  async getOneUser(id: number): Promise<Users | null> {
-    return this.from(Users).findOne({ where: { id } });
+  async getOneUser(id: number) {
+    return this.db.users.findFirst({ where: { id } });
   }
 
-  async getAllUsers(): Promise<Users[]> {
-    return this.from(Users).find();
+  async getAllUsers() {
+    return this.db.users.findMany();
   }
 
   async getPageUsers(options: PaginationOptions): Promise<GetPageUsers> {
-    const totalItems = await this.from(Users).count();
+    const totalItems = await this.db.users.count();
 
-    const datas = await this.from(Users).find({
+    const datas = await this.db.users.findMany({
       take: getLimit(options),
       skip: getOffset(options),
-      order: { id: 'ASC' },
+      orderBy: { id: 'asc' },
     });
 
     return { datas, totalItems };
   }
 
   async insertUser(data: NewUser): Promise<void> {
-    const user = this.from(Users).create(data);
-    await this.from(Users).insert(user);
+    await this.db.users.create({ data });
   }
 
   async updateUser(user: Users): Promise<void> {
     const { id, ...data } = user;
 
-    await this.from(Users).update(id, data);
+    await this.db.users.update({
+      where: { id },
+      data,
+    });
   }
 
   async isEmailExistsInUsers(
     email: string,
     excludeId?: number,
   ): Promise<boolean> {
-    const where: FindOptionsWhere<Users> = { email };
+    const data = await this.db.users.findFirst({
+      select: { id: true },
+      where: { email, id: { not: excludeId } },
+    });
 
-    if (excludeId) {
-      where.id = Not(excludeId);
-    }
-
-    return this.from(Users).existsBy(where);
+    return !!data?.id;
   }
 }
 

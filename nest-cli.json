@@ -13,6 +13,13 @@
           "dtoFileNameSuffix": [".dto.ts"]
         }
       }
+    ],
+    "assets": [
+      {
+        "include": "./core/db/prisma/**/*.{ts,js}",
+        "outDir": "dist",
+        "watchAssets": true
+      }
     ]
   }
 }

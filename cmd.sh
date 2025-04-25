@@ -57,16 +57,14 @@ function db:gen() {
   docker compose exec postgres psql -q -U postgres -d temp -f /var/lib/postgresql/data/dbml.sql
   rm _docker_volumes/postgres/dbml.sql
 
-  yarn typeorm-model-generator -h localhost -d temp -u postgres -x postgres -e postgres
-
-  rm -rf ./src/core/db/entities
-  mv ./output/entities ./src/core/db/entities
-  yarn prettier --write "./src/core/db/entities/**/*.{js,ts}"
+  export DATABASE_URL="$DATABASE_URL" yarn prisma db pull
 
   yarn typeorm migration:generate ./src/core/db/migrations/$1
   yarn prettier --write "./src/core/db/migrations/**/*.{js,ts}"
+}
 
-  rm -rf ./output
+test() {
+  echo $DATABASE_URL
 }
 
 function db:reset() {

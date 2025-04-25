@@ -1,7 +1,17 @@
+export interface UserData {
+  email: string;
+  password: string;
+}
+
+export interface NewUser extends PostData {
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface PostData {
   title: string;
   details: string;
-  createdBy: { id: number };
+  createdBy: number;
 }
 
 export interface NewPost extends PostData {

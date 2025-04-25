@@ -1,7 +1,6 @@
 import { Command, CommandRunner } from 'nest-commander';
 
-import { Posts } from '@core/db/entities/Posts';
-import { Users } from '@core/db/entities/Users';
+import { Users } from '@core/db/prisma';
 import { DEFAULT_PASSWORD } from '@core/shared/common/common.constant';
 import { hashString } from '@core/shared/common/common.crypto';
 
@@ -24,35 +23,31 @@ export class InitialsCliSeed extends CommandRunner {
   }
 
   private async _initUsers() {
-    const superadmin = this.repo.from(Users).create({
+    const superadmin = await this.repo.createUsers({
       email: 'superadmin@example.com',
       password: hashString(DEFAULT_PASSWORD),
     });
 
-    const general = this.repo.from(Users).create({
+    this.repo.createUsers({
       email: 'general@example.com',
       password: hashString(DEFAULT_PASSWORD),
     });
-
-    await this.repo.from(Users).save([superadmin, general]);
 
     this.superAdmin = superadmin;
   }
 
   private async _initPosts() {
-    const posts = this.repo.from(Posts).create([
+    await this.repo.createManyPosts([
       {
         title: 'test post A',
         details: 'post A details',
-        createdBy: this.superAdmin,
+        createdBy: this.superAdmin.id,
       },
       {
         title: 'test post B',
         details: 'post B details',
-        createdBy: this.superAdmin,
+        createdBy: this.superAdmin.id,
       },
     ]);
-
-    await this.repo.from(Posts).insert(posts);
   }
 }
