@@ -57,10 +57,9 @@ function db:gen() {
   docker compose exec postgres psql -q -U postgres -d temp -f /var/lib/postgresql/data/dbml.sql
   rm _docker_volumes/postgres/dbml.sql
 
-  export DATABASE_URL="$DATABASE_URL" yarn prisma db pull
+  DATABASE_URL="postgresql://postgres:postgres@localhost:5432/temp" yarn prisma db pull
 
-  yarn typeorm migration:generate ./src/core/db/migrations/$1
-  yarn prettier --write "./src/core/db/migrations/**/*.{js,ts}"
+  yarn prisma migrate dev --name $1
 }
 
 test() {

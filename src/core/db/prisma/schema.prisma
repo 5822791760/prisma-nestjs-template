@@ -8,17 +8,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Migrations {
-  id        Int    @id(map: "PK_8c82d7f526340ab734260ea46be") @default(autoincrement())
-  timestamp BigInt
-  name      String @db.VarChar
-
-  @@map("migrations")
-}
-
 model Posts {
-  id        Int      @id(map: "PK_2829ac61eff60fcec60d7274b9e") @unique(map: "posts_pkey") @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   title     String?  @db.VarChar(250)
+  chad      String?  @db.VarChar(250)
   details   String   @default("")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
@@ -29,10 +22,10 @@ model Posts {
 }
 
 model Users {
-  id             Int       @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @unique(map: "users_pkey") @default(autoincrement())
+  id             Int       @id @default(autoincrement())
   createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt      DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  email          String    @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar(250)
+  email          String    @unique @db.VarChar(250)
   password       String    @db.VarChar(250)
   lastSignedInAt DateTime? @map("last_signed_in_at") @db.Timestamptz(6)
   posts          Posts[]

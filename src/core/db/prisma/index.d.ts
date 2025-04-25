@@ -14,11 +14,6 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
- * Model Migrations
- * 
- */
-export type Migrations = $Result.DefaultSelection<Prisma.$MigrationsPayload>
-/**
  * Model Posts
  * 
  */
@@ -36,8 +31,8 @@ export type Users = $Result.DefaultSelection<Prisma.$UsersPayload>
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Migrations
- * const migrations = await prisma.migrations.findMany()
+ * // Fetch zero or more Posts
+ * const posts = await prisma.posts.findMany()
  * ```
  *
  *
@@ -57,8 +52,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Migrations
-   * const migrations = await prisma.migrations.findMany()
+   * // Fetch zero or more Posts
+   * const posts = await prisma.posts.findMany()
    * ```
    *
    *
@@ -155,16 +150,6 @@ export class PrismaClient<
   }>>
 
       /**
-   * `prisma.migrations`: Exposes CRUD operations for the **Migrations** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Migrations
-    * const migrations = await prisma.migrations.findMany()
-    * ```
-    */
-  get migrations(): Prisma.MigrationsDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.posts`: Exposes CRUD operations for the **Posts** model.
     * Example usage:
     * ```ts
@@ -623,7 +608,6 @@ export namespace Prisma {
 
 
   export const ModelName: {
-    Migrations: 'Migrations',
     Posts: 'Posts',
     Users: 'Users'
   };
@@ -644,84 +628,10 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "migrations" | "posts" | "users"
+      modelProps: "posts" | "users"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
-      Migrations: {
-        payload: Prisma.$MigrationsPayload<ExtArgs>
-        fields: Prisma.MigrationsFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.MigrationsFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MigrationsPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.MigrationsFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MigrationsPayload>
-          }
-          findFirst: {
-            args: Prisma.MigrationsFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MigrationsPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.MigrationsFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MigrationsPayload>
-          }
-          findMany: {
-            args: Prisma.MigrationsFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MigrationsPayload>[]
-          }
-          create: {
-            args: Prisma.MigrationsCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MigrationsPayload>
-          }
-          createMany: {
-            args: Prisma.MigrationsCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.MigrationsCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MigrationsPayload>[]
-          }
-          delete: {
-            args: Prisma.MigrationsDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MigrationsPayload>
-          }
-          update: {
-            args: Prisma.MigrationsUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MigrationsPayload>
-          }
-          deleteMany: {
-            args: Prisma.MigrationsDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.MigrationsUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.MigrationsUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MigrationsPayload>[]
-          }
-          upsert: {
-            args: Prisma.MigrationsUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MigrationsPayload>
-          }
-          aggregate: {
-            args: Prisma.MigrationsAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateMigrations>
-          }
-          groupBy: {
-            args: Prisma.MigrationsGroupByArgs<ExtArgs>
-            result: $Utils.Optional<MigrationsGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.MigrationsCountArgs<ExtArgs>
-            result: $Utils.Optional<MigrationsCountAggregateOutputType> | number
-          }
-        }
-      }
       Posts: {
         payload: Prisma.$PostsPayload<ExtArgs>
         fields: Prisma.PostsFieldRefs
@@ -954,7 +864,6 @@ export namespace Prisma {
     omit?: Prisma.GlobalOmitConfig
   }
   export type GlobalOmitConfig = {
-    migrations?: MigrationsOmit
     posts?: PostsOmit
     users?: UsersOmit
   }
@@ -1082,1013 +991,6 @@ export namespace Prisma {
    */
 
   /**
-   * Model Migrations
-   */
-
-  export type AggregateMigrations = {
-    _count: MigrationsCountAggregateOutputType | null
-    _avg: MigrationsAvgAggregateOutputType | null
-    _sum: MigrationsSumAggregateOutputType | null
-    _min: MigrationsMinAggregateOutputType | null
-    _max: MigrationsMaxAggregateOutputType | null
-  }
-
-  export type MigrationsAvgAggregateOutputType = {
-    id: number | null
-    timestamp: number | null
-  }
-
-  export type MigrationsSumAggregateOutputType = {
-    id: number | null
-    timestamp: bigint | null
-  }
-
-  export type MigrationsMinAggregateOutputType = {
-    id: number | null
-    timestamp: bigint | null
-    name: string | null
-  }
-
-  export type MigrationsMaxAggregateOutputType = {
-    id: number | null
-    timestamp: bigint | null
-    name: string | null
-  }
-
-  export type MigrationsCountAggregateOutputType = {
-    id: number
-    timestamp: number
-    name: number
-    _all: number
-  }
-
-
-  export type MigrationsAvgAggregateInputType = {
-    id?: true
-    timestamp?: true
-  }
-
-  export type MigrationsSumAggregateInputType = {
-    id?: true
-    timestamp?: true
-  }
-
-  export type MigrationsMinAggregateInputType = {
-    id?: true
-    timestamp?: true
-    name?: true
-  }
-
-  export type MigrationsMaxAggregateInputType = {
-    id?: true
-    timestamp?: true
-    name?: true
-  }
-
-  export type MigrationsCountAggregateInputType = {
-    id?: true
-    timestamp?: true
-    name?: true
-    _all?: true
-  }
-
-  export type MigrationsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Migrations to aggregate.
-     */
-    where?: MigrationsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Migrations to fetch.
-     */
-    orderBy?: MigrationsOrderByWithRelationInput | MigrationsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: MigrationsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Migrations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Migrations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Migrations
-    **/
-    _count?: true | MigrationsCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: MigrationsAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: MigrationsSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: MigrationsMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: MigrationsMaxAggregateInputType
-  }
-
-  export type GetMigrationsAggregateType<T extends MigrationsAggregateArgs> = {
-        [P in keyof T & keyof AggregateMigrations]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateMigrations[P]>
-      : GetScalarType<T[P], AggregateMigrations[P]>
-  }
-
-
-
-
-  export type MigrationsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MigrationsWhereInput
-    orderBy?: MigrationsOrderByWithAggregationInput | MigrationsOrderByWithAggregationInput[]
-    by: MigrationsScalarFieldEnum[] | MigrationsScalarFieldEnum
-    having?: MigrationsScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: MigrationsCountAggregateInputType | true
-    _avg?: MigrationsAvgAggregateInputType
-    _sum?: MigrationsSumAggregateInputType
-    _min?: MigrationsMinAggregateInputType
-    _max?: MigrationsMaxAggregateInputType
-  }
-
-  export type MigrationsGroupByOutputType = {
-    id: number
-    timestamp: bigint
-    name: string
-    _count: MigrationsCountAggregateOutputType | null
-    _avg: MigrationsAvgAggregateOutputType | null
-    _sum: MigrationsSumAggregateOutputType | null
-    _min: MigrationsMinAggregateOutputType | null
-    _max: MigrationsMaxAggregateOutputType | null
-  }
-
-  type GetMigrationsGroupByPayload<T extends MigrationsGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<MigrationsGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof MigrationsGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], MigrationsGroupByOutputType[P]>
-            : GetScalarType<T[P], MigrationsGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type MigrationsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    timestamp?: boolean
-    name?: boolean
-  }, ExtArgs["result"]["migrations"]>
-
-  export type MigrationsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    timestamp?: boolean
-    name?: boolean
-  }, ExtArgs["result"]["migrations"]>
-
-  export type MigrationsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    timestamp?: boolean
-    name?: boolean
-  }, ExtArgs["result"]["migrations"]>
-
-  export type MigrationsSelectScalar = {
-    id?: boolean
-    timestamp?: boolean
-    name?: boolean
-  }
-
-  export type MigrationsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "timestamp" | "name", ExtArgs["result"]["migrations"]>
-
-  export type $MigrationsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Migrations"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      timestamp: bigint
-      name: string
-    }, ExtArgs["result"]["migrations"]>
-    composites: {}
-  }
-
-  type MigrationsGetPayload<S extends boolean | null | undefined | MigrationsDefaultArgs> = $Result.GetResult<Prisma.$MigrationsPayload, S>
-
-  type MigrationsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<MigrationsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: MigrationsCountAggregateInputType | true
-    }
-
-  export interface MigrationsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Migrations'], meta: { name: 'Migrations' } }
-    /**
-     * Find zero or one Migrations that matches the filter.
-     * @param {MigrationsFindUniqueArgs} args - Arguments to find a Migrations
-     * @example
-     * // Get one Migrations
-     * const migrations = await prisma.migrations.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends MigrationsFindUniqueArgs>(args: SelectSubset<T, MigrationsFindUniqueArgs<ExtArgs>>): Prisma__MigrationsClient<$Result.GetResult<Prisma.$MigrationsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Migrations that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {MigrationsFindUniqueOrThrowArgs} args - Arguments to find a Migrations
-     * @example
-     * // Get one Migrations
-     * const migrations = await prisma.migrations.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends MigrationsFindUniqueOrThrowArgs>(args: SelectSubset<T, MigrationsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MigrationsClient<$Result.GetResult<Prisma.$MigrationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Migrations that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MigrationsFindFirstArgs} args - Arguments to find a Migrations
-     * @example
-     * // Get one Migrations
-     * const migrations = await prisma.migrations.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends MigrationsFindFirstArgs>(args?: SelectSubset<T, MigrationsFindFirstArgs<ExtArgs>>): Prisma__MigrationsClient<$Result.GetResult<Prisma.$MigrationsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Migrations that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MigrationsFindFirstOrThrowArgs} args - Arguments to find a Migrations
-     * @example
-     * // Get one Migrations
-     * const migrations = await prisma.migrations.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends MigrationsFindFirstOrThrowArgs>(args?: SelectSubset<T, MigrationsFindFirstOrThrowArgs<ExtArgs>>): Prisma__MigrationsClient<$Result.GetResult<Prisma.$MigrationsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Migrations that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MigrationsFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Migrations
-     * const migrations = await prisma.migrations.findMany()
-     * 
-     * // Get first 10 Migrations
-     * const migrations = await prisma.migrations.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const migrationsWithIdOnly = await prisma.migrations.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends MigrationsFindManyArgs>(args?: SelectSubset<T, MigrationsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MigrationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Migrations.
-     * @param {MigrationsCreateArgs} args - Arguments to create a Migrations.
-     * @example
-     * // Create one Migrations
-     * const Migrations = await prisma.migrations.create({
-     *   data: {
-     *     // ... data to create a Migrations
-     *   }
-     * })
-     * 
-     */
-    create<T extends MigrationsCreateArgs>(args: SelectSubset<T, MigrationsCreateArgs<ExtArgs>>): Prisma__MigrationsClient<$Result.GetResult<Prisma.$MigrationsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Migrations.
-     * @param {MigrationsCreateManyArgs} args - Arguments to create many Migrations.
-     * @example
-     * // Create many Migrations
-     * const migrations = await prisma.migrations.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends MigrationsCreateManyArgs>(args?: SelectSubset<T, MigrationsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Migrations and returns the data saved in the database.
-     * @param {MigrationsCreateManyAndReturnArgs} args - Arguments to create many Migrations.
-     * @example
-     * // Create many Migrations
-     * const migrations = await prisma.migrations.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Migrations and only return the `id`
-     * const migrationsWithIdOnly = await prisma.migrations.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends MigrationsCreateManyAndReturnArgs>(args?: SelectSubset<T, MigrationsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MigrationsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Migrations.
-     * @param {MigrationsDeleteArgs} args - Arguments to delete one Migrations.
-     * @example
-     * // Delete one Migrations
-     * const Migrations = await prisma.migrations.delete({
-     *   where: {
-     *     // ... filter to delete one Migrations
-     *   }
-     * })
-     * 
-     */
-    delete<T extends MigrationsDeleteArgs>(args: SelectSubset<T, MigrationsDeleteArgs<ExtArgs>>): Prisma__MigrationsClient<$Result.GetResult<Prisma.$MigrationsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Migrations.
-     * @param {MigrationsUpdateArgs} args - Arguments to update one Migrations.
-     * @example
-     * // Update one Migrations
-     * const migrations = await prisma.migrations.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends MigrationsUpdateArgs>(args: SelectSubset<T, MigrationsUpdateArgs<ExtArgs>>): Prisma__MigrationsClient<$Result.GetResult<Prisma.$MigrationsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Migrations.
-     * @param {MigrationsDeleteManyArgs} args - Arguments to filter Migrations to delete.
-     * @example
-     * // Delete a few Migrations
-     * const { count } = await prisma.migrations.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends MigrationsDeleteManyArgs>(args?: SelectSubset<T, MigrationsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Migrations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MigrationsUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Migrations
-     * const migrations = await prisma.migrations.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends MigrationsUpdateManyArgs>(args: SelectSubset<T, MigrationsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Migrations and returns the data updated in the database.
-     * @param {MigrationsUpdateManyAndReturnArgs} args - Arguments to update many Migrations.
-     * @example
-     * // Update many Migrations
-     * const migrations = await prisma.migrations.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Migrations and only return the `id`
-     * const migrationsWithIdOnly = await prisma.migrations.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends MigrationsUpdateManyAndReturnArgs>(args: SelectSubset<T, MigrationsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MigrationsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Migrations.
-     * @param {MigrationsUpsertArgs} args - Arguments to update or create a Migrations.
-     * @example
-     * // Update or create a Migrations
-     * const migrations = await prisma.migrations.upsert({
-     *   create: {
-     *     // ... data to create a Migrations
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Migrations we want to update
-     *   }
-     * })
-     */
-    upsert<T extends MigrationsUpsertArgs>(args: SelectSubset<T, MigrationsUpsertArgs<ExtArgs>>): Prisma__MigrationsClient<$Result.GetResult<Prisma.$MigrationsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Migrations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MigrationsCountArgs} args - Arguments to filter Migrations to count.
-     * @example
-     * // Count the number of Migrations
-     * const count = await prisma.migrations.count({
-     *   where: {
-     *     // ... the filter for the Migrations we want to count
-     *   }
-     * })
-    **/
-    count<T extends MigrationsCountArgs>(
-      args?: Subset<T, MigrationsCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], MigrationsCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Migrations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MigrationsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends MigrationsAggregateArgs>(args: Subset<T, MigrationsAggregateArgs>): Prisma.PrismaPromise<GetMigrationsAggregateType<T>>
-
-    /**
-     * Group by Migrations.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MigrationsGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends MigrationsGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: MigrationsGroupByArgs['orderBy'] }
-        : { orderBy?: MigrationsGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, MigrationsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMigrationsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Migrations model
-   */
-  readonly fields: MigrationsFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Migrations.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__MigrationsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Migrations model
-   */
-  interface MigrationsFieldRefs {
-    readonly id: FieldRef<"Migrations", 'Int'>
-    readonly timestamp: FieldRef<"Migrations", 'BigInt'>
-    readonly name: FieldRef<"Migrations", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Migrations findUnique
-   */
-  export type MigrationsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Migrations
-     */
-    select?: MigrationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Migrations
-     */
-    omit?: MigrationsOmit<ExtArgs> | null
-    /**
-     * Filter, which Migrations to fetch.
-     */
-    where: MigrationsWhereUniqueInput
-  }
-
-  /**
-   * Migrations findUniqueOrThrow
-   */
-  export type MigrationsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Migrations
-     */
-    select?: MigrationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Migrations
-     */
-    omit?: MigrationsOmit<ExtArgs> | null
-    /**
-     * Filter, which Migrations to fetch.
-     */
-    where: MigrationsWhereUniqueInput
-  }
-
-  /**
-   * Migrations findFirst
-   */
-  export type MigrationsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Migrations
-     */
-    select?: MigrationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Migrations
-     */
-    omit?: MigrationsOmit<ExtArgs> | null
-    /**
-     * Filter, which Migrations to fetch.
-     */
-    where?: MigrationsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Migrations to fetch.
-     */
-    orderBy?: MigrationsOrderByWithRelationInput | MigrationsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Migrations.
-     */
-    cursor?: MigrationsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Migrations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Migrations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Migrations.
-     */
-    distinct?: MigrationsScalarFieldEnum | MigrationsScalarFieldEnum[]
-  }
-
-  /**
-   * Migrations findFirstOrThrow
-   */
-  export type MigrationsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Migrations
-     */
-    select?: MigrationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Migrations
-     */
-    omit?: MigrationsOmit<ExtArgs> | null
-    /**
-     * Filter, which Migrations to fetch.
-     */
-    where?: MigrationsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Migrations to fetch.
-     */
-    orderBy?: MigrationsOrderByWithRelationInput | MigrationsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Migrations.
-     */
-    cursor?: MigrationsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Migrations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Migrations.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Migrations.
-     */
-    distinct?: MigrationsScalarFieldEnum | MigrationsScalarFieldEnum[]
-  }
-
-  /**
-   * Migrations findMany
-   */
-  export type MigrationsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Migrations
-     */
-    select?: MigrationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Migrations
-     */
-    omit?: MigrationsOmit<ExtArgs> | null
-    /**
-     * Filter, which Migrations to fetch.
-     */
-    where?: MigrationsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Migrations to fetch.
-     */
-    orderBy?: MigrationsOrderByWithRelationInput | MigrationsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Migrations.
-     */
-    cursor?: MigrationsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Migrations from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Migrations.
-     */
-    skip?: number
-    distinct?: MigrationsScalarFieldEnum | MigrationsScalarFieldEnum[]
-  }
-
-  /**
-   * Migrations create
-   */
-  export type MigrationsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Migrations
-     */
-    select?: MigrationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Migrations
-     */
-    omit?: MigrationsOmit<ExtArgs> | null
-    /**
-     * The data needed to create a Migrations.
-     */
-    data: XOR<MigrationsCreateInput, MigrationsUncheckedCreateInput>
-  }
-
-  /**
-   * Migrations createMany
-   */
-  export type MigrationsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Migrations.
-     */
-    data: MigrationsCreateManyInput | MigrationsCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Migrations createManyAndReturn
-   */
-  export type MigrationsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Migrations
-     */
-    select?: MigrationsSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Migrations
-     */
-    omit?: MigrationsOmit<ExtArgs> | null
-    /**
-     * The data used to create many Migrations.
-     */
-    data: MigrationsCreateManyInput | MigrationsCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Migrations update
-   */
-  export type MigrationsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Migrations
-     */
-    select?: MigrationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Migrations
-     */
-    omit?: MigrationsOmit<ExtArgs> | null
-    /**
-     * The data needed to update a Migrations.
-     */
-    data: XOR<MigrationsUpdateInput, MigrationsUncheckedUpdateInput>
-    /**
-     * Choose, which Migrations to update.
-     */
-    where: MigrationsWhereUniqueInput
-  }
-
-  /**
-   * Migrations updateMany
-   */
-  export type MigrationsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Migrations.
-     */
-    data: XOR<MigrationsUpdateManyMutationInput, MigrationsUncheckedUpdateManyInput>
-    /**
-     * Filter which Migrations to update
-     */
-    where?: MigrationsWhereInput
-    /**
-     * Limit how many Migrations to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Migrations updateManyAndReturn
-   */
-  export type MigrationsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Migrations
-     */
-    select?: MigrationsSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Migrations
-     */
-    omit?: MigrationsOmit<ExtArgs> | null
-    /**
-     * The data used to update Migrations.
-     */
-    data: XOR<MigrationsUpdateManyMutationInput, MigrationsUncheckedUpdateManyInput>
-    /**
-     * Filter which Migrations to update
-     */
-    where?: MigrationsWhereInput
-    /**
-     * Limit how many Migrations to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Migrations upsert
-   */
-  export type MigrationsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Migrations
-     */
-    select?: MigrationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Migrations
-     */
-    omit?: MigrationsOmit<ExtArgs> | null
-    /**
-     * The filter to search for the Migrations to update in case it exists.
-     */
-    where: MigrationsWhereUniqueInput
-    /**
-     * In case the Migrations found by the `where` argument doesn't exist, create a new Migrations with this data.
-     */
-    create: XOR<MigrationsCreateInput, MigrationsUncheckedCreateInput>
-    /**
-     * In case the Migrations was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<MigrationsUpdateInput, MigrationsUncheckedUpdateInput>
-  }
-
-  /**
-   * Migrations delete
-   */
-  export type MigrationsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Migrations
-     */
-    select?: MigrationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Migrations
-     */
-    omit?: MigrationsOmit<ExtArgs> | null
-    /**
-     * Filter which Migrations to delete.
-     */
-    where: MigrationsWhereUniqueInput
-  }
-
-  /**
-   * Migrations deleteMany
-   */
-  export type MigrationsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Migrations to delete
-     */
-    where?: MigrationsWhereInput
-    /**
-     * Limit how many Migrations to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Migrations without action
-   */
-  export type MigrationsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Migrations
-     */
-    select?: MigrationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Migrations
-     */
-    omit?: MigrationsOmit<ExtArgs> | null
-  }
-
-
-  /**
    * Model Posts
    */
 
@@ -2113,6 +1015,7 @@ export namespace Prisma {
   export type PostsMinAggregateOutputType = {
     id: number | null
     title: string | null
+    chad: string | null
     details: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2122,6 +1025,7 @@ export namespace Prisma {
   export type PostsMaxAggregateOutputType = {
     id: number | null
     title: string | null
+    chad: string | null
     details: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -2131,6 +1035,7 @@ export namespace Prisma {
   export type PostsCountAggregateOutputType = {
     id: number
     title: number
+    chad: number
     details: number
     createdAt: number
     updatedAt: number
@@ -2152,6 +1057,7 @@ export namespace Prisma {
   export type PostsMinAggregateInputType = {
     id?: true
     title?: true
+    chad?: true
     details?: true
     createdAt?: true
     updatedAt?: true
@@ -2161,6 +1067,7 @@ export namespace Prisma {
   export type PostsMaxAggregateInputType = {
     id?: true
     title?: true
+    chad?: true
     details?: true
     createdAt?: true
     updatedAt?: true
@@ -2170,6 +1077,7 @@ export namespace Prisma {
   export type PostsCountAggregateInputType = {
     id?: true
     title?: true
+    chad?: true
     details?: true
     createdAt?: true
     updatedAt?: true
@@ -2266,6 +1174,7 @@ export namespace Prisma {
   export type PostsGroupByOutputType = {
     id: number
     title: string | null
+    chad: string | null
     details: string
     createdAt: Date
     updatedAt: Date
@@ -2294,6 +1203,7 @@ export namespace Prisma {
   export type PostsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    chad?: boolean
     details?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2304,6 +1214,7 @@ export namespace Prisma {
   export type PostsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    chad?: boolean
     details?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2314,6 +1225,7 @@ export namespace Prisma {
   export type PostsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
+    chad?: boolean
     details?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -2324,13 +1236,14 @@ export namespace Prisma {
   export type PostsSelectScalar = {
     id?: boolean
     title?: boolean
+    chad?: boolean
     details?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     createdBy?: boolean
   }
 
-  export type PostsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "details" | "createdAt" | "updatedAt" | "createdBy", ExtArgs["result"]["posts"]>
+  export type PostsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "chad" | "details" | "createdAt" | "updatedAt" | "createdBy", ExtArgs["result"]["posts"]>
   export type PostsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Posts$usersArgs<ExtArgs>
   }
@@ -2349,6 +1262,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       title: string | null
+      chad: string | null
       details: string
       createdAt: Date
       updatedAt: Date
@@ -2779,6 +1693,7 @@ export namespace Prisma {
   interface PostsFieldRefs {
     readonly id: FieldRef<"Posts", 'Int'>
     readonly title: FieldRef<"Posts", 'String'>
+    readonly chad: FieldRef<"Posts", 'String'>
     readonly details: FieldRef<"Posts", 'String'>
     readonly createdAt: FieldRef<"Posts", 'DateTime'>
     readonly updatedAt: FieldRef<"Posts", 'DateTime'>
@@ -4347,18 +3262,10 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-  export const MigrationsScalarFieldEnum: {
-    id: 'id',
-    timestamp: 'timestamp',
-    name: 'name'
-  };
-
-  export type MigrationsScalarFieldEnum = (typeof MigrationsScalarFieldEnum)[keyof typeof MigrationsScalarFieldEnum]
-
-
   export const PostsScalarFieldEnum: {
     id: 'id',
     title: 'title',
+    chad: 'chad',
     details: 'details',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -4424,20 +3331,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'BigInt'
-   */
-  export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
-    
-
-
-  /**
-   * Reference to a field of type 'BigInt[]'
-   */
-  export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
-    
-
-
-  /**
    * Reference to a field of type 'String'
    */
   export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
@@ -4482,56 +3375,13 @@ export namespace Prisma {
    */
 
 
-  export type MigrationsWhereInput = {
-    AND?: MigrationsWhereInput | MigrationsWhereInput[]
-    OR?: MigrationsWhereInput[]
-    NOT?: MigrationsWhereInput | MigrationsWhereInput[]
-    id?: IntFilter<"Migrations"> | number
-    timestamp?: BigIntFilter<"Migrations"> | bigint | number
-    name?: StringFilter<"Migrations"> | string
-  }
-
-  export type MigrationsOrderByWithRelationInput = {
-    id?: SortOrder
-    timestamp?: SortOrder
-    name?: SortOrder
-  }
-
-  export type MigrationsWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: MigrationsWhereInput | MigrationsWhereInput[]
-    OR?: MigrationsWhereInput[]
-    NOT?: MigrationsWhereInput | MigrationsWhereInput[]
-    timestamp?: BigIntFilter<"Migrations"> | bigint | number
-    name?: StringFilter<"Migrations"> | string
-  }, "id">
-
-  export type MigrationsOrderByWithAggregationInput = {
-    id?: SortOrder
-    timestamp?: SortOrder
-    name?: SortOrder
-    _count?: MigrationsCountOrderByAggregateInput
-    _avg?: MigrationsAvgOrderByAggregateInput
-    _max?: MigrationsMaxOrderByAggregateInput
-    _min?: MigrationsMinOrderByAggregateInput
-    _sum?: MigrationsSumOrderByAggregateInput
-  }
-
-  export type MigrationsScalarWhereWithAggregatesInput = {
-    AND?: MigrationsScalarWhereWithAggregatesInput | MigrationsScalarWhereWithAggregatesInput[]
-    OR?: MigrationsScalarWhereWithAggregatesInput[]
-    NOT?: MigrationsScalarWhereWithAggregatesInput | MigrationsScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Migrations"> | number
-    timestamp?: BigIntWithAggregatesFilter<"Migrations"> | bigint | number
-    name?: StringWithAggregatesFilter<"Migrations"> | string
-  }
-
   export type PostsWhereInput = {
     AND?: PostsWhereInput | PostsWhereInput[]
     OR?: PostsWhereInput[]
     NOT?: PostsWhereInput | PostsWhereInput[]
     id?: IntFilter<"Posts"> | number
     title?: StringNullableFilter<"Posts"> | string | null
+    chad?: StringNullableFilter<"Posts"> | string | null
     details?: StringFilter<"Posts"> | string
     createdAt?: DateTimeFilter<"Posts"> | Date | string
     updatedAt?: DateTimeFilter<"Posts"> | Date | string
@@ -4542,6 +3392,7 @@ export namespace Prisma {
   export type PostsOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrderInput | SortOrder
+    chad?: SortOrderInput | SortOrder
     details?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -4555,16 +3406,18 @@ export namespace Prisma {
     OR?: PostsWhereInput[]
     NOT?: PostsWhereInput | PostsWhereInput[]
     title?: StringNullableFilter<"Posts"> | string | null
+    chad?: StringNullableFilter<"Posts"> | string | null
     details?: StringFilter<"Posts"> | string
     createdAt?: DateTimeFilter<"Posts"> | Date | string
     updatedAt?: DateTimeFilter<"Posts"> | Date | string
     createdBy?: IntNullableFilter<"Posts"> | number | null
     users?: XOR<UsersNullableScalarRelationFilter, UsersWhereInput> | null
-  }, "id" | "id">
+  }, "id">
 
   export type PostsOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrderInput | SortOrder
+    chad?: SortOrderInput | SortOrder
     details?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -4582,6 +3435,7 @@ export namespace Prisma {
     NOT?: PostsScalarWhereWithAggregatesInput | PostsScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Posts"> | number
     title?: StringNullableWithAggregatesFilter<"Posts"> | string | null
+    chad?: StringNullableWithAggregatesFilter<"Posts"> | string | null
     details?: StringWithAggregatesFilter<"Posts"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Posts"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Posts"> | Date | string
@@ -4622,7 +3476,7 @@ export namespace Prisma {
     password?: StringFilter<"Users"> | string
     lastSignedInAt?: DateTimeNullableFilter<"Users"> | Date | string | null
     posts?: PostsListRelationFilter
-  }, "id" | "id" | "email">
+  }, "id" | "email">
 
   export type UsersOrderByWithAggregationInput = {
     id?: SortOrder
@@ -4650,47 +3504,9 @@ export namespace Prisma {
     lastSignedInAt?: DateTimeNullableWithAggregatesFilter<"Users"> | Date | string | null
   }
 
-  export type MigrationsCreateInput = {
-    timestamp: bigint | number
-    name: string
-  }
-
-  export type MigrationsUncheckedCreateInput = {
-    id?: number
-    timestamp: bigint | number
-    name: string
-  }
-
-  export type MigrationsUpdateInput = {
-    timestamp?: BigIntFieldUpdateOperationsInput | bigint | number
-    name?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type MigrationsUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    timestamp?: BigIntFieldUpdateOperationsInput | bigint | number
-    name?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type MigrationsCreateManyInput = {
-    id?: number
-    timestamp: bigint | number
-    name: string
-  }
-
-  export type MigrationsUpdateManyMutationInput = {
-    timestamp?: BigIntFieldUpdateOperationsInput | bigint | number
-    name?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type MigrationsUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    timestamp?: BigIntFieldUpdateOperationsInput | bigint | number
-    name?: StringFieldUpdateOperationsInput | string
-  }
-
   export type PostsCreateInput = {
     title?: string | null
+    chad?: string | null
     details?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4700,6 +3516,7 @@ export namespace Prisma {
   export type PostsUncheckedCreateInput = {
     id?: number
     title?: string | null
+    chad?: string | null
     details?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4708,6 +3525,7 @@ export namespace Prisma {
 
   export type PostsUpdateInput = {
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    chad?: NullableStringFieldUpdateOperationsInput | string | null
     details?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4717,6 +3535,7 @@ export namespace Prisma {
   export type PostsUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    chad?: NullableStringFieldUpdateOperationsInput | string | null
     details?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4726,6 +3545,7 @@ export namespace Prisma {
   export type PostsCreateManyInput = {
     id?: number
     title?: string | null
+    chad?: string | null
     details?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -4734,6 +3554,7 @@ export namespace Prisma {
 
   export type PostsUpdateManyMutationInput = {
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    chad?: NullableStringFieldUpdateOperationsInput | string | null
     details?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4742,6 +3563,7 @@ export namespace Prisma {
   export type PostsUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    chad?: NullableStringFieldUpdateOperationsInput | string | null
     details?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4823,15 +3645,19 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type BigIntFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -4847,99 +3673,6 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringFilter<$PrismaModel> | string
-  }
-
-  export type MigrationsCountOrderByAggregateInput = {
-    id?: SortOrder
-    timestamp?: SortOrder
-    name?: SortOrder
-  }
-
-  export type MigrationsAvgOrderByAggregateInput = {
-    id?: SortOrder
-    timestamp?: SortOrder
-  }
-
-  export type MigrationsMaxOrderByAggregateInput = {
-    id?: SortOrder
-    timestamp?: SortOrder
-    name?: SortOrder
-  }
-
-  export type MigrationsMinOrderByAggregateInput = {
-    id?: SortOrder
-    timestamp?: SortOrder
-    name?: SortOrder
-  }
-
-  export type MigrationsSumOrderByAggregateInput = {
-    id?: SortOrder
-    timestamp?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedBigIntFilter<$PrismaModel>
-    _min?: NestedBigIntFilter<$PrismaModel>
-    _max?: NestedBigIntFilter<$PrismaModel>
-  }
-
-  export type StringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -4977,6 +3710,7 @@ export namespace Prisma {
   export type PostsCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    chad?: SortOrder
     details?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -4991,6 +3725,7 @@ export namespace Prisma {
   export type PostsMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    chad?: SortOrder
     details?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -5000,6 +3735,7 @@ export namespace Prisma {
   export type PostsMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
+    chad?: SortOrder
     details?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -5009,6 +3745,22 @@ export namespace Prisma {
   export type PostsSumOrderByAggregateInput = {
     id?: SortOrder
     createdBy?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -5027,6 +3779,24 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type StringWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -5129,26 +3899,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type BigIntFieldUpdateOperationsInput = {
-    set?: bigint | number
-    increment?: bigint | number
-    decrement?: bigint | number
-    multiply?: bigint | number
-    divide?: bigint | number
-  }
-
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type UsersCreateNestedOneWithoutPostsInput = {
     create?: XOR<UsersCreateWithoutPostsInput, UsersUncheckedCreateWithoutPostsInput>
     connectOrCreate?: UsersCreateOrConnectWithoutPostsInput
@@ -5157,6 +3907,10 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -5171,6 +3925,14 @@ export namespace Prisma {
     delete?: UsersWhereInput | boolean
     connect?: UsersWhereUniqueInput
     update?: XOR<XOR<UsersUpdateToOneWithWhereWithoutPostsInput, UsersUpdateWithoutPostsInput>, UsersUncheckedUpdateWithoutPostsInput>
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -5238,15 +4000,18 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type NestedBigIntFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -5261,6 +4026,28 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -5290,20 +4077,21 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
-    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
-    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedBigIntFilter<$PrismaModel>
-    _min?: NestedBigIntFilter<$PrismaModel>
-    _max?: NestedBigIntFilter<$PrismaModel>
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -5321,59 +4109,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -5494,6 +4229,7 @@ export namespace Prisma {
 
   export type PostsCreateWithoutUsersInput = {
     title?: string | null
+    chad?: string | null
     details?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5502,6 +4238,7 @@ export namespace Prisma {
   export type PostsUncheckedCreateWithoutUsersInput = {
     id?: number
     title?: string | null
+    chad?: string | null
     details?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5539,6 +4276,7 @@ export namespace Prisma {
     NOT?: PostsScalarWhereInput | PostsScalarWhereInput[]
     id?: IntFilter<"Posts"> | number
     title?: StringNullableFilter<"Posts"> | string | null
+    chad?: StringNullableFilter<"Posts"> | string | null
     details?: StringFilter<"Posts"> | string
     createdAt?: DateTimeFilter<"Posts"> | Date | string
     updatedAt?: DateTimeFilter<"Posts"> | Date | string
@@ -5548,6 +4286,7 @@ export namespace Prisma {
   export type PostsCreateManyUsersInput = {
     id?: number
     title?: string | null
+    chad?: string | null
     details?: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -5555,6 +4294,7 @@ export namespace Prisma {
 
   export type PostsUpdateWithoutUsersInput = {
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    chad?: NullableStringFieldUpdateOperationsInput | string | null
     details?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5563,6 +4303,7 @@ export namespace Prisma {
   export type PostsUncheckedUpdateWithoutUsersInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    chad?: NullableStringFieldUpdateOperationsInput | string | null
     details?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5571,6 +4312,7 @@ export namespace Prisma {
   export type PostsUncheckedUpdateManyWithoutUsersInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: NullableStringFieldUpdateOperationsInput | string | null
+    chad?: NullableStringFieldUpdateOperationsInput | string | null
     details?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
