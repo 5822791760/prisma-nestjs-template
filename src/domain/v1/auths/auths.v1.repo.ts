@@ -11,7 +11,7 @@ export class AuthsV1Repo extends BaseRepo {
     return this.db.users.findFirst({ where: { email } });
   }
 
-  async insertAuthUser(data: NewUser): Promise<AuthenticatedUser | null> {
+  async insertAuthUser(data: NewUser): Promise<AuthenticatedUser> {
     const user = await this.db.users.create({ data });
     return user as AuthenticatedUser;
   }

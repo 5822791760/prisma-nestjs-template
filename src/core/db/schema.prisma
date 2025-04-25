@@ -1,3 +1,8 @@
+generator kysely {
+  provider = "prisma-kysely"
+  camelCase = true
+}
+
 generator dbml {
   provider = "prisma-dbml-generator"
 }
