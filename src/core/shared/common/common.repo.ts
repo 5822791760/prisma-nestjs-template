@@ -30,13 +30,14 @@ export abstract class BaseRepo {
   get db(): CoreDB {
     let mainDb: CoreDB = this._currentTransaction() as unknown as CoreDB;
     if (!mainDb) {
-      mainDb = this.shardDb.replica ?? this.shardDb.main;
+      mainDb = this.shardDb.main;
     }
 
     return mainDb;
   }
 
-  private get shardDb(): { main: CoreDB; replica?: CoreDB } {
+  // If DB is sharded can switch base on context here
+  private get shardDb(): { main: CoreDB } {
     return { main: this.coreDb };
   }
 
