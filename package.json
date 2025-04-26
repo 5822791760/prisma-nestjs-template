@@ -24,9 +24,6 @@
     "debug": "nest start --debug --watch",
     "dev:worker": "nodemon --exec 'ts-node -r tsconfig-paths/register ./src/worker.ts'",
     "dev:email": "email dev --dir ./src/helper/email/template --port 3001",
-    "db:init": "yarn cmd db:init",
-    "db:up": "./cmd.sh db:up",
-    "db:prev": "./cmd.sh db:prev",
     "repl": "./cmd.sh repl"
   },
   "dependencies": {

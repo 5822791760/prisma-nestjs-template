@@ -32,6 +32,7 @@ function cli() {
 
 function db:up() {
   yarn prisma migrate deploy
+  yarn prisma generate
 }
 
 function db:gen() {
@@ -48,7 +49,7 @@ function db:drop() {
   docker-compose exec postgres createdb -U postgres postgres
 }
 
-function sync() {
+function db:sync() {
   docker-compose exec postgres dropdb -U postgres --if-exists temp --force > /dev/null 2>&1
   docker-compose exec postgres createdb -U postgres temp
 
@@ -61,6 +62,10 @@ function sync() {
   docker-compose exec postgres dropdb -U postgres --if-exists temp --force
   yarn format:prisma
   yarn prisma generate
+
+  sleep 1
+
+  db:push
 }
 
 test() {
