@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker';
 import { Command, CommandRunner, Option } from 'nest-commander';
 
-import { Posts } from '@core/db/prisma';
 import tzDayjs from '@core/shared/common/common.dayjs';
 import { getRandomId } from '@core/shared/common/common.func';
 
 import { PostsCliRepo } from '../posts.cli.repo';
+import { NewPost } from '../posts.cli.type';
 
 interface CommandOptions {
   amount: number;
@@ -21,8 +21,8 @@ export class PostsCliSeed extends CommandRunner {
   }
 
   async run(_passedParams: string[], options: CommandOptions): Promise<void> {
-    const data: Omit<Posts, 'id'>[] = [];
-    const users = await this.repo.db.users.findMany();
+    const data: NewPost[] = [];
+    const users = await this.repo.getUsers();
 
     for (let i = 0; i < options.amount; i++) {
       data.push({
@@ -35,7 +35,7 @@ export class PostsCliSeed extends CommandRunner {
     }
 
     await this.repo.transaction(async () => {
-      this.repo.db.posts.createMany({ data });
+      this.repo.createPosts(data);
     });
   }
 
