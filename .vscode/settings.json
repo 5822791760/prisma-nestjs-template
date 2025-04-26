@@ -1,5 +1,5 @@
 {
   "typescript.preferences.autoImportFileExcludePatterns": [
     "src/core/db/generated/types.ts"
-  ]
+  ],
 }

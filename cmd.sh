@@ -30,12 +30,16 @@ function cli() {
   NODE_ENV=cli ts-node -r tsconfig-paths/register ./src/cli.ts $@
 }
 
+function dbml() {
+  yarn db2dbml postgres "$DATABASE_URL" -o schema.dbml
+}
+
 function db:up() {
   yarn prisma migrate deploy
   yarn prisma generate
 }
 
-function db:gen() {
+function db:make() {
   yarn prisma migrate dev --create-only
 }
 
@@ -47,25 +51,6 @@ function db:drop() {
   docker-compose up -d postgres
   docker-compose exec postgres dropdb -U postgres --if-exists postgres --force
   docker-compose exec postgres createdb -U postgres postgres
-}
-
-function db:sync() {
-  docker-compose exec postgres dropdb -U postgres --if-exists temp --force > /dev/null 2>&1
-  docker-compose exec postgres createdb -U postgres temp
-
-  yarn dbml2sql db.dbml -o _docker_volumes/postgres/dbml.sql
-  docker compose exec postgres psql -q -U postgres -d temp -f /var/lib/postgresql/data/dbml.sql
-  rm _docker_volumes/postgres/dbml.sql
-
-  DATABASE_URL="postgresql://postgres:postgres@localhost:5432/temp" yarn prisma db pull
-
-  docker-compose exec postgres dropdb -U postgres --if-exists temp --force
-  yarn format:prisma
-  yarn prisma generate
-
-  sleep 1
-
-  db:push
 }
 
 test() {

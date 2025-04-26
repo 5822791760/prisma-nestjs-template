@@ -1,0 +1,30 @@
+Table "_prisma_migrations" {
+  "id" varchar(36) [pk, not null]
+  "checksum" varchar(64) [not null]
+  "finished_at" timestamptz
+  "migration_name" varchar(255) [not null]
+  "logs" text
+  "rolled_back_at" timestamptz
+  "started_at" timestamptz [not null, default: `now()`]
+  "applied_steps_count" int4 [not null, default: 0]
+}
+
+Table "posts" {
+  "id" int4 [pk, not null, increment]
+  "title" varchar(250)
+  "details" varchar(250) [not null, default: '']
+  "created_at" timestamptz [not null, default: `CURRENT_TIMESTAMP`]
+  "updated_at" timestamptz [not null, default: `CURRENT_TIMESTAMP`]
+  "created_by" int4
+}
+
+Table "users" {
+  "id" int4 [pk, not null, increment]
+  "created_at" timestamptz [not null, default: `CURRENT_TIMESTAMP`]
+  "updated_at" timestamptz [not null, default: `CURRENT_TIMESTAMP`]
+  "email" varchar(250) [unique, not null]
+  "password" varchar(250) [not null]
+  "last_signed_in_at" timestamptz
+}
+
+Ref "posts_created_by_fkey":"users"."id" < "posts"."created_by"
