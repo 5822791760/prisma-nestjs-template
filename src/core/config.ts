@@ -14,7 +14,6 @@ export interface AppConfig {
   };
   database: {
     url: string;
-    enableAutoMigrate: boolean;
     enableLog: boolean;
   };
   email: {
@@ -47,7 +46,6 @@ export const config = (): AppConfig => ({
   },
   database: {
     url: get('DATABASE_URL').required().asString(),
-    enableAutoMigrate: get('ENABLE_AUTO_MIGRATE').default('true').asBool(),
     enableLog: get('ENABLE_DB_LOG').default('false').asBool(),
   },
   email: {
