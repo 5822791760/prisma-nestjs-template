@@ -16,7 +16,7 @@
     ],
     "assets": [
       {
-        "include": "./core/db/prisma/**/*.{ts,js}",
+        "include": "./core/db/prisma/**/*",
         "outDir": "dist",
         "watchAssets": true
       }

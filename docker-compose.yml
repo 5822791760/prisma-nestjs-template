@@ -1,4 +1,20 @@
 services:
+  # to test app build (if break in ci, don't need to use locally)
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - '3000:3000'
+  #   environment:
+  #     DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
+  #     REDIS_URL: redis://localhost:6379
+  #   working_dir: /usr/src/app
+  #   command: ['dist/main.js']
+  #   # command: ['dist/worker.js']
+  #   # entrypoint: []
+  #   # command: ['tail', '-f', '/dev/null']
+
   postgres:
     image: postgres:15
     restart: always
