@@ -1,6 +1,5 @@
 import { Provider } from '@nestjs/common';
 import {
-  CamelCasePlugin,
   Kysely,
   PostgresAdapter,
   PostgresIntrospector,
@@ -23,7 +22,7 @@ const kyselyExtensionArgs: PrismaKyselyExtensionArgs<DB> = {
         createIntrospector: (db) => new PostgresIntrospector(db),
         createQueryCompiler: () => new PostgresQueryCompiler(),
       },
-      plugins: [new CamelCasePlugin()],
+      plugins: [],
     }),
 };
 

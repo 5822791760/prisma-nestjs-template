@@ -8,17 +8,17 @@ export type Posts = {
     id: Generated<number>;
     title: string | null;
     details: Generated<string>;
-    createdAt: Generated<Timestamp>;
-    updatedAt: Generated<Timestamp>;
-    createdBy: number | null;
+    created_at: Generated<Timestamp>;
+    updated_at: Generated<Timestamp>;
+    created_by: number | null;
 };
 export type Users = {
     id: Generated<number>;
-    createdAt: Generated<Timestamp>;
-    updatedAt: Generated<Timestamp>;
+    created_at: Generated<Timestamp>;
+    updated_at: Generated<Timestamp>;
     email: string;
     password: string;
-    lastSignedInAt: Timestamp | null;
+    last_signed_in_at: Timestamp | null;
 };
 export type DB = {
     posts: Posts;
