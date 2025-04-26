@@ -36,26 +36,20 @@ $ yarn
 # development & watch mode
 $ yarn dev
 
+# worker development & watch mode
+$ yarn dev:worker
+
 # production mode
 $ yarn start
 ```
 
 ## Database Management
 ```bash
-# make empty migration file
-$ yarn db:make
+# sync db prisma with db.dbml
+$ yarn db:sync
 
 # run migrations
 $ yarn db:up
-
-# reset previous migration
-$ yarn db:prev
-
-# make empty seed file
-$ yarn seed make
-
-# seeding DB
-$ yarn seed run
 
 # reseting all migration and run seed
 $ yarn db:init
