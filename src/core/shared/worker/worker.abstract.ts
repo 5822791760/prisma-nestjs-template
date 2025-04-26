@@ -29,7 +29,7 @@ export abstract class BaseQueue implements OnModuleInit {
   }
 
   addJob(name: string, data: any) {
-    this.queue.add(name, data);
+    this.queue.add(name, data, { removeOnComplete: 100, removeOnFail: 50 });
   }
 }
 
@@ -39,7 +39,12 @@ export abstract class BaseCronQueue extends BaseQueue {
   addCron(name: string, pattern: string, data?: any) {
     // has job id to prevent duplicates
     // for horizontal scale
-    this.queue.add(name, data, { repeat: { pattern }, jobId: name });
+    this.queue.add(name, data, {
+      repeat: { pattern },
+      jobId: name,
+      removeOnComplete: true,
+      removeOnFail: 10,
+    });
   }
 
   onModuleInit(): void {
