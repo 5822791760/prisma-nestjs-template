@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Job, Queue } from 'bullmq';
+import { Job, JobsOptions, Queue } from 'bullmq';
 
 import { AppConfig } from '@core/config';
 import { QueueBoard } from '@core/queue/queue.board';
@@ -29,7 +29,14 @@ export abstract class BaseQueue implements OnModuleInit {
   }
 
   addJob(name: string, data: any) {
-    this.queue.add(name, data, { removeOnComplete: 100, removeOnFail: 50 });
+    this.queue.add(name, data, this._getQueueConfig());
+  }
+
+  protected _getQueueConfig(): JobsOptions {
+    return {
+      removeOnComplete: 20,
+      removeOnFail: 50,
+    };
   }
 }
 
@@ -42,8 +49,7 @@ export abstract class BaseCronQueue extends BaseQueue {
     this.queue.add(name, data, {
       repeat: { pattern },
       jobId: name,
-      removeOnComplete: true,
-      removeOnFail: 10,
+      ...this._getQueueConfig(),
     });
   }
 
