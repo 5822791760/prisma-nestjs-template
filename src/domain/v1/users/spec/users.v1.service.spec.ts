@@ -1,7 +1,6 @@
 import { Dayjs } from 'dayjs';
 import { mock } from 'jest-mock-extended';
 
-import { Users } from '@core/db/entities/Users';
 import { UsersQueueService } from '@core/queue/users/users.queue.service';
 import tzDayjs from '@core/shared/common/common.dayjs';
 import { errIs } from '@core/shared/common/common.neverthrow';
@@ -45,14 +44,13 @@ describe(`UsersV1Service`, () => {
   describe(`getUsers`, () => {
     it('works', async () => {
       // Arrange
-      const user: Users = {
+      const user = {
         id: 1,
         email: 'test@example.com',
         password: 'test',
         createdAt: current.toDate(),
         updatedAt: current.toDate(),
         lastSignedInAt: null,
-        posts: [],
       };
 
       repo.getPageUsers.mockResolvedValue({
@@ -87,14 +85,13 @@ describe(`UsersV1Service`, () => {
       // Arrange
       const id = 1;
 
-      const user: Users = {
+      const user = {
         id: 1,
         email: 'test@example.com',
         password: 'test',
         createdAt: current.toDate(),
         updatedAt: current.toDate(),
         lastSignedInAt: null,
-        posts: [],
       };
 
       repo.getOneUser.mockResolvedValue(user);
@@ -194,7 +191,6 @@ describe(`UsersV1Service`, () => {
         createdAt: current.toDate(),
         updatedAt: current.toDate(),
         lastSignedInAt: null,
-        posts: [],
       });
       mockTransaction(repo);
       repo.updateUser.mockResolvedValue(undefined);
@@ -223,7 +219,6 @@ describe(`UsersV1Service`, () => {
         createdAt: current.toDate(),
         updatedAt: current.toDate(),
         lastSignedInAt: null,
-        posts: [],
       });
     });
 

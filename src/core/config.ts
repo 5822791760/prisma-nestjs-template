@@ -11,6 +11,7 @@ export interface AppConfig {
     enableBullboard: boolean;
     enableJsonLog: boolean;
     enableCache: boolean;
+    enableErrorDetails: boolean;
   };
   database: {
     url: string;
@@ -39,6 +40,7 @@ export const config = (): AppConfig => ({
     enableSwagger: get('ENABLE_SWAGGER').default('true').asBool(),
     enableBullboard: get('ENABLE_BULLBOARD').default('true').asBool(),
     enableJsonLog: get('ENABLE_JSON_LOG').default('true').asBool(),
+    enableErrorDetails: get('ENABLE_ERROR_DETAILS').default('true').asBool(),
     enableCache: get('ENABLE_CACHE').default('false').asBool(),
     memThreshold: get('MEM_THRESHOLD')
       .default(150 * 1024 * 1024)

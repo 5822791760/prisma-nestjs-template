@@ -59,16 +59,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
       error: {
         fields,
         context,
-        details: isProd(appConfig.nodeEnv)
-          ? null
-          : {
+        details: appConfig.enableErrorDetails
+          ? {
               method,
               query,
               body,
               path,
               cause: exception.cause,
               stack: exception.stack,
-            },
+            }
+          : null,
       },
       meta: {},
     };

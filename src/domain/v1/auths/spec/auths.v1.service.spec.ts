@@ -43,7 +43,6 @@ describe('AuthsV1Service', () => {
         lastSignedInAt: null,
         createdAt: current.toDate(),
         updatedAt: current.toDate(),
-        posts: [],
       });
       mockTransaction(repo);
       repo.updateUser.mockResolvedValue(undefined);
@@ -66,7 +65,6 @@ describe('AuthsV1Service', () => {
         lastSignedInAt: current.toDate(),
         createdAt: current.toDate(),
         updatedAt: current.toDate(),
-        posts: [],
       });
     });
 
@@ -96,7 +94,6 @@ describe('AuthsV1Service', () => {
         lastSignedInAt: null,
         createdAt: current.toDate(),
         updatedAt: current.toDate(),
-        posts: [],
       });
 
       const data: SignInUserData = {
