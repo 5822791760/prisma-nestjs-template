@@ -19,6 +19,16 @@
         "include": "./core/db/prisma/**/*",
         "outDir": "dist",
         "watchAssets": true
+      },
+      {
+        "include": "./core/db/migrations/**/*",
+        "outDir": "dist",
+        "watchAssets": true
+      },
+      {
+        "include": "./core/db/schema.prisma",
+        "outDir": "dist",
+        "watchAssets": true
       }
     ]
   }

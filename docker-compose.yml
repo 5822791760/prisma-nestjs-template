@@ -8,12 +8,9 @@ services:
   #     - '3000:3000'
   #   environment:
   #     DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
-  #     REDIS_URL: redis://localhost:6379
+  #     REDIS_URL: redis://redis:6379
   #   working_dir: /usr/src/app
-  #   command: ['dist/main.js']
-  #   # command: ['dist/worker.js']
-  #   # entrypoint: []
-  #   # command: ['tail', '-f', '/dev/null']
+  #   command: ['start']
 
   postgres:
     image: postgres:15

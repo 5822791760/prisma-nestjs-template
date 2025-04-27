@@ -17,9 +17,10 @@ RUN adduser -S app
 COPY --chown=app package.json yarn.lock ./
 COPY --chown=app .env .env
 COPY --chown=app --from=builder /usr/src/app/dist ./dist
+COPY --chown=app --from=builder /usr/src/app/package.json ./package.json
 
 RUN yarn install --frozen-lockfile --production
 USER app
 EXPOSE 3000
 
-ENTRYPOINT ["node"]
+ENTRYPOINT ["yarn"]
