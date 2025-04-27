@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Exit script on any error
+set -e
+
 # Load .env variables if .env file exists
 if [ -f ./.env ]; then
   export $(grep -v '^#' .env | xargs)
@@ -51,10 +54,6 @@ function db:drop() {
   docker-compose up -d postgres
   docker-compose exec postgres dropdb -U postgres --if-exists postgres --force
   docker-compose exec postgres createdb -U postgres postgres
-}
-
-test() {
-  echo $DATABASE_URL
 }
 
 function db:reset() {
