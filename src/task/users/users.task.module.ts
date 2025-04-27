@@ -11,7 +11,7 @@ import { UsersTaskRepo } from './users.task.repo';
     UsersTaskRepo,
 
     // Handler
-    createTaskHandler(QUEUE.users, UsersTaskHandler),
+    createTaskHandler(QUEUE.USERS, UsersTaskHandler),
   ],
 })
 export class UsersTaskModule {}

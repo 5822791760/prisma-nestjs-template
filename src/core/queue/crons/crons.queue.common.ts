@@ -1,3 +1,3 @@
 export const CRONS_JOBS = {
-  sample: 'sample',
+  SAMPLE: 'SAMPLE',
 } as const;

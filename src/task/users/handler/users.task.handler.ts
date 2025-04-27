@@ -9,7 +9,7 @@ import { Task } from '@core/shared/worker/worker.decorator';
 
 @Injectable()
 export class UsersTaskHandler extends BaseTaskHandler {
-  @Task(USERS_JOBS.sample)
+  @Task(USERS_JOBS.SAMPLE)
   async processSample(data: ProcessSampleData) {
     console.log('==================================');
     console.log(`Sample Proccessed: ${data.key}`);

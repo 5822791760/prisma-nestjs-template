@@ -3,7 +3,7 @@ import { Job, Worker } from 'bullmq';
 
 import { config } from '@core/config';
 
-import { IQUEUE, QUEUE } from './worker.queue';
+import { QUEUE } from './worker.queue';
 
 const redisConfig = config().redis;
 
@@ -31,7 +31,7 @@ export function createWorker(app: INestApplicationContext) {
   }
 }
 
-export function createTaskHandler(key: IQUEUE, clazz: any): Provider {
+export function createTaskHandler(key: QUEUE, clazz: any): Provider {
   return {
     provide: addNamePrefix(key),
     useClass: clazz,

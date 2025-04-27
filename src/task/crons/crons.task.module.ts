@@ -11,7 +11,7 @@ import { CronsTaskHandler } from './handler/crons.task.handler';
     CronsTaskRepo,
 
     // Handler
-    createTaskHandler(QUEUE.crons, CronsTaskHandler),
+    createTaskHandler(QUEUE.CRONS, CronsTaskHandler),
   ],
 })
 export class CronsTaskModule {}

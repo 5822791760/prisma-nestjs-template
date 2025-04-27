@@ -1,5 +1,5 @@
 export const USERS_JOBS = {
-  sample: 'sample',
+  SAMPLE: 'SAMPLE',
 } as const;
 
 export interface ProcessSampleData {

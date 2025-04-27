@@ -1,6 +1,6 @@
 export const QUEUE = {
-  users: 'users',
-  crons: 'crons',
+  USERS: 'USERS',
+  CRONS: 'CRONS',
 } as const;
 
-export type IQUEUE = (typeof QUEUE)[keyof typeof QUEUE];
+export type QUEUE = (typeof QUEUE)[keyof typeof QUEUE];
