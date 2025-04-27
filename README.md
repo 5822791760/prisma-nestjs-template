@@ -11,7 +11,7 @@
 
 ## Description
 
-Test [Nest](https://github.com/nestjs/nest) project, is using kyselyDB ORM. And uses yarn as package manager.
+[Nest](https://github.com/nestjs/nest) project, is using primsa & kyselyDB ORM. Yarn as package manager. This project is design to run as 2 entry point **main(api)** **worker(process task)**. Steps to perform deploy will is in Note section.
 
 ## Quick Start
 ```bash
@@ -22,7 +22,9 @@ $ yarn dev
 
 ## API Documentation
 
-[Swagger UI](http://localhost:3000/docs/swagger#/)
+[Swagger UI](http://localhost:3000/docs/swagger/)
+
+[Bullboard](http://localhost:3000/docs/queues/)
 
 ## Installation
 
@@ -109,3 +111,196 @@ $ yarn dev:email
 # running repl
 $ yarn repl
 ```
+
+
+## Note
+
+### Error communication using KEY
+  #### WE WILL ONLY THROW ERROR ON HANDLER
+  - we utilize the library [neverthrow](https://github.com/supermacro/neverthrow) to handle this use case.
+  - each function that can cause error will instead return an **Res OBJECT** object that contains error information. Example users.v1.service.ts:
+  ```ts
+  // _validateUser can cause error so we check
+  // if isErr() we then return with the KEY 'validation'
+  const r = await this._validateUser(body, id);
+  if (r.isErr()) {
+    return Err('validation', r.error);
+  }
+
+  // getOneUser can return null value
+  // the api need to be error if user is not found
+  // so we return with the KEY 'notFound'
+  let user = await this.repo.getOneUser(id);
+  if (!user) {
+    return Err('notFound');
+  }
+  ```
+  - then we perform check inside the handler and return httpcode based on our error key
+  ```ts
+  const r = await this.service.putUserDetails(body, id);
+
+  return r.match(
+    () => ({
+      success: true,
+      key: '',
+      data: {},
+    }),
+    (e) => {
+      // If KEY notFound api 400
+      if (errIs(e, 'notFound')) {
+        throw new ApiException(e, 400);
+      }
+
+      // If KEY validation api 400
+      if (errIs(e, 'validation')) {
+        throw new ApiException(e, 400);
+      }
+
+      // else api 500
+      throw new ApiException(e, 500);
+    },
+  );
+  ```
+  - Note that frontend will also receive the same key and they will continue their UI logic using the key
+  - If you want to change the key when responding to frontend you can override it
+  ```ts
+  if (errIs(e, 'notFound')) {
+    // Override with key 'users-not-found'
+    throw new ApiException(e, 400, 'users-not-found');
+  }
+  ```
+
+### DB setup
+- all db setup is inside [db.provider](src/core/db/db.provider.ts) you can uncomment and add database replicas there
+
+### DB transaction management
+
+- I've already setup the repo to have a transaction method, you only need to wrap other repo functionality inside the callback
+
+```ts
+// Example from users.v1.service.ts
+await this.repo.transaction(async () => {
+  // this is inside transaction
+  await this.repo.updateUser(user);
+});
+```
+- **Make sure that every write/read chain operation is inside transaction**
+- **Make sure to await every method called inside transaction, or it will release before operation complete**
+- I've wrapped operation inside transaction with try catch that will return a [**Res OBJECT**](#error-communication-using-key)
+- Note: When using read replicas every operation inside transaction (even read) will be performed on the main DB. So make sure that read performed after write is inside transaction.
+
+### Adding Queues & Tasks
+- To add new queue go into [core/queue](src/core/queue) and create a new folder following the pattern of [users folder](src/core/queue/users)
+- Then define your queue inside [worker.queue.ts](src/core/shared/worker/worker.queue.ts)
+- To add task go to [task folder](src/task) and create using the same pattern as [users task folder](src/task/users)
+- **IMPORTANT** make sure to link your task with queue inside your new module
+```ts
+// Link users queue with UsersTaskHandler
+createTaskHandler(QUEUE.users, UsersTaskHandler)
+```
+
+### Using Helpers
+- The meaing of [Helper Folder](src/helper) is to create a service that allow shared service functionality that can be used across different module.
+- **IMPORTANT** Helper is designed to not have any dependency **SO DON'T IMPORT OTHER HELPER INTO IT**.
+- I would also encourage dev to make helper function do only 1 thing (if possible). Meaning it only does 1 logic so function will be quite short, it will be easier to test and dedug.
+- Example: EmailHelperService send function only send email and do nothing else
+```ts
+async send(
+  email: string,
+  subject: string,
+  template: React.JSX.Element,
+): Promise<Res<null, 'failSend'>> {
+  try {
+    await this._sendMail(email, subject, template);
+
+    return Ok(null);
+  } catch (e: any) {
+    return Err('failSend', { context: { message: e.message } });
+  }
+}
+```
+
+- Example: using the EmailHelperService inside users.v1.module
+```ts
+@Module({
+  // Import the EmailHelperModule first
+  imports: [EmailHelperModule],
+  providers: [UsersV1Service, UsersV1Repo],
+  controllers: [UsersV1HttpController],
+})
+export class UsersV1Module {}
+```
+```ts
+export class UsersV1Service {
+  constructor(
+    private repo: UsersV1Repo,
+    private usersQueueService: UsersQueueService,
+    // Then use the service inside
+    private emailHelperService: EmailHelperService,
+  ) {}
+}
+```
+
+### Writing pure function
+- I would like to encourage dev to make their function pure (if possible based on project). Meaning the function doesn't modify any object outside of it, only recieve argument and return response.
+- Example
+```ts
+// This function doesn't modify the user object
+// It clone argument into new object then modify the cloned object
+// leaving the original object untouched.
+private _updateUser(user: Users, data: UpdateUserData): Users {
+  user = clone(user);
+
+  if (data.email) {
+    user.email = data.email;
+  }
+
+  if (data.password) {
+    user.password = hashString(data.password);
+  }
+
+  user.updatedAt = tzDayjs().toDate();
+
+  return user;
+}
+```
+- This can be a bit of a hassle ofcourse, so if not possible or timeline is tight you don't have to do it.
+
+### CI work flow
+  - devops don't need to know about how to run test for our project so we have a script to handle that they just need to execute it.
+  - devops to create a **SETUP pipeline** as shown here
+    - steps (after open PR):
+      - ./scripts/setup.sh merge
+    - steps (before build):
+      - ./scripts/setup.sh build
+  - **IMPORTANT** on build step devops need to create .env file from repo env
+    - echo $REPO_ENV > .env
+
+### CD (deployment) workflow
+  - As said above our project is designed to be run as 2 app (api, worker) and we will also need to handle db migration, so we will follow these steps.
+  #### 1. Handling server database migration
+  - database migration is avaliable inside the image using command:
+  ```bash
+  # migrate DB
+  $ docker run $image db:deploy
+  ```
+  - devops need to create a pipeline to handle DB migration before deploying the application
+    - cicd workflow: **setup** -> **build** -> **deploy DB** -> **deploy app**
+  #### 2. Deploying application
+  - after image has been build and DB has been deployed the image need to be run with the following command (start api,worker)
+  ```bash
+  # run main app
+  $ docker run $image start
+
+  # run worker
+  $ docker run $image start:worker
+  ```
+  #### Tradeoffs
+  - when performing cicd this way there will be an application downtime tradeoff. After deploy DB pipeline finished. The feature that perform query on changed schema will break. (around 2-3mins depend on pipeline speed)
+  - there's 2 ways to handle this issue:
+    1. **Recommend** report client and everyone to stop using app before deploying.
+    2. **If 1. option is really not avaliable** we need to handle migration script to allow backward compatability. Meaning you don't touch the column that old version uses.
+        - example: if we want to rename column
+          - first deploy changes that add new column (name that you want to change to)
+          - new app will be deploy with the new column
+          - then deploy again with the removed old column

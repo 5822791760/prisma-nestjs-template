@@ -73,7 +73,7 @@ export class UsersV1Service {
     const newUser = this._newUser(body);
 
     await this.repo.transaction(async () => {
-      this.repo.insertUser(newUser);
+      await this.repo.insertUser(newUser);
     });
 
     return Ok(null);
@@ -96,7 +96,7 @@ export class UsersV1Service {
     user = this._updateUser(user, body);
 
     await this.repo.transaction(async () => {
-      this.repo.updateUser(user);
+      await this.repo.updateUser(user);
     });
 
     return Ok(null);
