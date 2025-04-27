@@ -61,6 +61,10 @@ export class LoggerService {
     let message = error.message;
     if (error instanceof HttpBaseException) {
       const baseException = error as HttpBaseException;
+      if (baseException?.key !== 'internal') {
+        // only pretty print internal error
+        return;
+      }
       message = baseException.key;
     }
 

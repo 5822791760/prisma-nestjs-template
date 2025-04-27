@@ -6,10 +6,11 @@ import { AppConfig } from '@core/config';
 import { QueueBoard } from '@core/queue/queue.board';
 
 import { getTaskHandlers } from './worker.decorator';
+import { IQUEUE } from './worker.queue';
 
 @Injectable()
 export abstract class BaseQueue implements OnModuleInit {
-  abstract queueName: string;
+  abstract queueName: IQUEUE;
   protected queue: Queue;
 
   constructor(

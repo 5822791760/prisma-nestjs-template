@@ -1,5 +1,5 @@
 import { BaseQueue } from '@core/shared/worker/worker.abstract';
-import QUEUE from '@core/shared/worker/worker.queue';
+import { QUEUE } from '@core/shared/worker/worker.queue';
 
 import { ProcessSampleData, USERS_JOBS } from './users.queue.common';
 
