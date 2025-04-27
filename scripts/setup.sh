@@ -11,7 +11,7 @@ fi
 function build() {
     yarn
     yarn test:mutation
-    _dbdoc
+    # _dbdoc
 }
 
 function merge() {
@@ -26,8 +26,8 @@ function _dbdoc() {
         echo "Error: DBDOCS_TOKEN is not set."
         exit 1
     fi
-    # yarn add -D dbdocs
-    # DBDOCS_TOKEN="$DBDOCS_TOKEN" dbdocs build ./schema.dbml --project nestjs
+    yarn add -D dbdocs
+    DBDOCS_TOKEN="$DBDOCS_TOKEN" dbdocs build ./schema.dbml --project nestjs
 }
 
 
