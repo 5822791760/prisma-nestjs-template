@@ -40,6 +40,7 @@ function dbml() {
 function db:up() {
   yarn prisma migrate deploy
   yarn prisma generate
+  dbml
 }
 
 function db:make() {
@@ -48,6 +49,7 @@ function db:make() {
 
 function db:push() {
   yarn prisma migrate dev
+  dbml
 }
 
 function db:drop() {
