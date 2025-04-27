@@ -15,6 +15,9 @@
 
 ## Quick Start
 ```bash
+# Stop all running docker (incase conflicting port)
+$ docker stop $(docker ps -q)
+
 $ yarn cmd initproject
 
 $ yarn dev
@@ -275,6 +278,19 @@ private _updateUser(user: Users, data: UpdateUserData): Users {
       - ./scripts/setup.sh build
   - **IMPORTANT** on build step devops need to create .env file from repo env
     - echo $REPO_ENV > .env
+
+  - **Bonus**: Integrating dbml with CI pipeline
+    - there's an auto generated [dbml file](schema.dbml) inside your repo. I've integrate this with prisma migration. We can use this to generate [dbdocs](https://dbdocs.io/).
+    - you can see inside [setup.sh](scripts/setup.sh) there's a function called _dbdoc() inside the build step.
+    ```bash
+    function build() {
+        yarn
+        yarn test:mutation
+        # _dbdoc
+    }
+    ```
+    - to use it and integrate your schema with [dbdocs](https://dbdocs.io/) just add $DBDOCS_TOKEN into your repo env
+    - more info on how to get the token at [dbdocs ci integration](https://docs.dbdocs.io/features/ci-integration)
 
 ### CD (deployment) workflow
   - As said above our project is designed to be run as 2 app (api, worker) and we will also need to handle db migration, so we will follow these steps.
