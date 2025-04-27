@@ -22,7 +22,7 @@ function waitpg() {
 
 function dev() {
   up
-  yarn start:dev
+  yarn nest start --watch
 }
 
 function repl() {
