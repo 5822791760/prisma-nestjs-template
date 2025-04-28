@@ -24,7 +24,7 @@
     "cli": "./cmd.sh cli",
     "dev": "./cmd.sh dev",
     "debug": "nest start --debug --watch",
-    "dev:worker": "nest start --entryFile worker --watch",
+    "dev:worker": "nodemon --exec 'ts-node -r tsconfig-paths/register ./src/worker.ts'",
     "dev:email": "email dev --dir ./src/helper/email/template --port 3001",
     "repl": "./cmd.sh repl"
   },
@@ -98,6 +98,7 @@
     "eslint-plugin-typescript-enum": "^2.1.0",
     "jest": "^29.5.0",
     "jest-mock-extended": "^4.0.0-beta1",
+    "nodemon": "^3.1.10",
     "prettier": "^3.4.1",
     "prisma-case-format": "^2.2.1",
     "prisma-kysely": "^1.8.0",
