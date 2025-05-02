@@ -1,8 +1,4 @@
-import { Kysely } from 'kysely';
+import { getPrisma } from './db.prisma';
 
-import { DB } from './generated/types';
-import { PrismaClient } from './prisma';
-
-export abstract class CoreDB extends PrismaClient {
-  declare $kysely: Kysely<DB>;
-}
+export const CORE_DB = Symbol('CORE_DB');
+export type CoreDB = Awaited<ReturnType<typeof getPrisma>>;

@@ -145,6 +145,9 @@
       ]
     ],
     "coverageDirectory": "test-report",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ]
   }
 }

@@ -1,9 +1,9 @@
 import { Global, Module, Provider } from '@nestjs/common';
 
-import { CoreDB } from '@core/db/db.common';
+import { CORE_DB } from '@core/db/db.common';
 
 const MockPrismaProvider: Provider = {
-  provide: CoreDB,
+  provide: CORE_DB,
   useValue: {
     transaction: jest.fn().mockImplementation(() => ({
       execute: jest.fn(),

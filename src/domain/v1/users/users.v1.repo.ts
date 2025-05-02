@@ -49,12 +49,7 @@ export class UsersV1Repo extends BaseRepo {
     email: string,
     excludeId?: number,
   ): Promise<boolean> {
-    const data = await this.db.users.findFirst({
-      select: { id: true },
-      where: { email, id: { not: excludeId } },
-    });
-
-    return !!data?.id;
+    return this.db.users.exists({ email, id: { not: excludeId } });
   }
 }
 

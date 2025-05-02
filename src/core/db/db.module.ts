@@ -1,6 +1,6 @@
-import { Global, Module, OnModuleDestroy } from '@nestjs/common';
+import { Global, Inject, Module, OnModuleDestroy } from '@nestjs/common';
 
-import { CoreDB } from './db.common';
+import { CORE_DB, CoreDB } from './db.common';
 import { PrismaProvider } from './db.provider';
 
 @Global()
@@ -9,7 +9,10 @@ import { PrismaProvider } from './db.provider';
   exports: [PrismaProvider],
 })
 export class DBModule implements OnModuleDestroy {
-  constructor(private readonly db: CoreDB) {}
+  constructor(
+    @Inject(CORE_DB)
+    private readonly db: CoreDB,
+  ) {}
 
   async onModuleDestroy() {
     await this.db.$disconnect();
