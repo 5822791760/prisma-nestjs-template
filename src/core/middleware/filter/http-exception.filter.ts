@@ -10,7 +10,6 @@ import { Request } from 'express';
 import { AppConfig } from '@core/config';
 import { LoggerService } from '@core/global/logger/logger.service';
 
-import { isProd } from '../../shared/common/common.func';
 import { HttpBaseException } from '../../shared/http/http.exception';
 import { IStandardSingleApiResponse } from '../../shared/http/http.standard';
 
@@ -46,7 +45,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       status = baseException.httpStatus;
       key = baseException.key;
 
-      if (isProd(appConfig.nodeEnv)) {
+      if (!appConfig.enableErrorDetails) {
         // Not exposing prod files
         delete context['stack'];
       }
