@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { RedisClientType } from 'redis';
 
 import { ExceptionErr, Ok, Res } from '@core/shared/common/common.neverthrow';
+import { Read } from '@core/shared/common/common.type';
 
 import { REDIS_CLIENT } from './cache.helper.provider';
 
@@ -34,7 +35,7 @@ export class CacheHelperService {
 
   async set(
     key: string,
-    data: string | Record<string, any>,
+    data: string | Read<Record<string, any>>,
     ttlInSeconds = 3600,
   ): Promise<Res<null, 'fail'>> {
     if (!this._isEnable()) {

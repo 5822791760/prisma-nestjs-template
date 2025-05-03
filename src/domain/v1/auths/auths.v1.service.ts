@@ -17,6 +17,7 @@ import {
   ValidateFields,
   validateSuccess,
 } from '@core/shared/common/common.neverthrow';
+import { Read } from '@core/shared/common/common.type';
 
 import { AuthsV1Repo } from './auths.v1.repo';
 import {
@@ -37,7 +38,7 @@ export class AuthsV1Service {
   ) {}
 
   async postAuthsSignIns(
-    data: SignInUserData,
+    data: Read<SignInUserData>,
   ): Promise<Res<AuthDetails, 'notFound' | 'invalidPassword'>> {
     const user = await this.repo.getOneUser(data.email);
     if (!user) {
@@ -60,7 +61,7 @@ export class AuthsV1Service {
   }
 
   async postAuthsSignUps(
-    data: NewUserData,
+    data: Read<NewUserData>,
   ): Promise<Res<AuthDetails, 'validation' | 'internal'>> {
     const r = await this._validateSignUp(data);
     if (r.isErr()) {
@@ -89,7 +90,7 @@ export class AuthsV1Service {
 
   // Logic Helper ========
 
-  private _registerUser(data: NewUserData): NewUser {
+  private _registerUser(data: Read<NewUserData>): NewUser {
     return {
       email: data.email,
       password: hashString(data.password),
@@ -100,7 +101,7 @@ export class AuthsV1Service {
   }
 
   private _authenticateUser(
-    user: Users,
+    user: Read<Users>,
     rawPassword: string,
   ): Res<AuthenticatedUser, 'invalidPassword'> {
     if (!isMatchedHash(rawPassword, user.password)) {
@@ -114,13 +115,13 @@ export class AuthsV1Service {
     return Ok(user as AuthenticatedUser);
   }
 
-  private _generateToken(user: AuthenticatedUser): string {
+  private _generateToken(user: Read<AuthenticatedUser>): string {
     const jwtConfig = this.configService.getOrThrow<AppConfig['jwt']>('jwt');
     return encodeUserJwt({ id: user.id }, jwtConfig.salt);
   }
 
-  private _updateUser(user: Users, data: UserData): Users {
-    user = clone(user);
+  private _updateUser(userInput: Read<Users>, data: Read<UserData>): Users {
+    const user = clone(userInput) as Users;
 
     if (data.lastSignedInAt) {
       user.lastSignedInAt = data.lastSignedInAt;
@@ -132,7 +133,7 @@ export class AuthsV1Service {
   }
 
   private async _validateSignUp(
-    data: ValidateSignUpData,
+    data: Read<ValidateSignUpData>,
   ): Promise<Res<null, 'validation'>> {
     const fields: ValidateFields<ValidateSignUpData> = {
       email: [],

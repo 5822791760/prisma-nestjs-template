@@ -16,6 +16,7 @@ import {
   PaginationOptions,
   getPagination,
 } from '@core/shared/common/common.pagintaion';
+import { Read } from '@core/shared/common/common.type';
 import { IPaginationSchema } from '@core/shared/http/http.standard';
 
 import { UsersV1Repo } from './users.v1.repo';
@@ -34,7 +35,7 @@ export class UsersV1Service {
     private usersQueueService: UsersQueueService,
   ) {}
 
-  async getUsers(options: PaginationOptions): Promise<GetUsers> {
+  async getUsers(options: Read<PaginationOptions>): Promise<GetUsers> {
     const { data, totalItems } = await this.repo.getPageUsers(options);
 
     // Queue job works!
@@ -64,7 +65,7 @@ export class UsersV1Service {
     });
   }
 
-  async postUsers(body: NewUserData): Promise<Res<null, 'validation'>> {
+  async postUsers(body: Read<NewUserData>): Promise<Res<null, 'validation'>> {
     const r = await this._validateUser(body);
     if (r.isErr()) {
       return Err('validation', r.error);
@@ -80,7 +81,7 @@ export class UsersV1Service {
   }
 
   async putUserDetails(
-    body: NewUserData,
+    body: Read<NewUserData>,
     id: number,
   ): Promise<Res<null, 'validation' | 'notFound'>> {
     const r = await this._validateUser(body, id);
@@ -104,7 +105,7 @@ export class UsersV1Service {
 
   // ========================== Logic helper ==========================
 
-  private _newUser(data: NewUserData): NewUser {
+  private _newUser(data: Read<NewUserData>): NewUser {
     return {
       email: data.email,
       password: hashString(data.password),
@@ -113,8 +114,11 @@ export class UsersV1Service {
     };
   }
 
-  private _updateUser(user: Users, data: UpdateUserData): Users {
-    user = clone(user);
+  private _updateUser(
+    userInput: Read<Users>,
+    data: Read<UpdateUserData>,
+  ): Users {
+    const user = clone(userInput) as Users;
 
     if (data.email) {
       user.email = data.email;
@@ -130,7 +134,7 @@ export class UsersV1Service {
   }
 
   private async _validateUser(
-    data: ValidateUserData,
+    data: Read<ValidateUserData>,
     excludeId?: number,
   ): Promise<Res<null, 'validation'>> {
     const fields: ValidateFields<ValidateUserData> = {
