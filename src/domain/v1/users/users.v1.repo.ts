@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { Users } from '@core/db/prisma';
-import {
-  PaginationOptions,
-  getLimit,
-  getOffset,
-} from '@core/shared/common/common.pagintaion';
+import { PaginationOptions } from '@core/shared/common/common.pagintaion';
 import { BaseRepo } from '@core/shared/common/common.repo';
 
 import { NewUser } from './users.v1.type';
@@ -21,15 +17,9 @@ export class UsersV1Repo extends BaseRepo {
   }
 
   async getPageUsers(options: PaginationOptions): Promise<GetPageUsers> {
-    const totalItems = await this.db.users.count();
-
-    const datas = await this.db.users.findMany({
-      take: getLimit(options),
-      skip: getOffset(options),
+    return this.db.users.paginate(options, {
       orderBy: { id: 'asc' },
     });
-
-    return { datas, totalItems };
   }
 
   async insertUser(data: NewUser): Promise<void> {
@@ -56,6 +46,6 @@ export class UsersV1Repo extends BaseRepo {
 // ========= Type =========
 
 interface GetPageUsers {
-  datas: Users[];
+  data: Users[];
   totalItems: number;
 }

@@ -35,18 +35,18 @@ export class UsersV1Service {
   ) {}
 
   async getUsers(options: PaginationOptions): Promise<GetUsers> {
-    const { datas, totalItems } = await this.repo.getPageUsers(options);
+    const { data, totalItems } = await this.repo.getPageUsers(options);
 
     // Queue job works!
     this.usersQueueService.addJobSample({ key: 'test' });
 
     return {
-      datas: datas.map((data) => ({
-        id: data.id,
-        email: data.email,
-        createdAt: data.createdAt,
+      data: data.map((user) => ({
+        id: user.id,
+        email: user.email,
+        createdAt: user.createdAt,
       })),
-      pagination: getPagination(datas, totalItems, options),
+      pagination: getPagination(data, totalItems, options),
     };
   }
 
@@ -156,6 +156,6 @@ export class UsersV1Service {
 // ============= type ==========
 
 type GetUsers = {
-  datas: UserDetails[];
+  data: UserDetails[];
   pagination: IPaginationSchema;
 };

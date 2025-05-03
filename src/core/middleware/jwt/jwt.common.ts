@@ -7,12 +7,6 @@ import {
 export const AUTH_HEADER = 'authorization';
 export const USER_CONTEXT = 'user';
 
-export enum JwtStatus {
-  Valid = 'VALID',
-  Invalid = 'INVALID',
-  Expired = 'EXPIRED',
-}
-
 export interface UserClaims {
   id: number;
 }

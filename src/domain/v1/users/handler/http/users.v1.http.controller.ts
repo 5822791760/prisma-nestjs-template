@@ -41,12 +41,12 @@ export class UsersV1HttpController {
   async getUsers(
     @Query() options: GetUsersV1HttpParam,
   ): Promise<GetUsersV1HttpResponse> {
-    const { datas, pagination } = await this.service.getUsers(options);
+    const { data, pagination } = await this.service.getUsers(options);
 
     return {
       success: true,
       key: '',
-      data: datas,
+      data,
       meta: {
         pagination,
       },

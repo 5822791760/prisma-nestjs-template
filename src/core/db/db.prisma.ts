@@ -9,6 +9,11 @@ import kyselyExtension, {
 } from 'prisma-extension-kysely';
 
 import { config } from '@core/config';
+import {
+  PaginationOptions,
+  getLimit,
+  getOffset,
+} from '@core/shared/common/common.pagintaion';
 
 import { DB } from './generated/types';
 import { Prisma, PrismaClient } from './prisma';
@@ -39,6 +44,29 @@ export async function getPrisma() {
     .$extends({
       model: {
         $allModels: {
+          async paginate<T, A>(
+            this: T,
+            paginationOpts: PaginationOptions,
+            opts: Omit<
+              Prisma.Args<T, 'findMany'>,
+              'skip' | 'take' | 'cursor' | 'distinct'
+            >,
+          ): Promise<{
+            data: Prisma.Result<T, A, 'findMany'>;
+            totalItems: number;
+          }> {
+            const context = Prisma.getExtensionContext(this);
+            const totalItems = await (context as any).count({
+              where: opts['where'],
+            });
+            const data = await (context as any).findMany({
+              ...opts,
+              take: getLimit(paginationOpts),
+              skip: getOffset(paginationOpts),
+            });
+
+            return { data, totalItems };
+          },
           async exists<T>(
             this: T,
             where: Prisma.Args<T, 'findFirst'>['where'],

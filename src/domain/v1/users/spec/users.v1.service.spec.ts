@@ -54,7 +54,7 @@ describe(`UsersV1Service`, () => {
       };
 
       repo.getPageUsers.mockResolvedValue({
-        datas: [user],
+        data: [user],
         totalItems: 1,
       });
 
@@ -75,7 +75,7 @@ describe(`UsersV1Service`, () => {
           createdAt: user.createdAt,
         },
       ];
-      expect(r.datas).toEqual(expectedData);
+      expect(r.data).toEqual(expectedData);
       expect(repo.getPageUsers).toHaveBeenNthCalledWith(1, options);
     });
   });
