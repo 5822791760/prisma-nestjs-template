@@ -21,11 +21,15 @@ import { Read } from '@core/shared/common/common.type';
 
 import { AuthsV1Repo } from './auths.v1.repo';
 import {
-  AuthDetails,
+  PostAuthsSignInsV1Input,
+  PostAuthsSignInsV1Output,
+  PostAuthsSignUpsV1Input,
+  PostAuthsSignUpsV1Output,
+} from './auths.v1.schema';
+import {
   AuthenticatedUser,
   NewUser,
   NewUserData,
-  SignInUserData,
   UserData,
   ValidateSignUpData,
 } from './auths.v1.type';
@@ -38,8 +42,8 @@ export class AuthsV1Service {
   ) {}
 
   async postAuthsSignIns(
-    data: Read<SignInUserData>,
-  ): Promise<Res<AuthDetails, 'notFound' | 'invalidPassword'>> {
+    data: Read<PostAuthsSignInsV1Input>,
+  ): Promise<Res<PostAuthsSignInsV1Output, 'notFound' | 'invalidPassword'>> {
     const user = await this.repo.getOneUser(data.email);
     if (!user) {
       return Err('notFound');
@@ -61,8 +65,8 @@ export class AuthsV1Service {
   }
 
   async postAuthsSignUps(
-    data: Read<NewUserData>,
-  ): Promise<Res<AuthDetails, 'validation' | 'internal'>> {
+    data: Read<PostAuthsSignUpsV1Input>,
+  ): Promise<Res<PostAuthsSignUpsV1Output, 'validation' | 'internal'>> {
     const r = await this._validateSignUp(data);
     if (r.isErr()) {
       return Err('validation', r.error);

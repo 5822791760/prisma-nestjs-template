@@ -12,19 +12,22 @@ import {
   ValidateFields,
   validateSuccess,
 } from '@core/shared/common/common.neverthrow';
-import {
-  PaginationOptions,
-  getPagination,
-} from '@core/shared/common/common.pagintaion';
 import { Read } from '@core/shared/common/common.type';
-import { IPaginationSchema } from '@core/shared/http/http.standard';
 
 import { UsersV1Repo } from './users.v1.repo';
+import {
+  GetUserDetailsV1Output,
+  GetUsersV1Input,
+  GetUsersV1Output,
+  PostUsersV1Input,
+  PostUsersV1Output,
+  PutUserDetailsV1Input,
+  PutUserDetailsV1Output,
+} from './users.v1.schema';
 import {
   NewUser,
   NewUserData,
   UpdateUserData,
-  UserDetails,
   ValidateUserData,
 } from './users.v1.type';
 
@@ -35,23 +38,27 @@ export class UsersV1Service {
     private usersQueueService: UsersQueueService,
   ) {}
 
-  async getUsers(options: Read<PaginationOptions>): Promise<GetUsers> {
+  async getUsers(
+    options: Read<GetUsersV1Input>,
+  ): Promise<Res<GetUsersV1Output, ''>> {
     const { data, totalItems } = await this.repo.getPageUsers(options);
 
     // Queue job works!
     this.usersQueueService.addJobSample({ key: 'test' });
 
-    return {
+    return Ok({
       data: data.map((user) => ({
         id: user.id,
         email: user.email,
         createdAt: user.createdAt,
       })),
-      pagination: getPagination(data, totalItems, options),
-    };
+      totalItems,
+    });
   }
 
-  async getUserDetails(id: number): Promise<Res<UserDetails, 'notFound'>> {
+  async getUserDetails(
+    id: number,
+  ): Promise<Res<GetUserDetailsV1Output, 'notFound'>> {
     const user = await this.repo.getOneUser(id);
 
     if (!user) {
@@ -65,7 +72,9 @@ export class UsersV1Service {
     });
   }
 
-  async postUsers(body: Read<NewUserData>): Promise<Res<null, 'validation'>> {
+  async postUsers(
+    body: Read<PostUsersV1Input>,
+  ): Promise<Res<PostUsersV1Output, 'validation'>> {
     const r = await this._validateUser(body);
     if (r.isErr()) {
       return Err('validation', r.error);
@@ -77,13 +86,13 @@ export class UsersV1Service {
       await this.repo.insertUser(newUser);
     });
 
-    return Ok(null);
+    return Ok({});
   }
 
   async putUserDetails(
-    body: Read<NewUserData>,
+    body: Read<PutUserDetailsV1Input>,
     id: number,
-  ): Promise<Res<null, 'validation' | 'notFound'>> {
+  ): Promise<Res<PutUserDetailsV1Output, 'validation' | 'notFound'>> {
     const r = await this._validateUser(body, id);
     if (r.isErr()) {
       return Err('validation', r.error);
@@ -100,7 +109,7 @@ export class UsersV1Service {
       await this.repo.updateUser(user);
     });
 
-    return Ok(null);
+    return Ok({});
   }
 
   // ========================== Logic helper ==========================
@@ -156,10 +165,3 @@ export class UsersV1Service {
     return Ok(null);
   }
 }
-
-// ============= type ==========
-
-type GetUsers = {
-  data: UserDetails[];
-  pagination: IPaginationSchema;
-};

@@ -11,22 +11,19 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { errIs } from '@core/shared/common/common.neverthrow';
+import { getPagination } from '@core/shared/common/common.pagintaion';
 import { ApiException } from '@core/shared/http/http.exception';
 
 import { UsersV1Service } from '../../users.v1.service';
-import { GetUserDetailsV1HttpResponse } from './dto/get-user-details.v1.http.dto';
 import {
+  GetUsersDetailsV1HttpResponse,
   GetUsersV1HttpDto,
   GetUsersV1HttpResponse,
-} from './dto/get-users.v1.http.dto';
-import {
   PostUsersV1HttpDto,
   PostUsersV1HttpResponse,
-} from './dto/post-users.v1.http.dto';
-import {
   PutUserDetailsV1HttpDto,
   PutUserDetailsV1HttpResponse,
-} from './dto/put-user-details.v1.http.dto';
+} from './users.v1.http.dto';
 
 @ApiTags('v1')
 @ApiBearerAuth()
@@ -41,16 +38,19 @@ export class UsersV1HttpController {
   async getUsers(
     @Query() options: GetUsersV1HttpDto,
   ): Promise<GetUsersV1HttpResponse> {
-    const { data, pagination } = await this.service.getUsers(options);
+    const r = await this.service.getUsers(options);
 
-    return {
-      success: true,
-      key: '',
-      data,
-      meta: {
-        pagination,
+    return r.match(
+      ({ data, totalItems }) => ({
+        success: true,
+        key: '',
+        data,
+        meta: getPagination(data, totalItems, options),
+      }),
+      (e) => {
+        throw new ApiException(e, 500);
       },
-    };
+    );
   }
 
   @Post()
@@ -60,10 +60,10 @@ export class UsersV1HttpController {
     const r = await this.service.postUsers(body);
 
     return r.match(
-      () => ({
+      (data) => ({
         success: true,
         key: '',
-        data: {},
+        data,
       }),
       (e) => {
         if (errIs(e, 'validation')) {
@@ -78,7 +78,7 @@ export class UsersV1HttpController {
   @Get(':id')
   async getUserDetails(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<GetUserDetailsV1HttpResponse> {
+  ): Promise<GetUsersDetailsV1HttpResponse> {
     const r = await this.service.getUserDetails(id);
 
     return r.match(
@@ -105,10 +105,10 @@ export class UsersV1HttpController {
     const r = await this.service.putUserDetails(body, id);
 
     return r.match(
-      () => ({
+      (data) => ({
         success: true,
         key: '',
-        data: {},
+        data,
       }),
       (e) => {
         if (errIs(e, 'notFound')) {

@@ -3,7 +3,7 @@ import {
   SchemaObject,
 } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import { ZodDto, zodToOpenAPI } from 'nestjs-zod';
-import { ZodSchema, ZodTypeDef, z } from 'zod';
+import { ZodArray, ZodSchema, ZodTypeDef, z } from 'zod';
 
 const isSchemaObject = (
   input: SchemaObject | ReferenceObject,
@@ -49,7 +49,10 @@ export function zodDto<
   return AugmentedZodDto as unknown as ZodDto<TOutput, TDef, TInput>;
 }
 
-export function zodResponse(data: z.AnyZodObject, meta?: z.AnyZodObject) {
+export function zodResponse(
+  data: z.AnyZodObject | ZodArray<z.AnyZodObject>,
+  meta?: z.AnyZodObject,
+) {
   const res = {
     success: z.boolean(),
     key: z.string(),

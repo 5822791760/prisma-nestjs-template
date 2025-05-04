@@ -9,11 +9,9 @@ import { AuthsV1Service } from '../../auths.v1.service';
 import {
   PostAuthsSignInsV1HttpDto,
   PostAuthsSignInsV1HttpResponse,
-} from './dto/post-auths-sign-ins.v1.dto';
-import {
   PostAuthsSignUpsHttpResponse,
   PostAuthsSignUpsV1HttpDto,
-} from './dto/post-auths-sign-ups.v1.dto';
+} from './auths.v1.http.dto';
 
 @ApiTags('v1')
 @Controller({
