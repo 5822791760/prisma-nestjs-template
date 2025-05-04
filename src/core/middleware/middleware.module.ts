@@ -5,7 +5,7 @@ import { HttpExceptionFilter } from '@core/middleware/filter/http-exception.filt
 
 import { CoreContextInterceptor } from './core-context/core-context.interceptor';
 import { JwtGuard } from './jwt/jwt.guard';
-import { CoreValidationPipe } from './validation/validation.pipe';
+import { CoreZodValidationPipe } from './validation/zod-validation.pipe';
 
 @Module({
   providers: [
@@ -15,7 +15,7 @@ import { CoreValidationPipe } from './validation/validation.pipe';
     },
     {
       provide: APP_PIPE,
-      useClass: CoreValidationPipe,
+      useClass: CoreZodValidationPipe,
     },
     {
       provide: APP_GUARD,

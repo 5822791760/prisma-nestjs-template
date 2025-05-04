@@ -1,27 +1,21 @@
-import { IsString } from 'class-validator';
+import { createZodDto } from 'nestjs-zod';
+import { z } from 'zod';
 
-import { IStandardSingleApiResponse } from '@core/shared/http/http.standard';
-
-import { NewUserData } from '../../../users.v1.type';
+import { createZodResponse } from '@core/shared/http/http.standard';
 
 // ===== body =====
 
-export class PutUserDetailsV1HttpDto implements NewUserData {
-  @IsString()
-  email: string;
-
-  @IsString()
-  password: string;
-}
+const PutUserDetailsV1Http = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+export class PutUserDetailsV1HttpDto extends createZodDto(
+  PutUserDetailsV1Http,
+) {}
 
 // ===== response =====
 
-class PutUserDetailsV1HttpData {}
-
-export class PutUserDetailsV1HttpResponse
-  implements IStandardSingleApiResponse
-{
-  success: boolean;
-  key: string;
-  data: PutUserDetailsV1HttpData;
-}
+const PutUserDetailsV1HttpData = z.object({});
+export class PutUserDetailsV1HttpResponse extends createZodResponse(
+  PutUserDetailsV1HttpData,
+) {}

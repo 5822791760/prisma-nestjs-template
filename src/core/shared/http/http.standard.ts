@@ -1,3 +1,6 @@
+import { createZodDto } from 'nestjs-zod';
+import { z } from 'zod';
+
 export type FieldsErrorKey = 'exists';
 
 export interface IPaginationSchema {
@@ -33,4 +36,21 @@ export interface IStandardArrayApiResponse<
 > extends Omit<IStandardSingleApiResponse<M>, 'data'> {
   data: object[];
   meta?: M;
+}
+
+export function createZodResponse(data: z.AnyZodObject, meta?: z.AnyZodObject) {
+  const res = {
+    success: z.boolean(),
+    key: z.string(),
+    data,
+    meta: z.object({}).optional(),
+  };
+
+  if (meta) {
+    res.meta = meta as any;
+  }
+
+  const standard = z.object(res);
+
+  return createZodDto(standard);
 }

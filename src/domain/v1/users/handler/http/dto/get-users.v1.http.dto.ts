@@ -1,40 +1,26 @@
-import { Type } from 'class-transformer';
-import { IsNotEmpty } from 'class-validator';
+import { createZodDto } from 'nestjs-zod';
+import { z } from 'zod';
 
-import { PaginationOptions } from '@core/shared/common/common.pagintaion';
-import { PaginationMetaResponse } from '@core/shared/http/http.response.dto';
-import {
-  IPaginationMeta,
-  IStandardArrayApiResponse,
-} from '@core/shared/http/http.standard';
-
-import { UserDetails } from '../../../users.v1.type';
+import { getPaginationZod } from '@core/shared/http/http.response.dto';
+import { createZodResponse } from '@core/shared/http/http.standard';
 
 // === request ===
 
-export class GetUsersV1HttpParam implements PaginationOptions {
-  @IsNotEmpty()
-  @Type(() => Number)
-  page: number;
-
-  @IsNotEmpty()
-  @Type(() => Number)
-  perPage: number;
-}
+const GetUsersV1Http = z.object({
+  page: z.coerce.number(),
+  perPage: z.coerce.number(),
+});
+export class GetUsersV1HttpDto extends createZodDto(GetUsersV1Http) {}
 
 // === response ===
 
-class GetUsersV1HttpData implements UserDetails {
-  id: number;
-  email: string;
-  createdAt: Date;
-}
+const GetUsersV1HttpData = z.object({
+  id: z.number(),
+  email: z.string(),
+  createdAt: z.date(),
+});
 
-export class GetUsersV1HttpResponse
-  implements IStandardArrayApiResponse<IPaginationMeta>
-{
-  success: boolean;
-  key: string;
-  data: GetUsersV1HttpData[];
-  meta: PaginationMetaResponse;
-}
+export class GetUsersV1HttpResponse extends createZodResponse(
+  GetUsersV1HttpData,
+  getPaginationZod(),
+) {}

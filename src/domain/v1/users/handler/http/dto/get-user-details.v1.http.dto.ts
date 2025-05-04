@@ -1,19 +1,14 @@
-import { IStandardSingleApiResponse } from '@core/shared/http/http.standard';
+import { z } from 'zod';
 
-import { UserDetails } from '../../../users.v1.type';
+import { createZodResponse } from '@core/shared/http/http.standard';
 
 // === response ===
+const GetUserDetailsV1HttpData = z.object({
+  id: z.number(),
+  email: z.string(),
+  createdAt: z.date(),
+});
 
-class GetUserDetailsV1HttpData implements UserDetails {
-  id: number;
-  email: string;
-  createdAt: Date;
-}
-
-export class GetUserDetailsV1HttpResponse
-  implements IStandardSingleApiResponse
-{
-  success: boolean;
-  key: string;
-  data: GetUserDetailsV1HttpData;
-}
+export class GetUserDetailsV1HttpResponse extends createZodResponse(
+  GetUserDetailsV1HttpData,
+) {}

@@ -2342,6 +2342,11 @@
   resolved "https://registry.yarnpkg.com/@msgpackr-extract/msgpackr-extract-win32-x64/-/msgpackr-extract-win32-x64-3.0.3.tgz#0aa5502d547b57abfc4ac492de68e2006e417242"
   integrity sha512-x0fWaQtYp4E6sktbsdAqnehxDgEc/VwM7uLsRCYWaiGu0ykYdZPiS8zCWdnjHwyiumousxfBm4SO31eXqwEZhQ==
 
+"@nest-zod/z@*":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@nest-zod/z/-/z-2.0.0.tgz#71fea34bf475f952e797484b9abda4ba5ec84b68"
+  integrity sha512-OqmJUZlpcx9ECzPYSIjaR/q/xLKrm9FkV+0FIWLEb9MVc9YeP21GmnQJBxE1dPRlLJ1kybNFBlt4D/PB8YAPkA==
+
 "@nestjs/cli@^10.0.0":
   version "10.4.8"
   resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-10.4.8.tgz#e6dec4eeda8a125918cbf1c0d10773ac6bb6d40e"
@@ -9679,6 +9684,14 @@ nest-winston@^1.9.3:
   dependencies:
     fast-safe-stringify "^2.1.1"
 
+nestjs-zod@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/nestjs-zod/-/nestjs-zod-4.3.1.tgz#4fa4fc502d3a08f965e407f617275cd127b72f29"
+  integrity sha512-gl10NOf/AhWt4HLcnMI1J0WUlBCKyteJBftD6SwNyX71/vzAorr5MJQWiDJoPPkou9QL2CRHHBtyjr55o7++Xw==
+  dependencies:
+    "@nest-zod/z" "*"
+    deepmerge "^4.3.1"
+
 neverthrow@^8.1.1:
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/neverthrow/-/neverthrow-8.1.1.tgz#dc4ce87236a878e325946034690d342160981a0b"
@@ -12909,7 +12922,7 @@ zip-stream@^6.0.1:
     compress-commons "^6.0.2"
     readable-stream "^4.0.0"
 
-zod@^3.22.2:
+zod@^3.22.2, zod@^3.24.3:
   version "3.24.3"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.24.3.tgz#1f40f750a05e477396da64438e0e1c0995dafd87"
   integrity sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==

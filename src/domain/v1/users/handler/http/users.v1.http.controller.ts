@@ -16,7 +16,7 @@ import { ApiException } from '@core/shared/http/http.exception';
 import { UsersV1Service } from '../../users.v1.service';
 import { GetUserDetailsV1HttpResponse } from './dto/get-user-details.v1.http.dto';
 import {
-  GetUsersV1HttpParam,
+  GetUsersV1HttpDto,
   GetUsersV1HttpResponse,
 } from './dto/get-users.v1.http.dto';
 import {
@@ -39,7 +39,7 @@ export class UsersV1HttpController {
 
   @Get()
   async getUsers(
-    @Query() options: GetUsersV1HttpParam,
+    @Query() options: GetUsersV1HttpDto,
   ): Promise<GetUsersV1HttpResponse> {
     const { data, pagination } = await this.service.getUsers(options);
 

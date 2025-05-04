@@ -1,14 +1,12 @@
-import { IStandardSingleApiResponse } from '@core/shared/http/http.standard';
+import { z } from 'zod';
+
+import { createZodResponse } from '@core/shared/http/http.standard';
 
 // ===== response =====
-class GetHealthData {
-  heap: string;
-  // rss: string;
-  // db: string;
-}
+const GetHealthData = z.object({
+  heap: z.string(),
+  // rss: z.string(),
+  // db: z.string(),
+});
 
-export class GetHealthResponse implements IStandardSingleApiResponse {
-  success: boolean;
-  key: string;
-  data: GetHealthData;
-}
+export class GetHealthResponse extends createZodResponse(GetHealthData) {}

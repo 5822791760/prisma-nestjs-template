@@ -1,34 +1,25 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { createZodDto } from 'nestjs-zod';
+import { z } from 'zod';
 
-import { IStandardSingleApiResponse } from '@core/shared/http/http.standard';
-
-import { AuthDetails, NewUserData } from '@domain/v1/auths/auths.v1.type';
+import { createZodResponse } from '@core/shared/http/http.standard';
 
 // ====== body =======
 
-export class PostAuthsSignUpsV1HttpDto implements NewUserData {
-  @IsEmail()
-  @IsString()
-  @IsNotEmpty()
-  email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  // @IsStrongPassword()
-  password: string;
-}
+const PostAuthsSignUpsV1Http = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+export class PostAuthsSignUpsV1HttpDto extends createZodDto(
+  PostAuthsSignUpsV1Http,
+) {}
 
 // ===== response =====
 
-class PostAuthsSignUpsV1HttpData implements AuthDetails {
-  token: string;
-  lastSignedInAt: Date;
-}
+const PostAuthsSignUpsV1HttpData = z.object({
+  token: z.string(),
+  lastSignedInAt: z.date(),
+});
 
-export class PostAuthsSignUpsHttpResponse
-  implements IStandardSingleApiResponse
-{
-  success: boolean;
-  key: string;
-  data: PostAuthsSignUpsV1HttpData;
-}
+export class PostAuthsSignUpsHttpResponse extends createZodResponse(
+  PostAuthsSignUpsV1HttpData,
+) {}

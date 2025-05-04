@@ -25,15 +25,39 @@ function getPreviousPage(currentPage: number, totalPages: number) {
   return nextPage;
 }
 
+function getPerpage(totalItems: number, perPage: number) {
+  if (perPage < 0) {
+    return totalItems;
+  }
+
+  return perPage;
+}
+
+function getPage(totalPages: number, page: number) {
+  if (page > totalPages) {
+    return totalPages;
+  }
+
+  return page;
+}
+
 export function getTotalPage(totalItems: number, perPage: number) {
   return Math.ceil(totalItems / perPage);
 }
 
 export function getOffset(options: PaginationOptions) {
-  return (options.page - 1) * options.perPage;
+  if (!options.perPage || options.perPage < 0) {
+    return undefined;
+  }
+
+  return Math.abs((options.page - 1) * (options.perPage || 0));
 }
 
 export function getLimit(options: PaginationOptions) {
+  if (!options.perPage || options.perPage < 0) {
+    return undefined;
+  }
+
   return options.perPage;
 }
 
@@ -42,14 +66,15 @@ export function getPagination(
   totalItems: number,
   options: PaginationOptions,
 ) {
-  const totalPages = getTotalPage(totalItems, options.perPage);
+  const perPage = getPerpage(totalItems, options.perPage);
+  const totalPages = getTotalPage(totalItems, perPage);
 
   return {
-    page: options.page,
+    totalPages,
+    page: getPage(totalPages, options.page),
     nextPage: getNextPage(options.page, totalPages),
     previousPage: getPreviousPage(options.page, totalPages),
-    perPage: options.perPage,
-    totalPages,
+    perPage,
     currentPageItems: datas.length,
     totalItems,
   };
