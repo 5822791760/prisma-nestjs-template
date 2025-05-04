@@ -1,7 +1,7 @@
-import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
-import { createZodResponse } from '@core/shared/http/http.standard';
+import { zodDto } from '@core/shared/common/common.zod';
+import { zodResponse } from '@core/shared/common/common.zod';
 
 // ===== body =====
 
@@ -9,13 +9,11 @@ const PutUserDetailsV1Http = z.object({
   email: z.string().email(),
   password: z.string(),
 });
-export class PutUserDetailsV1HttpDto extends createZodDto(
-  PutUserDetailsV1Http,
-) {}
+export class PutUserDetailsV1HttpDto extends zodDto(PutUserDetailsV1Http) {}
 
 // ===== response =====
 
 const PutUserDetailsV1HttpData = z.object({});
-export class PutUserDetailsV1HttpResponse extends createZodResponse(
+export class PutUserDetailsV1HttpResponse extends zodResponse(
   PutUserDetailsV1HttpData,
 ) {}

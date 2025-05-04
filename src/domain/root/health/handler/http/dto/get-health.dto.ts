@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { createZodResponse } from '@core/shared/http/http.standard';
+import { zodResponse } from '@core/shared/common/common.zod';
 
 // ===== response =====
 const GetHealthData = z.object({
@@ -9,4 +9,4 @@ const GetHealthData = z.object({
   // db: z.string(),
 });
 
-export class GetHealthResponse extends createZodResponse(GetHealthData) {}
+export class GetHealthResponse extends zodResponse(GetHealthData) {}

@@ -1,6 +1,5 @@
 import { INestApplication, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { patchNestJsSwagger } from 'nestjs-zod';
 
 export function setupApp(app: INestApplication): void {
   // Set versioning
@@ -10,8 +9,6 @@ export function setupApp(app: INestApplication): void {
 }
 
 export function setupSwagger(app: INestApplication) {
-  patchNestJsSwagger();
-
   const config = new DocumentBuilder()
     .setTitle('DW API')
     .setDescription('DW API description')

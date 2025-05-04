@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { createZodResponse } from '@core/shared/http/http.standard';
+import { zodResponse } from '@core/shared/common/common.zod';
 
 // === response ===
 const GetUserDetailsV1HttpData = z.object({
@@ -9,6 +9,6 @@ const GetUserDetailsV1HttpData = z.object({
   createdAt: z.date(),
 });
 
-export class GetUserDetailsV1HttpResponse extends createZodResponse(
+export class GetUserDetailsV1HttpResponse extends zodResponse(
   GetUserDetailsV1HttpData,
 ) {}
