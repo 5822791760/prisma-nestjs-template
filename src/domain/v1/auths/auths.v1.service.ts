@@ -21,18 +21,20 @@ import { Read } from '@core/shared/common/common.type';
 
 import { AuthsV1Repo } from './auths.v1.repo';
 import {
-  PostAuthsSignInsV1Input,
-  PostAuthsSignInsV1Output,
-  PostAuthsSignUpsV1Input,
-  PostAuthsSignUpsV1Output,
-} from './auths.v1.schema';
-import {
   AuthenticatedUser,
   NewUser,
   NewUserData,
   UserData,
   ValidateSignUpData,
 } from './auths.v1.type';
+import {
+  PostAuthsSignInsV1Input,
+  PostAuthsSignInsV1Output,
+} from './schema/post-auths-sign-ins.v1';
+import {
+  PostAuthsSignUpsV1Input,
+  PostAuthsSignUpsV1Output,
+} from './schema/post-auths-sign-ups.v1';
 
 @Injectable()
 export class AuthsV1Service {
@@ -125,7 +127,7 @@ export class AuthsV1Service {
   }
 
   private _updateUser(userInput: Read<Users>, data: Read<UserData>): Users {
-    const user = clone(userInput) as Users;
+    const user = clone(userInput);
 
     if (data.lastSignedInAt) {
       user.lastSignedInAt = data.lastSignedInAt;

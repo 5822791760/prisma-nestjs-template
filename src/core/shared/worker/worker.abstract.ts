@@ -3,9 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { Job, JobsOptions, Queue } from 'bullmq';
 
 import { AppConfig } from '@core/config';
+import { LoggerService } from '@core/global/logger/logger.service';
 import { QueueBoard } from '@core/queue/queue.board';
 
-import { getTaskHandlers } from './worker.decorator';
+import { TaskMetadata, getTaskHandlers } from './worker.decorator';
 import { QUEUE } from './worker.queue';
 
 @Injectable()
@@ -16,6 +17,7 @@ export abstract class BaseQueue implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService,
     private readonly bullboardService: QueueBoard,
+    private readonly loggerService: LoggerService,
   ) {}
 
   onModuleInit() {
@@ -62,16 +64,34 @@ export abstract class BaseCronQueue extends BaseQueue {
 
 @Injectable()
 export abstract class BaseTaskHandler {
-  private _taskMap: Record<string, string>;
+  private _taskMap: Record<string, TaskMetadata>;
 
   constructor() {
     this._taskMap = getTaskHandlers(this);
   }
 
   async dispatch(job: Job): Promise<void> {
-    const methodKey = this._taskMap[job.name];
-    if (methodKey && typeof (this as any)[methodKey] === 'function') {
-      await (this as any)[methodKey](job.data);
+    const metadata = this._taskMap[job.name];
+    if (!metadata) {
+      throw new Error(`metadata for job ${job.name} not found!`);
+    }
+
+    const methodName = metadata.methodName;
+    if (!methodName) {
+      // this should never happen, but handle just in case
+      throw new Error(`unexpected: method name for ${job.name} not found`);
+    }
+
+    // handle task pipe
+    const zodSchema = metadata.schema;
+    if (zodSchema) {
+      job.data = zodSchema.parse(job.data);
+    }
+
+    // handle task
+    const method = (this as any)[methodName];
+    if (method && typeof method === 'function') {
+      await method(job.data);
     }
   }
 }

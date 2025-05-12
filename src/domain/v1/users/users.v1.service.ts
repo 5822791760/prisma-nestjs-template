@@ -14,16 +14,14 @@ import {
 } from '@core/shared/common/common.neverthrow';
 import { Read } from '@core/shared/common/common.type';
 
-import { UsersV1Repo } from './users.v1.repo';
+import { GetUsersIdV1Output } from './schema/get-users-id.v1';
+import { GetUsersV1Input, GetUsersV1Output } from './schema/get-users.v1';
+import { PostUsersV1Input, PostUsersV1Output } from './schema/post-users.v1';
 import {
-  GetUserDetailsV1Output,
-  GetUsersV1Input,
-  GetUsersV1Output,
-  PostUsersV1Input,
-  PostUsersV1Output,
-  PutUserDetailsV1Input,
-  PutUserDetailsV1Output,
-} from './users.v1.schema';
+  PutUsersIdV1Input,
+  PutUsersIdV1Output,
+} from './schema/put-users-id.v1';
+import { UsersV1Repo } from './users.v1.repo';
 import {
   NewUser,
   NewUserData,
@@ -56,9 +54,7 @@ export class UsersV1Service {
     });
   }
 
-  async getUserDetails(
-    id: number,
-  ): Promise<Res<GetUserDetailsV1Output, 'notFound'>> {
+  async getUsersId(id: number): Promise<Res<GetUsersIdV1Output, 'notFound'>> {
     const user = await this.repo.getOneUser(id);
 
     if (!user) {
@@ -89,10 +85,10 @@ export class UsersV1Service {
     return Ok({});
   }
 
-  async putUserDetails(
-    body: Read<PutUserDetailsV1Input>,
+  async putUsersId(
+    body: Read<PutUsersIdV1Input>,
     id: number,
-  ): Promise<Res<PutUserDetailsV1Output, 'validation' | 'notFound'>> {
+  ): Promise<Res<PutUsersIdV1Output, 'validation' | 'notFound'>> {
     const r = await this._validateUser(body, id);
     if (r.isErr()) {
       return Err('validation', r.error);
@@ -127,7 +123,7 @@ export class UsersV1Service {
     userInput: Read<Users>,
     data: Read<UpdateUserData>,
   ): Users {
-    const user = clone(userInput) as Users;
+    const user = clone(userInput);
 
     if (data.email) {
       user.email = data.email;

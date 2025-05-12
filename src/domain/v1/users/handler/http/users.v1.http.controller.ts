@@ -16,13 +16,13 @@ import { ApiException } from '@core/shared/http/http.exception';
 
 import { UsersV1Service } from '../../users.v1.service';
 import {
-  GetUsersDetailsV1HttpResponse,
+  GetUsersIdV1HttpResponse,
   GetUsersV1HttpDto,
-  GetUsersV1HttpResponse,
+  GetUsersV1Response,
   PostUsersV1HttpDto,
-  PostUsersV1HttpResponse,
-  PutUserDetailsV1HttpDto,
-  PutUserDetailsV1HttpResponse,
+  PostUsersV1Response,
+  PutUsersIdV1HttpDto,
+  PutUsersIdV1Response,
 } from './users.v1.http.dto';
 
 @ApiTags('v1')
@@ -37,7 +37,7 @@ export class UsersV1HttpController {
   @Get()
   async getUsers(
     @Query() options: GetUsersV1HttpDto,
-  ): Promise<GetUsersV1HttpResponse> {
+  ): Promise<GetUsersV1Response> {
     const r = await this.service.getUsers(options);
 
     return r.match(
@@ -56,7 +56,7 @@ export class UsersV1HttpController {
   @Post()
   async postUsers(
     @Body() body: PostUsersV1HttpDto,
-  ): Promise<PostUsersV1HttpResponse> {
+  ): Promise<PostUsersV1Response> {
     const r = await this.service.postUsers(body);
 
     return r.match(
@@ -76,10 +76,10 @@ export class UsersV1HttpController {
   }
 
   @Get(':id')
-  async getUserDetails(
+  async getUsersId(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<GetUsersDetailsV1HttpResponse> {
-    const r = await this.service.getUserDetails(id);
+  ): Promise<GetUsersIdV1HttpResponse> {
+    const r = await this.service.getUsersId(id);
 
     return r.match(
       (data) => ({
@@ -98,11 +98,11 @@ export class UsersV1HttpController {
   }
 
   @Put(':id')
-  async putUserDetails(
-    @Body() body: PutUserDetailsV1HttpDto,
+  async putUsersId(
+    @Body() body: PutUsersIdV1HttpDto,
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<PutUserDetailsV1HttpResponse> {
-    const r = await this.service.putUserDetails(body, id);
+  ): Promise<PutUsersIdV1Response> {
+    const r = await this.service.putUsersId(body, id);
 
     return r.match(
       (data) => ({

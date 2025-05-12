@@ -4,30 +4,38 @@ import {
   zodResponse,
 } from '@core/shared/common/common.zod';
 
+import { GetUsersIdV1Output } from '../../schema/get-users-id.v1';
 import {
-  GetUserDetailsV1Output,
   GetUsersV1Input,
   GetUsersV1OutputData,
+} from '../../schema/get-users.v1';
+import {
   PostUsersV1Input,
   PostUsersV1Output,
-  PutUserDetailsV1Input,
-  PutUserDetailsV1Output,
-} from '../../users.v1.schema';
+} from '../../schema/post-users.v1';
+import {
+  PutUsersIdV1Input,
+  PutUsersIdV1Output,
+} from '../../schema/put-users-id.v1';
 
-export class GetUsersDetailsV1HttpResponse extends zodResponse(
-  GetUserDetailsV1Output,
-) {}
+//
+
+export class GetUsersIdV1HttpResponse extends zodResponse(GetUsersIdV1Output) {}
+
+//
 
 export class GetUsersV1HttpDto extends zodDto(GetUsersV1Input) {}
-export class GetUsersV1HttpResponse extends zodResponse(
+export class GetUsersV1Response extends zodResponse(
   GetUsersV1OutputData,
   getPaginationZod(),
 ) {}
 
-export class PostUsersV1HttpDto extends zodDto(PostUsersV1Input) {}
-export class PostUsersV1HttpResponse extends zodResponse(PostUsersV1Output) {}
+//
 
-export class PutUserDetailsV1HttpDto extends zodDto(PutUserDetailsV1Input) {}
-export class PutUserDetailsV1HttpResponse extends zodResponse(
-  PutUserDetailsV1Output,
-) {}
+export class PostUsersV1HttpDto extends zodDto(PostUsersV1Input) {}
+export class PostUsersV1Response extends zodResponse(PostUsersV1Output) {}
+
+//
+
+export class PutUsersIdV1HttpDto extends zodDto(PutUsersIdV1Input) {}
+export class PutUsersIdV1Response extends zodResponse(PutUsersIdV1Output) {}

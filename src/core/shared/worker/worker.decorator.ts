@@ -1,12 +1,25 @@
 import 'reflect-metadata';
+import { ZodSchema } from 'zod';
 
 const TASK_METADATA = Symbol('TASK_METADATA');
 
-export function Task(taskName: string): MethodDecorator {
+export interface TaskMetadata {
+  methodName: string;
+  schema?: ZodSchema<unknown>;
+}
+
+export function Task<T = unknown>(
+  taskName: string,
+  schema?: ZodSchema<T>,
+): MethodDecorator {
   return (target, propertyKey) => {
     const handlers =
       Reflect.getMetadata(TASK_METADATA, target.constructor) || {};
-    handlers[taskName] = propertyKey;
+    handlers[taskName] = {
+      methodName: propertyKey as string,
+      schema,
+    } satisfies TaskMetadata;
+
     Reflect.defineMetadata(TASK_METADATA, handlers, target.constructor);
   };
 }

@@ -75,7 +75,8 @@ describe(`UsersV1Service`, () => {
           createdAt: user.createdAt,
         },
       ];
-      expect(r.data).toEqual(expectedData);
+      expect(r.isOk()).toEqual(true);
+      expect(r._unsafeUnwrap().data).toEqual(expectedData);
       expect(repo.getPageUsers).toHaveBeenNthCalledWith(1, options);
     });
   });
@@ -97,7 +98,7 @@ describe(`UsersV1Service`, () => {
       repo.getOneUser.mockResolvedValue(user);
 
       // Act
-      const r = await service.getUserDetails(id);
+      const r = await service.getUsersId(id);
 
       // Assert
       const expectedResp: UserDetails = {
@@ -115,7 +116,7 @@ describe(`UsersV1Service`, () => {
       repo.getOneUser.mockResolvedValue(null);
 
       // Act
-      const r = await service.getUserDetails(1);
+      const r = await service.getUsersId(1);
 
       // Assert
       expect(r.isErr()).toEqual(true);
@@ -202,7 +203,7 @@ describe(`UsersV1Service`, () => {
       const id = 1;
 
       // Act
-      const r = await service.putUserDetails(body, id);
+      const r = await service.putUsersId(body, id);
 
       // Assert
       expect(r.isOk()).toEqual(true);
@@ -233,7 +234,7 @@ describe(`UsersV1Service`, () => {
       const id = 1;
 
       // Act
-      const r = await service.putUserDetails(body, id);
+      const r = await service.putUsersId(body, id);
 
       // Assert
       expect(r.isErr()).toEqual(true);
@@ -255,7 +256,7 @@ describe(`UsersV1Service`, () => {
       const id = 1;
 
       // Act
-      const r = await service.putUserDetails(body, id);
+      const r = await service.putUsersId(body, id);
 
       // Assert
       expect(r.isErr()).toEqual(true);
