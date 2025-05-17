@@ -1,8 +1,9 @@
 import { Global, Module, Provider } from '@nestjs/common';
 
+import { LoggerService } from '@core/global/logger/logger.service';
 import { TransactionService } from '@core/global/transaction/transaction.service';
 
-const serviceProviders: Provider[] = [TransactionService];
+const serviceProviders: Provider[] = [TransactionService, LoggerService];
 
 @Global()
 @Module({

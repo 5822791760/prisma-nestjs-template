@@ -1,8 +1,11 @@
+import { UsersServiceMockFactory } from '@helper/users/mock/users.service.mock';
+import { UsersService } from '@helper/users/users.service';
+import { NewUserData } from '@helper/users/users.type';
 import { Dayjs } from 'dayjs';
 import { mock } from 'jest-mock-extended';
 
 import { UsersQueueService } from '@core/queue/users/users.queue.service';
-import tzDayjs from '@core/shared/common/common.dayjs';
+import myDayjs from '@core/shared/common/common.dayjs';
 import { errIs } from '@core/shared/common/common.neverthrow';
 import { PaginationOptions } from '@core/shared/common/common.pagintaion';
 import {
@@ -14,24 +17,27 @@ import {
 import { UsersV1Module } from '../users.v1.module';
 import { UsersV1Repo } from '../users.v1.repo';
 import { UsersV1Service } from '../users.v1.service';
-import { NewUser, NewUserData, UserDetails } from '../users.v1.type';
+import { UserDetails } from '../users.v1.type';
 
 describe(`UsersV1Service`, () => {
   const repo = mock<UsersV1Repo>();
-  const queue = mock<UsersQueueService>();
+  const usersService = mock<UsersService>();
+  const usersQueueService = mock<UsersQueueService>();
 
   let service: UsersV1Service;
   let current: Dayjs;
 
   beforeAll(async () => {
-    current = tzDayjs();
+    current = myDayjs();
     freezeTestTime(current);
 
     const module = await createTestingModule(UsersV1Module)
       .overrideProvider(UsersV1Repo)
       .useValue(repo)
+      .overrideProvider(UsersService)
+      .useValue(usersService)
       .overrideProvider(UsersQueueService)
-      .useValue(queue)
+      .useValue(usersQueueService)
       .compile();
 
     service = module.get(UsersV1Service);
@@ -58,7 +64,7 @@ describe(`UsersV1Service`, () => {
         totalItems: 1,
       });
 
-      queue.addJobSample.mockReturnValue();
+      usersQueueService.addJobSample.mockReturnValue();
 
       // Act
       const options: PaginationOptions = {
@@ -81,7 +87,7 @@ describe(`UsersV1Service`, () => {
     });
   });
 
-  describe(`getUserDetails`, () => {
+  describe(`getUsersId`, () => {
     it('works', async () => {
       // Arrange
       const id = 1;
@@ -133,8 +139,15 @@ describe(`UsersV1Service`, () => {
         password: 'testuser',
       };
 
-      repo.isEmailExistsInUsers.mockResolvedValue(false);
-      repo.insertUser.mockResolvedValue();
+      const mockNew = UsersServiceMockFactory.new();
+      usersService.new.mockReturnValue(mockNew);
+
+      const mockDbValidate = UsersServiceMockFactory.dbValidate();
+      usersService.dbValidate.mockResolvedValue(mockDbValidate);
+
+      const mockDbInsert = UsersServiceMockFactory.dbInsert(1);
+      usersService.dbInsert.mockResolvedValue(mockDbInsert);
+
       mockTransaction(repo);
 
       // Act
@@ -142,20 +155,10 @@ describe(`UsersV1Service`, () => {
 
       // Assert
       expect(r.isOk()).toEqual(true);
-      expect(repo.isEmailExistsInUsers).toHaveBeenNthCalledWith(
-        1,
-        userData.email,
-        undefined,
-      );
-      expect(repo.transaction).toHaveBeenCalledTimes(1);
 
-      const user: NewUser = {
-        email: userData.email,
-        password: expect.any(String), // Hashed password
-        createdAt: current.toDate(),
-        updatedAt: current.toDate(),
-      };
-      expect(repo.insertUser).toHaveBeenNthCalledWith(1, user);
+      expect(usersService.new).toHaveBeenNthCalledWith(1, userData);
+      expect(usersService.dbValidate).toHaveBeenNthCalledWith(1, mockNew);
+      expect(usersService.dbInsert).toHaveBeenNthCalledWith(1, mockNew);
     });
 
     it('throws validation', async () => {
@@ -165,7 +168,11 @@ describe(`UsersV1Service`, () => {
         password: 'testuser',
       };
 
-      repo.isEmailExistsInUsers.mockResolvedValue(true);
+      const mockNew = UsersServiceMockFactory.new();
+      usersService.new.mockReturnValue(mockNew);
+
+      const mockDbValidate = UsersServiceMockFactory.dbValidate({ err: true });
+      usersService.dbValidate.mockResolvedValue(mockDbValidate);
 
       // Act
       const r = await service.postUsers(userData);
@@ -173,94 +180,107 @@ describe(`UsersV1Service`, () => {
       // Assert
       expect(r.isErr()).toEqual(true);
       expect(errIs(r._unsafeUnwrapErr(), 'validation')).toEqual(true);
-      expect(repo.isEmailExistsInUsers).toHaveBeenNthCalledWith(
-        1,
-        userData.email,
-        undefined,
-      );
+
+      expect(usersService.dbValidate).toHaveBeenNthCalledWith(1, mockNew);
     });
   });
-
-  describe('putUserDetails', () => {
+  describe('putUsersId', () => {
     it('works', async () => {
       // Arrange
-      repo.isEmailExistsInUsers.mockResolvedValue(false);
-      repo.getOneUser.mockResolvedValue({
+      const id = 1;
+
+      const mockGetOne = {
         id: 1,
         email: 'old@example.com',
         password: 'password',
         createdAt: current.toDate(),
         updatedAt: current.toDate(),
         lastSignedInAt: null,
-      });
-      mockTransaction(repo);
-      repo.updateUser.mockResolvedValue(undefined);
-
-      const body: NewUserData = {
-        email: 'update@example.com',
-        password: 'updatedPassword',
       };
-      const id = 1;
+      repo.getOneUser.mockResolvedValue(mockGetOne);
+
+      const mockUpdate = UsersServiceMockFactory.update();
+      usersService.update.mockReturnValue(mockUpdate);
+
+      const mockDbValidate = UsersServiceMockFactory.dbValidate();
+      usersService.dbValidate.mockResolvedValue(mockDbValidate);
+
+      usersService.dbUpdate.mockResolvedValue();
+
+      mockTransaction(repo);
 
       // Act
+      const body = { email: 'test@example.com', password: 'test' };
       const r = await service.putUsersId(body, id);
 
       // Assert
       expect(r.isOk()).toEqual(true);
-      expect(repo.isEmailExistsInUsers).toHaveBeenNthCalledWith(
+
+      expect(repo.getOneUser).toHaveBeenNthCalledWith(1, id);
+      expect(usersService.update).toHaveBeenNthCalledWith(1, mockGetOne, body);
+      expect(usersService.dbValidate).toHaveBeenNthCalledWith(
         1,
-        body.email,
+        mockUpdate,
         id,
       );
-      expect(repo.getOneUser).toHaveBeenNthCalledWith(1, id);
-      expect(repo.updateUser).toHaveBeenNthCalledWith(1, {
-        id: 1,
-        email: 'update@example.com',
-        password: expect.any(String),
-        createdAt: current.toDate(),
-        updatedAt: current.toDate(),
-        lastSignedInAt: null,
-      });
+      expect(usersService.dbUpdate).toHaveBeenNthCalledWith(1, mockUpdate);
     });
 
     it('throws validation', async () => {
       // Arrange
-      repo.isEmailExistsInUsers.mockResolvedValue(true);
-
-      const body: NewUserData = {
-        email: 'update@example.com',
-        password: 'updatedPassword',
-      };
       const id = 1;
 
+      const mockGetOne = {
+        id: 1,
+        email: 'old@example.com',
+        password: 'password',
+        createdAt: current.toDate(),
+        updatedAt: current.toDate(),
+        lastSignedInAt: null,
+      };
+      repo.getOneUser.mockResolvedValue(mockGetOne);
+
+      const mockUpdate = UsersServiceMockFactory.update();
+      usersService.update.mockReturnValue(mockUpdate);
+
+      const mockDbValidate = UsersServiceMockFactory.dbValidate({
+        err: true,
+      });
+      usersService.dbValidate.mockResolvedValue(mockDbValidate);
+
       // Act
+      const body = { email: 'test@example.com', password: 'test' };
       const r = await service.putUsersId(body, id);
 
       // Assert
       expect(r.isErr()).toEqual(true);
+      expect(errIs(r._unsafeUnwrapErr(), 'validation')).toEqual(true);
 
-      const e = r._unsafeUnwrapErr();
-      expect(errIs(e, 'validation')).toEqual(true);
-      expect(e.fields.email).toEqual([expect.any(String)]);
+      expect(repo.getOneUser).toHaveBeenNthCalledWith(1, id);
+      expect(usersService.update).toHaveBeenNthCalledWith(1, mockGetOne, body);
+      expect(usersService.dbValidate).toHaveBeenNthCalledWith(
+        1,
+        mockUpdate,
+        id,
+      );
     });
 
     it('throws notFound', async () => {
       // Arrange
-      repo.isEmailExistsInUsers.mockResolvedValue(false);
-      repo.getOneUser.mockResolvedValue(null);
-
-      const body: NewUserData = {
-        email: 'update@example.com',
-        password: 'updatedPassword',
-      };
       const id = 1;
 
+      const mockGetOne = null;
+      repo.getOneUser.mockResolvedValue(mockGetOne);
+
       // Act
+      const body = { email: 'test@example.com', password: 'test' };
       const r = await service.putUsersId(body, id);
 
       // Assert
       expect(r.isErr()).toEqual(true);
       expect(errIs(r._unsafeUnwrapErr(), 'notFound')).toEqual(true);
+
+      expect(repo.getOneUser).toHaveBeenNthCalledWith(1, id);
     });
   });
 });

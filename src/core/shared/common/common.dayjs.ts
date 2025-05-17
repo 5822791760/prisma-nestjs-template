@@ -9,6 +9,6 @@ dayjs.extend(isBetween);
 
 dayjs.tz.setDefault('Asia/Bangkok');
 
-export default function tzDayjs(date?: dayjs.ConfigType) {
-  return dayjs(date).tz();
+export default function myDayjs(date?: dayjs.ConfigType) {
+  return dayjs(date);
 }

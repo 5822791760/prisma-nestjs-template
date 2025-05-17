@@ -1,32 +1,11 @@
+import { AuthsService } from '@helper/auths/auths.service';
+import { UsersService } from '@helper/users/users.service';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
-import { AppConfig } from '@core/config';
-import { Users } from '@core/db/prisma';
-import {
-  encodeUserJwt,
-  hashString,
-  isMatchedHash,
-} from '@core/shared/common/common.crypto';
-import tzDayjs from '@core/shared/common/common.dayjs';
-import { clone } from '@core/shared/common/common.func';
-import {
-  Err,
-  Ok,
-  Res,
-  ValidateFields,
-  validateSuccess,
-} from '@core/shared/common/common.neverthrow';
+import { Err, Ok, Res } from '@core/shared/common/common.neverthrow';
 import { Read } from '@core/shared/common/common.type';
 
 import { AuthsV1Repo } from './auths.v1.repo';
-import {
-  AuthenticatedUser,
-  NewUser,
-  NewUserData,
-  UserData,
-  ValidateSignUpData,
-} from './auths.v1.type';
 import {
   PostAuthsSignInsV1Input,
   PostAuthsSignInsV1Output,
@@ -40,7 +19,8 @@ import {
 export class AuthsV1Service {
   constructor(
     private repo: AuthsV1Repo,
-    private configService: ConfigService,
+    private usersService: UsersService,
+    private authsService: AuthsService,
   ) {}
 
   async postAuthsSignIns(
@@ -51,17 +31,19 @@ export class AuthsV1Service {
       return Err('notFound');
     }
 
-    const rAuthenUser = this._authenticateUser(user, data.password);
+    const rAuthenUser = this.usersService.signIn(user, data.password);
     if (rAuthenUser.isErr()) {
       return Err('invalidPassword');
     }
 
     const authenUser = rAuthenUser.value;
 
-    await this.repo.transaction(async () => this.repo.updateUser(authenUser));
+    await this.repo.transaction(async () =>
+      this.usersService.dbUpdate(authenUser),
+    );
 
     return Ok({
-      token: this._generateToken(authenUser),
+      token: this.authsService.generateToken(authenUser),
       lastSignedInAt: authenUser.lastSignedInAt,
     });
   }
@@ -69,14 +51,21 @@ export class AuthsV1Service {
   async postAuthsSignUps(
     data: Read<PostAuthsSignUpsV1Input>,
   ): Promise<Res<PostAuthsSignUpsV1Output, 'validation' | 'internal'>> {
-    const r = await this._validateSignUp(data);
+    const r = await this.usersService.dbValidate({ email: data.email });
     if (r.isErr()) {
       return Err('validation', r.error);
     }
 
-    const newUser = this._registerUser(data);
+    const newUser = this.usersService.new(data);
+    const rNewSignedInUser = this.usersService.signIn(newUser, data.password);
+    if (rNewSignedInUser.isErr()) {
+      return Err('validation', rNewSignedInUser.error);
+    }
+
+    const newSignedInUser = rNewSignedInUser.value;
+
     const rUser = await this.repo.transaction(async () =>
-      this.repo.insertAuthUser(newUser),
+      this.usersService.dbInsert(newSignedInUser),
     );
 
     if (rUser.isErr()) {
@@ -84,76 +73,10 @@ export class AuthsV1Service {
     }
 
     const user = rUser.value;
-    if (!user) {
-      return Err('internal');
-    }
 
     return Ok({
-      token: this._generateToken(user),
+      token: this.authsService.generateToken(user),
       lastSignedInAt: user.lastSignedInAt,
     });
-  }
-
-  // Logic Helper ========
-
-  private _registerUser(data: Read<NewUserData>): NewUser {
-    return {
-      email: data.email,
-      password: hashString(data.password),
-      createdAt: tzDayjs().toDate(),
-      updatedAt: tzDayjs().toDate(),
-      lastSignedInAt: tzDayjs().toDate(),
-    };
-  }
-
-  private _authenticateUser(
-    user: Read<Users>,
-    rawPassword: string,
-  ): Res<AuthenticatedUser, 'invalidPassword'> {
-    if (!isMatchedHash(rawPassword, user.password)) {
-      return Err('invalidPassword');
-    }
-
-    user = this._updateUser(user, {
-      lastSignedInAt: tzDayjs().toDate(),
-    });
-
-    return Ok(user as AuthenticatedUser);
-  }
-
-  private _generateToken(user: Read<AuthenticatedUser>): string {
-    const jwtConfig = this.configService.getOrThrow<AppConfig['jwt']>('jwt');
-    return encodeUserJwt({ id: user.id }, jwtConfig.salt);
-  }
-
-  private _updateUser(userInput: Read<Users>, data: Read<UserData>): Users {
-    const user = clone(userInput);
-
-    if (data.lastSignedInAt) {
-      user.lastSignedInAt = data.lastSignedInAt;
-    }
-
-    user.updatedAt = tzDayjs().toDate();
-
-    return user;
-  }
-
-  private async _validateSignUp(
-    data: Read<ValidateSignUpData>,
-  ): Promise<Res<null, 'validation'>> {
-    const fields: ValidateFields<ValidateSignUpData> = {
-      email: [],
-    };
-
-    const emailExists = await this.repo.isEmailExistsInUsers(data.email);
-    if (emailExists) {
-      fields.email.push('exists');
-    }
-
-    if (!validateSuccess(fields)) {
-      return Err('validation', { fields });
-    }
-
-    return Ok(null);
   }
 }

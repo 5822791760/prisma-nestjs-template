@@ -126,6 +126,7 @@
     ],
     "moduleNameMapper": {
       "@core/(.*)": "<rootDir>/src/core/$1",
+      "@helper/(.*)": "<rootDir>/src/helper/$1",
       "@domain/(.*)": "<rootDir>/src/domain/$1",
       "@testcore/(.*)": "<rootDir>/test/core/$1"
     },

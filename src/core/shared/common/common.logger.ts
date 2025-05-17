@@ -16,7 +16,7 @@ import { format, transports } from 'winston';
 import { AppConfig } from '@core/config';
 
 import { HttpBaseException } from '../http/http.exception';
-import tzDayjs from './common.dayjs';
+import myDayjs from './common.dayjs';
 
 export function coreLogger(appConfig: AppConfig['app']) {
   return WinstonModule.createLogger({
@@ -49,7 +49,7 @@ export function prettyLogError(error: Error) {
     message = baseException.key;
   }
 
-  const timestamp = tzDayjs().format('YYYY-MM-DD HH:mm:ss Z');
+  const timestamp = myDayjs().format('YYYY-MM-DD HH:mm:ss Z');
 
   // Header for the error log
   console.log('');

@@ -6,6 +6,7 @@ import { Dayjs } from 'dayjs';
 import { CORE_DB } from '@core/db/db.common';
 import { TransactionService } from '@core/global/transaction/transaction.service';
 import { QueueModule } from '@core/queue/queue.module';
+import { Ok } from '@core/shared/common/common.neverthrow';
 import { setupApp } from '@core/shared/http/http.setup';
 
 import { MockGlobalModule } from '../mock/mock.global.module';
@@ -18,8 +19,8 @@ export function mockTransaction(
   mockResponse?: any,
 ) {
   mockRepo.transaction.mockImplementation(async (txCallback) => {
-    await txCallback();
-    return mockResponse || null;
+    const res = await txCallback();
+    return mockResponse || Ok(res);
   });
 }
 

@@ -1,5 +1,7 @@
 {
   "typescript.preferences.autoImportFileExcludePatterns": [
-    "src/core/db/generated/types.ts"
+    "src/core/db/generated/types.ts",
+    "**/dayjs/**",
+    "**/neverthrow/**",
   ],
 }

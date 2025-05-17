@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Command, CommandRunner, Option } from 'nest-commander';
 
-import tzDayjs from '@core/shared/common/common.dayjs';
+import myDayjs from '@core/shared/common/common.dayjs';
 import { getRandomId } from '@core/shared/common/common.func';
 
 import { PostsCliRepo } from '../posts.cli.repo';
@@ -29,8 +29,8 @@ export class PostsCliSeed extends CommandRunner {
         title: faker.book.title(),
         details: faker.lorem.lines(),
         createdBy: getRandomId(users),
-        createdAt: tzDayjs().toDate(),
-        updatedAt: tzDayjs().toDate(),
+        createdAt: myDayjs().toDate(),
+        updatedAt: myDayjs().toDate(),
       });
     }
 

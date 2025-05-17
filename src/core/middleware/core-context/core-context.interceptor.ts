@@ -7,7 +7,7 @@ import {
 import { nanoid } from 'nanoid';
 import { Observable } from 'rxjs';
 
-import tzDayjs from '@core/shared/common/common.dayjs';
+import myDayjs from '@core/shared/common/common.dayjs';
 
 import { CORE_CONTEXT, ICoreContext } from './core-context.common';
 
@@ -21,7 +21,7 @@ export class CoreContextInterceptor implements NestInterceptor {
 
     const coreCtx: ICoreContext = {
       traceId: nanoid(),
-      requestTime: tzDayjs().toISOString(),
+      requestTime: myDayjs().toISOString(),
     };
     request[CORE_CONTEXT] = coreCtx;
 

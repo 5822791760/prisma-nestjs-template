@@ -3,7 +3,7 @@ import { Command, CommandRunner, Option } from 'nest-commander';
 
 import { DEFAULT_PASSWORD } from '@core/shared/common/common.constant';
 import { hashString } from '@core/shared/common/common.crypto';
-import tzDayjs from '@core/shared/common/common.dayjs';
+import myDayjs from '@core/shared/common/common.dayjs';
 
 import { UsersCliRepo } from '../users.cli.repo';
 import { NewUser } from '../users.cli.type';
@@ -28,8 +28,8 @@ export class UsersCliSeed extends CommandRunner {
       data.push({
         email: faker.internet.email(),
         password: hashString(DEFAULT_PASSWORD),
-        createdAt: tzDayjs().toDate(),
-        updatedAt: tzDayjs().toDate(),
+        createdAt: myDayjs().toDate(),
+        updatedAt: myDayjs().toDate(),
       });
     }
 
