@@ -5,7 +5,7 @@ import { createBackendTestingModule } from '@core/test/test-util/test-util.commo
 
 import { UsersV1Module } from '../users.v1.module';
 
-describe(`UsersV1Service`, () => {
+describe(`UsersV1Module`, () => {
   let app: INestApplication;
 
   beforeAll(async () => {

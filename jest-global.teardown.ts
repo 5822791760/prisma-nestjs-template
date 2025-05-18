@@ -7,4 +7,7 @@ export default async () => {
   if (globalThis.redisContainer) {
     await globalThis.redisContainer.stop();
   }
+  if (globalThis.mailhogContainer) {
+    await globalThis.mailhogContainer.stop();
+  }
 };

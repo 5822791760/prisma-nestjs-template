@@ -87,13 +87,15 @@ export async function createBackendTestingModule(
     ],
   }).compile();
 
-  execSync('yarn db:deploy');
-
   const app = module.createNestApplication();
   setupApp(app);
   await app.init();
 
-  await app.get(InitialsCliSeed).run([]);
+  if (globalThis.requireDbSetup) {
+    execSync('yarn db:deploy');
+    await app.get(InitialsCliSeed).run([]);
+    globalThis.requireDbSetup = false;
+  }
 
   return { module, app };
 }
