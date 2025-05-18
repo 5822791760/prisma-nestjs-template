@@ -1,4 +1,3 @@
-import { UsersModule } from '@helper/users/users.module';
 import { Module } from '@nestjs/common';
 
 import { UsersV1HttpController } from './handler/http/users.v1.http.controller';
@@ -6,7 +5,6 @@ import { UsersV1Repo } from './users.v1.repo';
 import { UsersV1Service } from './users.v1.service';
 
 @Module({
-  imports: [UsersModule],
   providers: [UsersV1Service, UsersV1Repo],
   controllers: [UsersV1HttpController],
 })

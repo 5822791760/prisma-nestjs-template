@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { RouteModule } from 'src/route/route.module';
 
 import { config } from '@core/config';
 import { DBModule } from '@core/db/db.module';
+import { DomainModule } from '@core/domain/domain.module';
 import { GlobalModule } from '@core/global/global.module';
 import { QueueModule } from '@core/queue/queue.module';
-
-import { DomainModule } from '@domain/domain.module';
 
 import { CliModule } from './cli/cli.module';
 import { MiddlewareModule } from './core/middleware/middleware.module';
@@ -22,8 +22,9 @@ import { TaskModule } from './task/task.module';
 
     DBModule,
     GlobalModule,
-    MiddlewareModule,
     DomainModule,
+    MiddlewareModule,
+    RouteModule,
     QueueModule,
   ],
 })
@@ -39,6 +40,7 @@ export class MainAppModule {}
 
     DBModule,
     GlobalModule,
+    DomainModule,
     TaskModule,
   ],
 })
@@ -54,6 +56,7 @@ export class WorkerAppModule {}
 
     DBModule,
     GlobalModule,
+    DomainModule,
     CliModule,
   ],
 })

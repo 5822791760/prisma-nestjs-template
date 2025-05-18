@@ -1,17 +1,13 @@
-import { DynamicModule, Provider, Type } from '@nestjs/common';
+import { Provider } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Dayjs } from 'dayjs';
 
 import { CORE_DB } from '@core/db/db.common';
 import { TransactionService } from '@core/global/transaction/transaction.service';
-import { QueueModule } from '@core/queue/queue.module';
 import { Ok } from '@core/shared/common/common.neverthrow';
 import { setupApp } from '@core/shared/http/http.setup';
 
-import { MockGlobalModule } from '../mock/mock.global.module';
-import { MockMiddlewareModule } from '../mock/mock.middleware.module';
-import { MockDBModule } from '../mock/mock.typeorm';
 import { config } from '../test-config';
 
 export function mockTransaction(
@@ -24,33 +20,15 @@ export function mockTransaction(
   });
 }
 
-export function createHttpTestingModule(module: DynamicModule | Type<any>) {
+export function createTestingModule(providers: Provider[]) {
   return Test.createTestingModule({
     imports: [
-      module,
-      MockDBModule,
-      MockGlobalModule,
-      MockMiddlewareModule,
       ConfigModule.forRoot({
         isGlobal: true,
         load: [config],
       }),
     ],
-  });
-}
-
-export function createTestingModule(module: DynamicModule | Type<any>) {
-  return Test.createTestingModule({
-    imports: [
-      module,
-      MockDBModule,
-      MockGlobalModule,
-      QueueModule,
-      ConfigModule.forRoot({
-        isGlobal: true,
-        load: [config],
-      }),
-    ],
+    providers,
   });
 }
 

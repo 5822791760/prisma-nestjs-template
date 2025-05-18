@@ -1,6 +1,6 @@
-import { UsersService } from '@helper/users/users.service';
 import { Injectable } from '@nestjs/common';
 
+import { UsersService } from '@core/domain/users/users.service';
 import { UsersQueueService } from '@core/queue/users/users.queue.service';
 import { Err, Ok, Res } from '@core/shared/common/common.neverthrow';
 import { Read } from '@core/shared/common/common.type';

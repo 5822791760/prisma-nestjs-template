@@ -4,10 +4,10 @@ import { RedisClientType } from 'redis';
 import { ExceptionErr, Ok, Res } from '@core/shared/common/common.neverthrow';
 import { Read } from '@core/shared/common/common.type';
 
-import { REDIS_CLIENT } from './cache.helper.provider';
+import { REDIS_CLIENT } from './cache.provider';
 
 @Injectable()
-export class CacheHelperService {
+export class CacheService {
   constructor(
     @Inject(REDIS_CLIENT)
     private redisClient: RedisClientType,

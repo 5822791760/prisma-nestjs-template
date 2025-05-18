@@ -1,10 +1,10 @@
-import { AuthsService } from '@helper/auths/auths.service';
-import { AuthsServiceMockFactory } from '@helper/auths/mock/auths.service.mock';
-import { UsersServiceMockFactory } from '@helper/users/mock/users.service.mock';
-import { UsersService } from '@helper/users/users.service';
 import { Dayjs } from 'dayjs';
 import { mock } from 'jest-mock-extended';
 
+import { AuthsService } from '@core/domain/auths/auths.service';
+import { AuthsServiceMockFactory } from '@core/domain/auths/mock/auths.service.mock';
+import { UsersServiceMockFactory } from '@core/domain/users/mock/users.service.mock';
+import { UsersService } from '@core/domain/users/users.service';
 import myDayjs from '@core/shared/common/common.dayjs';
 import { Err, errIs } from '@core/shared/common/common.neverthrow';
 import {
@@ -13,7 +13,6 @@ import {
   mockTransaction,
 } from '@core/test/test-util/test-util.common';
 
-import { AuthsV1Module } from '../auths.v1.module';
 import { AuthsV1Repo } from '../auths.v1.repo';
 import { AuthsV1Service } from '../auths.v1.service';
 
@@ -29,14 +28,12 @@ describe('AuthsV1Service', () => {
     current = myDayjs();
     freezeTestTime(current);
 
-    const module = await createTestingModule(AuthsV1Module)
-      .overrideProvider(AuthsV1Repo)
-      .useValue(repo)
-      .overrideProvider(UsersService)
-      .useValue(usersService)
-      .overrideProvider(AuthsService)
-      .useValue(authsService)
-      .compile();
+    const module = await createTestingModule([
+      AuthsV1Service,
+      { provide: AuthsV1Repo, useValue: repo },
+      { provide: UsersService, useValue: usersService },
+      { provide: AuthsService, useValue: authsService },
+    ]).compile();
 
     service = module.get(AuthsV1Service);
   });

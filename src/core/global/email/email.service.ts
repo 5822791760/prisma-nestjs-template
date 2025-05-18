@@ -6,10 +6,10 @@ import Mail from 'nodemailer/lib/mailer';
 import { AppConfig } from '@core/config';
 import { Err, Ok, Res } from '@core/shared/common/common.neverthrow';
 
-import { NODE_MAILER } from './email.helper.provider';
+import { NODE_MAILER } from './email.provider';
 
 @Injectable()
-export class EmailHelperService {
+export class EmailService {
   constructor(
     @Inject(NODE_MAILER)
     private mail: Mail,

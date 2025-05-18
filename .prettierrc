@@ -2,12 +2,7 @@
   "singleQuote": true,
   "trailingComma": "all",
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
-  "importOrder": [
-    "^@core/(.*)$",
-    "^@domain/(.*)$",
-    "^@testcore/(.*)$",
-    "^[./]"
-  ],
+  "importOrder": ["^@core/(.*)$", "^@route/(.*)$", "^@testcore/(.*)$", "^[./]"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "importOrderParserPlugins": ["typescript", "decorators-legacy"]

@@ -1,7 +1,7 @@
-import { AuthsService } from '@helper/auths/auths.service';
-import { UsersService } from '@helper/users/users.service';
 import { Injectable } from '@nestjs/common';
 
+import { AuthsService } from '@core/domain/auths/auths.service';
+import { UsersService } from '@core/domain/users/users.service';
 import { Err, Ok, Res } from '@core/shared/common/common.neverthrow';
 import { Read } from '@core/shared/common/common.type';
 

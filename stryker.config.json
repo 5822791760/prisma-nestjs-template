@@ -9,5 +9,5 @@
   "testRunner_comment": "Take a look at https://stryker-mutator.io/docs/stryker-js/jest-runner for information about the jest plugin.",
   "coverageAnalysis": "perTest",
   "thresholds": { "high": 100, "low": 80, "break": 70 },
-  "mutate": ["src/domain/**/*.service.ts", "!src/domain/health/**"]
+  "mutate": ["src/route/**/*.service.ts", "!src/route/health/**"]
 }
