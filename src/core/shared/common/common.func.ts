@@ -6,6 +6,10 @@ export function isProd(env: string) {
   return env === 'prod';
 }
 
+export function isTesting(env: string) {
+  return env === 'test';
+}
+
 export function isLocal(env: string) {
   return env === 'local';
 }

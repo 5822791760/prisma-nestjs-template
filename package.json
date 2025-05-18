@@ -81,6 +81,7 @@
     "@stryker-mutator/jest-runner": "^8.6.0",
     "@stryker-mutator/typescript-checker": "^8.6.0",
     "@testcontainers/postgresql": "^10.16.0",
+    "@testcontainers/redis": "^10.26.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.0",
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.17",
@@ -118,6 +119,8 @@
     "schema": "./src/core/db/schema.prisma"
   },
   "jest": {
+    "globalSetup": "<rootDir>/jest-global.setup.ts",
+    "globalTeardown": "<rootDir>/jest-global.teardown.ts",
     "testTimeout": 40000,
     "moduleFileExtensions": [
       "js",

@@ -1,15 +1,14 @@
-// import { PostgreSqlContainer } from '@testcontainers/postgresql';
-// import 'tsconfig-paths/register';
+import { PostgreSqlContainer } from '@testcontainers/postgresql';
+import { RedisContainer } from '@testcontainers/redis';
+import 'tsconfig-paths/register';
 
-// import { connectionSource } from '@core/db/db.provider';
+export default async () => {
+  const pgContainer = await new PostgreSqlContainer().start();
+  const redisContainer = await new RedisContainer('redis:7.2').start();
 
-// export default async () => {
-//   const pgContainer = await new PostgreSqlContainer().start();
+  process.env.DATABASE_URL = pgContainer.getConnectionUri();
+  process.env.REDIS_URL = redisContainer.getConnectionUrl();
 
-//   const dataSource = await connectionSource.initialize();
-
-//   globalThis.pgContainer = pgContainer;
-//   globalThis.dataSource = dataSource;
-
-//   console.log('PostgreSQL container started.');
-// };
+  globalThis.pgContainer = pgContainer;
+  globalThis.redisContainer = redisContainer;
+};

@@ -8,7 +8,7 @@ import kyselyExtension, {
   PrismaKyselyExtensionArgs,
 } from 'prisma-extension-kysely';
 
-import { config } from '@core/config';
+import { AppConfig } from '@core/config';
 import {
   PaginationOptions,
   getLimit,
@@ -18,7 +18,6 @@ import {
 import { DB } from './generated/types';
 import { Prisma, PrismaClient } from './prisma';
 
-const dbConfig = config().database;
 const kyselyExtensionArgs: PrismaKyselyExtensionArgs<DB> = {
   kysely: (driver) =>
     new Kysely<DB>({
@@ -32,7 +31,7 @@ const kyselyExtensionArgs: PrismaKyselyExtensionArgs<DB> = {
     }),
 };
 
-export async function getPrisma() {
+export async function getPrisma(dbConfig: AppConfig['database']) {
   // Enable Replica here
   // const replicaClient = new PrismaClient({
   //   datasourceUrl: 'YOUR_REPLICA_URL', // Replace this with your replica's URL!

@@ -5,6 +5,7 @@ import { Request } from 'express';
 
 import { AppConfig } from '@core/config';
 import { decodeUserJwt } from '@core/shared/common/common.crypto';
+import { isTesting } from '@core/shared/common/common.func';
 import { newInfo } from '@core/shared/common/common.neverthrow';
 import { ApiException } from '@core/shared/http/http.exception';
 
@@ -18,11 +19,13 @@ export class JwtGuard implements CanActivate {
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
+    const appConfig = this.configService.getOrThrow<AppConfig['app']>('app');
+
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
-    if (isPublic) {
+    if (isPublic || isTesting(appConfig.nodeEnv)) {
       return true;
     }
 

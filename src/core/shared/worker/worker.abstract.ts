@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Job, JobsOptions, Queue } from 'bullmq';
 
@@ -10,7 +10,7 @@ import { TaskMetadata, getTaskHandlers } from './worker.decorator';
 import { QUEUE } from './worker.queue';
 
 @Injectable()
-export abstract class BaseQueue implements OnModuleInit {
+export abstract class BaseQueue implements OnModuleInit, OnModuleDestroy {
   abstract queueName: QUEUE;
   protected queue: Queue;
 
@@ -29,6 +29,10 @@ export abstract class BaseQueue implements OnModuleInit {
     });
 
     this.bullboardService.addQueue(this.queue);
+  }
+
+  async onModuleDestroy() {
+    await this.queue.disconnect();
   }
 
   addJob(name: string, data: any) {
