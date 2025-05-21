@@ -1,8 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
+import { AppConfig } from '@core/config';
 import { CORE_DB, CoreDB } from '@core/db/db.common';
 import { TransactionService } from '@core/global/transaction/transaction.service';
 
+import { isTesting } from './common.func';
 import { ExceptionErr, Ok, Res } from './common.neverthrow';
 
 @Injectable()
@@ -11,12 +14,20 @@ export abstract class BaseRepo {
     @Inject(CORE_DB)
     private coreDb: CoreDB,
     private transactionService: TransactionService,
+    private configService: ConfigService,
   ) {}
 
   async transaction<T>(
     callback: () => Promise<T>,
   ): Promise<Res<T, 'internal'>> {
+    const appConfig = this.configService.getOrThrow<AppConfig['app']>('app');
     try {
+      if (isTesting(appConfig.nodeEnv)) {
+        // No transaction in test
+        const res = await callback();
+        return Ok(res);
+      }
+
       const res = await this.shardDb.main.$transaction((tx) => {
         this.transactionService.setTransaction(tx);
         return callback();

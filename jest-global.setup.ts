@@ -3,6 +3,8 @@ import { RedisContainer } from '@testcontainers/redis';
 // import { GenericContainer } from 'testcontainers';
 import 'tsconfig-paths/register';
 
+import { updateTestState } from '@core/test/test-util/test-state.common';
+
 export default async () => {
   const pgContainer = await new PostgreSqlContainer().start();
   const redisContainer = await new RedisContainer('redis:7.2').start();
@@ -17,5 +19,5 @@ export default async () => {
   globalThis.pgContainer = pgContainer;
   globalThis.redisContainer = redisContainer;
 
-  globalThis.requireDbSetup = true;
+  updateTestState({ requireDbSetup: true });
 };

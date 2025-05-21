@@ -16,7 +16,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "format:prisma": "prisma-case-format -f src/core/db/schema.prisma",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "jest --maxWorkers=1",
     "test:mutation": "npx stryker run",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",

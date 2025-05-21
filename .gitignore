@@ -41,6 +41,8 @@ _docker_volumes
 
 # test report
 test-report
+.test-state.json
+
 # stryker temp files
 .stryker-tmp
 

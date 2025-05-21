@@ -1,10 +1,16 @@
-import { DynamicModule, Provider, Type } from '@nestjs/common';
+import {
+  DynamicModule,
+  INestApplication,
+  Provider,
+  Type,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { execSync } from 'child_process';
 import { Dayjs } from 'dayjs';
 
-import { CORE_DB } from '@core/db/db.common';
+import { config } from '@core/config';
+import { CORE_DB, CoreDB } from '@core/db/db.common';
 import { DBModule } from '@core/db/db.module';
 import { DomainModule } from '@core/domain/domain.module';
 import { GlobalModule } from '@core/global/global.module';
@@ -16,7 +22,7 @@ import { setupApp } from '@core/shared/http/http.setup';
 
 import { InitialsCliSeed } from '../../../cli/initials/cmd/initials.cli.seed';
 import { InitialsCliModule } from '../../../cli/initials/initials.cli.module';
-import { config } from '../test-config';
+import { getTestState, updateTestState } from './test-state.common';
 
 export function mockTransaction(
   mockRepo: { transaction: jest.Mock },
@@ -67,10 +73,10 @@ export async function createRepoTestingModule(repo: Provider) {
   return module;
 }
 
-export async function createBackendTestingModule(
+export function createBackendTestingModule(
   testModule: DynamicModule | Type<any>,
 ) {
-  const module = await Test.createTestingModule({
+  const module = Test.createTestingModule({
     imports: [
       ConfigModule.forRoot({
         isGlobal: true,
@@ -85,21 +91,45 @@ export async function createBackendTestingModule(
       QueueModule,
       InitialsCliModule,
     ],
-  }).compile();
+  });
 
-  const app = module.createNestApplication();
-  setupApp(app);
-  await app.init();
-
-  if (globalThis.requireDbSetup) {
-    execSync('yarn db:deploy');
-    await app.get(InitialsCliSeed).run([]);
-    globalThis.requireDbSetup = false;
-  }
-
-  return { module, app };
+  return module;
 }
 
 export function freezeTestTime(current: Dayjs) {
   jest.useFakeTimers().setSystemTime(current.toDate());
+}
+
+export async function startTestApp(module: TestingModule) {
+  const app = module.createNestApplication();
+  setupApp(app);
+  await app.init();
+
+  const { requireDbSetup } = getTestState();
+
+  if (requireDbSetup) {
+    execSync('yarn db:deploy');
+    await app.get(InitialsCliSeed).run([]);
+    updateTestState({ requireDbSetup: false });
+  }
+
+  const db = app.get<CoreDB>(CORE_DB);
+  const transactionService = app.get<TransactionService>(TransactionService);
+
+  const tx = await db.$begin();
+  transactionService.setTransaction(tx);
+
+  return app;
+}
+
+export async function endTestApp(app: INestApplication<any>) {
+  const transactionService = app.get<TransactionService>(TransactionService);
+  const tx = transactionService.getTransaction();
+
+  await tx.$rollback();
+  transactionService.clearTransaction();
+
+  await app.close();
+
+  return;
 }

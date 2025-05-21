@@ -12,4 +12,8 @@ export class TransactionService {
   getTransaction(): any | null {
     return this._transactionStorage.getStore() ?? null;
   }
+
+  clearTransaction() {
+    this._transactionStorage.disable();
+  }
 }
