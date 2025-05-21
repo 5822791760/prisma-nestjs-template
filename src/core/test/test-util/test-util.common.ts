@@ -17,6 +17,7 @@ import { GlobalModule } from '@core/global/global.module';
 import { TransactionService } from '@core/global/transaction/transaction.service';
 import { MiddlewareModule } from '@core/middleware/middleware.module';
 import { QueueModule } from '@core/queue/queue.module';
+import { getConfigOptions } from '@core/shared/common/common.dotenv';
 import { Ok } from '@core/shared/common/common.neverthrow';
 import { setupApp } from '@core/shared/http/http.setup';
 
@@ -78,10 +79,7 @@ export function createBackendTestingModule(
 ) {
   const module = Test.createTestingModule({
     imports: [
-      ConfigModule.forRoot({
-        isGlobal: true,
-        load: [config],
-      }),
+      ConfigModule.forRoot(getConfigOptions()),
 
       testModule,
       DBModule,

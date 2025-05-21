@@ -10,7 +10,7 @@
     "start": "node dist/main",
     "start:worker": "node dist/worker",
     "start:repl": "node dist/repl",
-    "start:cli": "node dist/cli",
+    "start:cli": "NODE_ENV=cli node dist/cli",
     "db:deploy": "prisma migrate deploy --schema dist/core/db/schema.prisma",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

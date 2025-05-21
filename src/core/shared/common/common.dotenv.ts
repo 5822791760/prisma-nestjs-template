@@ -1,5 +1,8 @@
-import { config } from 'dotenv';
+import { ConfigModuleOptions } from '@nestjs/config';
+import { config as dotenvConfig } from 'dotenv';
 import * as path from 'path';
+
+import { config } from '@core/config';
 
 // Initializing dotenv
 function getEnvPath(nodeEnv: string | undefined) {
@@ -14,9 +17,16 @@ function getEnvPath(nodeEnv: string | undefined) {
   return '../../../../.env';
 }
 
-const envPath: string = path.resolve(
-  __dirname,
-  getEnvPath(process.env.NODE_ENV),
-);
+export function getEnvFullPath() {
+  return path.resolve(__dirname, getEnvPath(process.env.NODE_ENV));
+}
 
-config({ path: envPath, override: true });
+dotenvConfig({ path: getEnvFullPath() });
+
+export function getConfigOptions(): ConfigModuleOptions {
+  return {
+    isGlobal: true,
+    load: [config],
+    ignoreEnvFile: true,
+  };
+}
