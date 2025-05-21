@@ -23,31 +23,37 @@ export class InitialsCliSeed extends CommandRunner {
   }
 
   private async _initUsers() {
-    const superadmin = await this.repo.createUsers({
-      email: 'superadmin@example.com',
-      password: hashString(DEFAULT_PASSWORD),
+    const superadmin = await this.repo.db.users.create({
+      data: {
+        email: 'superadmin@example.com',
+        password: hashString(DEFAULT_PASSWORD),
+      },
     });
 
-    this.repo.createUsers({
-      email: 'general@example.com',
-      password: hashString(DEFAULT_PASSWORD),
+    await this.repo.db.users.create({
+      data: {
+        email: 'general@example.com',
+        password: hashString(DEFAULT_PASSWORD),
+      },
     });
 
     this.superAdmin = superadmin;
   }
 
   private async _initPosts() {
-    await this.repo.createManyPosts([
-      {
-        title: 'test post A',
-        details: 'post A details',
-        createdBy: this.superAdmin.id,
-      },
-      {
-        title: 'test post B',
-        details: 'post B details',
-        createdBy: this.superAdmin.id,
-      },
-    ]);
+    await this.repo.db.posts.createMany({
+      data: [
+        {
+          title: 'test post A',
+          details: 'post A details',
+          createdBy: this.superAdmin.id,
+        },
+        {
+          title: 'test post B',
+          details: 'post B details',
+          createdBy: this.superAdmin.id,
+        },
+      ],
+    });
   }
 }

@@ -25,7 +25,9 @@ export class UsersV1Service {
   async getUsers(
     options: Read<GetUsersV1Input>,
   ): Promise<Res<GetUsersV1Output, ''>> {
-    const { data, totalItems } = await this.repo.getPageUsers(options);
+    const { data, totalItems } = await this.repo.db.users.paginate(options, {
+      orderBy: { id: 'asc' },
+    });
 
     // Queue job works!
     this.usersQueueService.addJobSample({ key: 'test' });
@@ -41,8 +43,7 @@ export class UsersV1Service {
   }
 
   async getUsersId(id: number): Promise<Res<GetUsersIdV1Output, 'notFound'>> {
-    const user = await this.repo.getOneUser(id);
-
+    const user = await this.repo.db.users.findFirst({ where: { id } });
     if (!user) {
       return Err('notFound');
     }
@@ -65,7 +66,7 @@ export class UsersV1Service {
     }
 
     await this.repo.transaction(async () => {
-      await this.usersService.dbInsert(newUser);
+      await this.repo.db.users.create({ data: newUser });
     });
 
     return Ok({});
@@ -75,7 +76,9 @@ export class UsersV1Service {
     body: Read<PutUsersIdV1Input>,
     id: number,
   ): Promise<Res<PutUsersIdV1Output, 'validation' | 'notFound'>> {
-    let user = await this.repo.getOneUser(id);
+    let user = await this.repo.db.users.findFirst({
+      where: { id },
+    });
     if (!user) {
       return Err('notFound');
     }
@@ -87,7 +90,7 @@ export class UsersV1Service {
     }
 
     await this.repo.transaction(async () => {
-      await this.usersService.dbUpdate(user);
+      await this.repo.db.users.update({ data: user, where: { id } });
     });
 
     return Ok({});

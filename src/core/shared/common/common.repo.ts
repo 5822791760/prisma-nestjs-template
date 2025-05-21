@@ -28,7 +28,7 @@ export abstract class BaseRepo {
     }
   }
 
-  protected get db(): CoreDB {
+  get db(): CoreDB {
     let mainDb: CoreDB = this._currentTransaction() as unknown as CoreDB;
     if (!mainDb) {
       mainDb = this.shardDb.main;

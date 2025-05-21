@@ -22,7 +22,7 @@ export class PostsCliSeed extends CommandRunner {
 
   async run(_passedParams: string[], options: CommandOptions): Promise<void> {
     const data: NewPost[] = [];
-    const users = await this.repo.getUsers();
+    const users = await this.repo.db.users.findMany();
 
     for (let i = 0; i < options.amount; i++) {
       data.push({
@@ -35,7 +35,7 @@ export class PostsCliSeed extends CommandRunner {
     }
 
     await this.repo.transaction(async () => {
-      this.repo.createPosts(data);
+      this.repo.db.posts.createMany({ data });
     });
   }
 

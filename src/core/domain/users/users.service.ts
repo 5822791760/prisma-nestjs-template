@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { Users } from '@core/db/prisma';
 import { hashString, isMatchedHash } from '@core/shared/common/common.crypto';
 import myDayjs from '@core/shared/common/common.dayjs';
 import { clone } from '@core/shared/common/common.func';
@@ -76,14 +75,6 @@ export class UsersService {
 
   // Query helper
 
-  async dbInsert<T extends UserData>(data: T) {
-    return this.repo.insert(data);
-  }
-
-  async dbUpdate<T extends Users>(user: Read<T>) {
-    await this.repo.update(user);
-  }
-
   async dbValidate(
     data: Read<ValidateUserData>,
     excludeId?: number,
@@ -92,7 +83,10 @@ export class UsersService {
       email: [],
     };
 
-    const emailExists = await this.repo.emailExists(data.email, excludeId);
+    const emailExists = await this.repo.db.users.exists({
+      email: data.email,
+      id: { not: excludeId },
+    });
     if (emailExists) {
       fields.email.push('exists');
     }
