@@ -1,5 +1,5 @@
-import { BaseQueue } from '@core/shared/worker/worker.abstract';
-import { QUEUE } from '@core/shared/worker/worker.queue';
+import { BaseQueue } from '@core/shared/task/task.abstract';
+import { QUEUE } from '@core/shared/task/task.queue';
 
 import { JobSampleInput } from './schema/job-sample';
 import { USERS_JOBS } from './users.queue.common';

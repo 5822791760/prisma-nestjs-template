@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 
-import { createWorker } from '@core/shared/worker/worker.util';
+import { createWorker } from '@core/shared/common/common.worker';
 
 import { MainWorkerModule } from './main.module';
 

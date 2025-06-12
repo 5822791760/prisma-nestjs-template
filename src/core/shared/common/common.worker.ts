@@ -3,7 +3,7 @@ import { Job, Worker } from 'bullmq';
 
 import { config } from '@core/config';
 
-import { QUEUE } from './worker.queue';
+import { QUEUE } from '../task/task.queue';
 
 const redisConfig = config().redis;
 

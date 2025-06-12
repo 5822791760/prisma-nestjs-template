@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { QUEUE } from '@core/shared/worker/worker.queue';
-import { createBullmqHandler } from '@core/shared/worker/worker.util';
+import { createBullmqHandler } from '@core/shared/common/common.worker';
+import { QUEUE } from '@core/shared/task/task.queue';
 
 import { CronsTaskRepo } from './crons.task.repo';
 import { CronsTaskBullmq } from './handler/crons.task.bullmq';

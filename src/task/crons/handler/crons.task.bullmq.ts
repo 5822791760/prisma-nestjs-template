@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
 import { CRONS_JOBS } from '@core/queue/crons/crons.queue.common';
-import { BaseTaskHandler } from '@core/shared/worker/worker.abstract';
-import { Task } from '@core/shared/worker/worker.decorator';
+import { BaseTaskHandler } from '@core/shared/task/task.abstract';
+import { Task } from '@core/shared/task/task.decorator';
 
 @Injectable()
 export class CronsTaskBullmq extends BaseTaskHandler {

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import { JobSampleInput } from '@core/queue/users/schema/job-sample';
 import { USERS_JOBS } from '@core/queue/users/users.queue.common';
-import { BaseTaskHandler } from '@core/shared/worker/worker.abstract';
-import { Task } from '@core/shared/worker/worker.decorator';
+import { BaseTaskHandler } from '@core/shared/task/task.abstract';
+import { Task } from '@core/shared/task/task.decorator';
 
 @Injectable()
 export class UsersTaskBullmq extends BaseTaskHandler {

@@ -6,8 +6,8 @@ import { AppConfig } from '@core/config';
 import { LoggerService } from '@core/global/logger/logger.service';
 import { QueueBoard } from '@core/queue/queue.board';
 
-import { TaskMetadata, getTaskHandlers } from './worker.decorator';
-import { QUEUE } from './worker.queue';
+import { TaskMetadata, getTaskHandlers } from './task.decorator';
+import { QUEUE } from './task.queue';
 
 @Injectable()
 export abstract class BaseQueue implements OnModuleInit, OnModuleDestroy {
