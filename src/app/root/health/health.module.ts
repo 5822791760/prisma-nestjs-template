@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
 
-import { HealthHttpController } from './handler/http/health.http.controller';
+import { HealthHttp } from './handler/health.http';
 
 @Module({
   imports: [TerminusModule],
-  controllers: [HealthHttpController],
+  controllers: [HealthHttp],
 })
 export class HealthModule {}

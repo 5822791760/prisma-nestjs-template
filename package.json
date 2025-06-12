@@ -131,7 +131,7 @@
     "moduleNameMapper": {
       "@core/(.*)": "<rootDir>/src/core/$1",
       "@helper/(.*)": "<rootDir>/src/helper/$1",
-      "@route/(.*)": "<rootDir>/src/route/$1",
+      "@app/(.*)": "<rootDir>/src/app/$1",
       "@testcore/(.*)": "<rootDir>/test/core/$1"
     },
     "testRegex": ".*\\.spec\\.ts$",

@@ -16,7 +16,7 @@ import { PostAuthsSignUpsV1Response } from '../dto/post-auths-sign-ups/post-auth
   path: 'auths',
   version: '1',
 })
-export class AuthsV1HttpController {
+export class AuthsV1Http {
   constructor(private service: AuthsV1Service) {}
 
   @Post('sign-ups')

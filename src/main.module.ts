@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { RouteModule } from 'src/route/route.module';
 
 import { DBModule } from '@core/db/db.module';
 import { DomainModule } from '@core/domain/domain.module';
 import { GlobalModule } from '@core/global/global.module';
 import { QueueModule } from '@core/queue/queue.module';
 import { getConfigOptions } from '@core/shared/common/common.dotenv';
+
+import { AppModule } from '@app/app.module';
 
 import { CliModule } from './cli/cli.module';
 import { MiddlewareModule } from './core/middleware/middleware.module';
@@ -21,7 +22,7 @@ import { TaskModule } from './task/task.module';
     GlobalModule,
     DomainModule,
     MiddlewareModule,
-    RouteModule,
+    AppModule,
     QueueModule,
   ],
 })
@@ -38,7 +39,7 @@ export class MainAppModule {}
     TaskModule,
   ],
 })
-export class WorkerAppModule {}
+export class MainWorkerModule {}
 
 @Module({
   imports: [
@@ -51,4 +52,4 @@ export class WorkerAppModule {}
     CliModule,
   ],
 })
-export class CliAppModule {}
+export class MainCliModule {}

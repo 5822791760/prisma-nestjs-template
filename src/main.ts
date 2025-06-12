@@ -4,7 +4,7 @@ import { config } from '@core/config';
 import { coreLogger } from '@core/shared/common/common.logger';
 import { setupApp, setupSwagger } from '@core/shared/http/http.setup';
 
-import { MainAppModule } from './app.module';
+import { MainAppModule } from './main.module';
 
 const appConfig = config().app;
 

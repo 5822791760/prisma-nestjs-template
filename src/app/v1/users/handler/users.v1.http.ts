@@ -29,7 +29,7 @@ import { UsersV1Service } from '../users.v1.service';
   path: 'users',
   version: '1',
 })
-export class UsersV1HttpController {
+export class UsersV1Http {
   constructor(private service: UsersV1Service) {}
 
   @Get()

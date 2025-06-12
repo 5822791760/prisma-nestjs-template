@@ -6,11 +6,11 @@ import { HealthCheckService, MemoryHealthIndicator } from '@nestjs/terminus';
 import { AppConfig } from '@core/config';
 import { UsePublic } from '@core/middleware/jwt/jwt.common';
 
-import { GetHealthHttpResponse } from './health.http.dto';
+import { GetHealthResponse } from '../dto/get-healths/get-healths.response';
 
 @ApiTags('health')
 @Controller('health')
-export class HealthHttpController {
+export class HealthHttp {
   constructor(
     private health: HealthCheckService,
     private memIndicator: MemoryHealthIndicator,
@@ -19,7 +19,7 @@ export class HealthHttpController {
 
   @Get()
   @UsePublic()
-  async getHealth(): Promise<GetHealthHttpResponse> {
+  async getHealth(): Promise<GetHealthResponse> {
     const appConfig = this.configService.getOrThrow<AppConfig['app']>('app');
 
     const data = await this.health.check([
