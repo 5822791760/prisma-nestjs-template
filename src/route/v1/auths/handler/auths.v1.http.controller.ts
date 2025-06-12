@@ -5,13 +5,11 @@ import { UsePublic } from '@core/middleware/jwt/jwt.common';
 import { errIs } from '@core/shared/common/common.neverthrow';
 import { ApiException } from '@core/shared/http/http.exception';
 
-import { AuthsV1Service } from '../../auths.v1.service';
-import {
-  PostAuthsSignInsV1HttpDto,
-  PostAuthsSignInsV1HttpResponse,
-  PostAuthsSignUpsHttpResponse,
-  PostAuthsSignUpsV1HttpDto,
-} from './auths.v1.http.dto';
+import { AuthsV1Service } from '../auths.v1.service';
+import { PostAuthsSignInsV1Dto } from '../dto/post-auths-sign-ins/post-auths-sign-ins.v1.dto';
+import { PostAuthsSignInsV1Response } from '../dto/post-auths-sign-ins/post-auths-sign-ins.v1.response';
+import { PostAuthsSignUpsV1Dto } from '../dto/post-auths-sign-ups/post-auths-sign-ups.v1.dto';
+import { PostAuthsSignUpsV1Response } from '../dto/post-auths-sign-ups/post-auths-sign-ups.v1.response';
 
 @ApiTags('v1')
 @Controller({
@@ -24,8 +22,8 @@ export class AuthsV1HttpController {
   @Post('sign-ups')
   @UsePublic()
   async postAuthsSignUps(
-    @Body() body: PostAuthsSignUpsV1HttpDto,
-  ): Promise<PostAuthsSignUpsHttpResponse> {
+    @Body() body: PostAuthsSignUpsV1Dto,
+  ): Promise<PostAuthsSignUpsV1Response> {
     const r = await this.service.postAuthsSignUps(body);
 
     return r.match(
@@ -51,8 +49,8 @@ export class AuthsV1HttpController {
   @Post('sign-ins')
   @UsePublic()
   async postAuthsSignIns(
-    @Body() body: PostAuthsSignInsV1HttpDto,
-  ): Promise<PostAuthsSignInsV1HttpResponse> {
+    @Body() body: PostAuthsSignInsV1Dto,
+  ): Promise<PostAuthsSignInsV1Response> {
     const r = await this.service.postAuthsSignIns(body);
 
     return r.match(

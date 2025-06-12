@@ -5,7 +5,7 @@ import { BaseTaskHandler } from '@core/shared/worker/worker.abstract';
 import { Task } from '@core/shared/worker/worker.decorator';
 
 @Injectable()
-export class CronsTaskHandler extends BaseTaskHandler {
+export class CronsTaskBullmq extends BaseTaskHandler {
   @Task(CRONS_JOBS.SAMPLE)
   async processSample() {
     console.log('XXxxxXXXXXXXXX');

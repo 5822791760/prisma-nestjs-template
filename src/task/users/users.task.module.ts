@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
 import { QUEUE } from '@core/shared/worker/worker.queue';
-import { createTaskHandler } from '@core/shared/worker/worker.util';
+import { createBullmqHandler } from '@core/shared/worker/worker.util';
 
-import { UsersTaskHandler } from './handler/users.task.handler';
+import { UsersTaskBullmq } from './handler/users.task.bullmq';
 import { UsersTaskRepo } from './users.task.repo';
 
 @Module({
@@ -11,7 +11,7 @@ import { UsersTaskRepo } from './users.task.repo';
     UsersTaskRepo,
 
     // Handler
-    createTaskHandler(QUEUE.USERS, UsersTaskHandler),
+    createBullmqHandler(QUEUE.USERS, UsersTaskBullmq),
   ],
 })
 export class UsersTaskModule {}

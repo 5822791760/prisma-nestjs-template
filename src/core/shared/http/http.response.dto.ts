@@ -1,6 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 import { IPaginationMeta, IPaginationSchema } from './http.standard';
 
-export class PaginationResponseSchema implements IPaginationSchema {
+class PaginationResponseSchema implements IPaginationSchema {
   page: number;
   nextPage: number;
   previousPage: number;
@@ -12,4 +14,12 @@ export class PaginationResponseSchema implements IPaginationSchema {
 
 export class PaginationMetaResponse implements IPaginationMeta {
   pagination: PaginationResponseSchema;
+}
+
+export class StandardResponse {
+  @ApiProperty({ example: true })
+  success: boolean;
+
+  @ApiProperty({ example: '' })
+  key: string;
 }

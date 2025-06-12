@@ -8,14 +8,10 @@ import { Err, Ok, Res } from '@core/shared/common/common.neverthrow';
 import { Read } from '@core/shared/common/common.type';
 
 import { AuthsV1Repo } from './auths.v1.repo';
-import {
-  PostAuthsSignInsV1Input,
-  PostAuthsSignInsV1Output,
-} from './schema/post-auths-sign-ins.v1';
-import {
-  PostAuthsSignUpsV1Input,
-  PostAuthsSignUpsV1Output,
-} from './schema/post-auths-sign-ups.v1';
+import { PostAuthsSignInsV1Input } from './dto/post-auths-sign-ins/post-auths-sign-ins.v1.dto';
+import { PostAuthsSignInsV1Output } from './dto/post-auths-sign-ins/post-auths-sign-ins.v1.response';
+import { PostAuthsSignUpsV1Input } from './dto/post-auths-sign-ups/post-auths-sign-ups.v1.dto';
+import { PostAuthsSignUpsV1Output } from './dto/post-auths-sign-ups/post-auths-sign-ups.v1.response';
 
 @Injectable()
 export class AuthsV1Service {

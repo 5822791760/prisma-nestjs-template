@@ -31,7 +31,7 @@ export function createWorker(app: INestApplicationContext) {
   }
 }
 
-export function createTaskHandler(key: QUEUE, clazz: any): Provider {
+export function createBullmqHandler(key: QUEUE, clazz: any): Provider {
   return {
     provide: addNamePrefix(key),
     useClass: clazz,

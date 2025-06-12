@@ -6,7 +6,7 @@ import { BaseTaskHandler } from '@core/shared/worker/worker.abstract';
 import { Task } from '@core/shared/worker/worker.decorator';
 
 @Injectable()
-export class UsersTaskHandler extends BaseTaskHandler {
+export class UsersTaskBullmq extends BaseTaskHandler {
   @Task(USERS_JOBS.SAMPLE, JobSampleInput)
   async processSample(data: JobSampleInput) {
     console.log('==================================');

@@ -5,13 +5,13 @@ import { UsersQueueService } from '@core/queue/users/users.queue.service';
 import { Err, Ok, Res } from '@core/shared/common/common.neverthrow';
 import { Read } from '@core/shared/common/common.type';
 
-import { GetUsersIdV1Output } from './schema/get-users-id.v1';
-import { GetUsersV1Input, GetUsersV1Output } from './schema/get-users.v1';
-import { PostUsersV1Input, PostUsersV1Output } from './schema/post-users.v1';
-import {
-  PutUsersIdV1Input,
-  PutUsersIdV1Output,
-} from './schema/put-users-id.v1';
+import { GetUsersIdV1Output } from './dto/get-users-id/get-users-id.v1.response';
+import { GetUsersV1Input } from './dto/get-users/get-users.v1.dto';
+import { GetUsersV1Output } from './dto/get-users/get-users.v1.response';
+import { PostUsersV1Input } from './dto/post-users/post-users.v1.dto';
+import { PostUsersV1Output } from './dto/post-users/post-users.v1.response';
+import { PutUsersIdV1Input } from './dto/put-users/put-users-id.v1.dto';
+import { PutUsersIdV1Output } from './dto/put-users/put-users-id.v1.response';
 import { UsersV1Repo } from './users.v1.repo';
 
 @Injectable()
@@ -57,7 +57,7 @@ export class UsersV1Service {
 
   async postUsers(
     body: Read<PostUsersV1Input>,
-  ): Promise<Res<PostUsersV1Output, 'validation'>> {
+  ): Promise<Res<PostUsersV1Output, 'validation' | 'internal'>> {
     const newUser = this.usersService.new(body);
 
     const r = await this.usersService.dbValidate(newUser);
@@ -65,17 +65,27 @@ export class UsersV1Service {
       return Err('validation', r.error);
     }
 
-    await this.repo.transaction(async () => {
-      await this.repo.db.users.create({ data: newUser });
+    const rUser = await this.repo.transaction(async () => {
+      return this.repo.db.users.create({ data: newUser });
     });
 
-    return Ok({});
+    if (rUser.isErr()) {
+      return Err('internal', rUser.error);
+    }
+
+    const user = rUser.value;
+
+    return Ok({
+      id: user.id,
+      email: user.email,
+      createdAt: user.createdAt,
+    });
   }
 
   async putUsersId(
     body: Read<PutUsersIdV1Input>,
     id: number,
-  ): Promise<Res<PutUsersIdV1Output, 'validation' | 'notFound'>> {
+  ): Promise<Res<PutUsersIdV1Output, 'validation' | 'notFound' | 'internal'>> {
     let user = await this.repo.db.users.findFirst({
       where: { id },
     });
@@ -89,10 +99,20 @@ export class UsersV1Service {
       return Err('validation', r.error);
     }
 
-    await this.repo.transaction(async () => {
-      await this.repo.db.users.update({ data: user, where: { id } });
+    const rUser = await this.repo.transaction(async () => {
+      return this.repo.db.users.update({ data: user, where: { id } });
     });
 
-    return Ok({});
+    if (rUser.isErr()) {
+      return Err('internal', rUser.error);
+    }
+
+    const updatedUser = rUser.value;
+
+    return Ok({
+      id: updatedUser.id,
+      email: updatedUser.email,
+      createdAt: updatedUser.createdAt,
+    });
   }
 }

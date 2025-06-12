@@ -1,16 +1,12 @@
-// auths sign ins
 import { z } from 'zod';
+
+import { zodDto } from '@core/shared/common/common.zod';
 
 export const PostAuthsSignInsV1Input = z.object({
   email: z.string().email(),
   password: z.string(),
 });
 
-export const PostAuthsSignInsV1Output = z.object({
-  token: z.string(),
-  lastSignedInAt: z.date(),
-});
-
-//
 export type PostAuthsSignInsV1Input = z.infer<typeof PostAuthsSignInsV1Input>;
-export type PostAuthsSignInsV1Output = z.infer<typeof PostAuthsSignInsV1Output>;
+
+export class PostAuthsSignInsV1Dto extends zodDto(PostAuthsSignInsV1Input) {}
