@@ -16,6 +16,10 @@ function down() {
   docker-compose down --remove-orphans
 }
 
+function stop() {
+  docker-compose stop
+}
+
 function waitpg() {
   ./scripts/wait-pg.sh
 }
