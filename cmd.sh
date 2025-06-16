@@ -26,11 +26,11 @@ function waitpg() {
 
 function dev() {
   up
-  yarn nest start --watch
+  npx nest start --watch
 }
 
 function repl() {
-  nest start --entryFile repl --watch
+  npx nest start --entryFile repl --watch
 }
 
 function cli() {
@@ -38,21 +38,21 @@ function cli() {
 }
 
 function dbml() {
-  yarn db2dbml postgres "$DATABASE_URL" -o schema.dbml
+  npx db2dbml postgres "$DATABASE_URL" -o schema.dbml
 }
 
 function db:up() {
-  yarn prisma migrate deploy
-  yarn prisma generate
+  npx prisma migrate deploy
+  npx prisma generate
   # dbml
 }
 
 function db:make() {
-  yarn prisma migrate dev --create-only
+  npx prisma migrate dev --create-only
 }
 
 function db:push() {
-  yarn prisma migrate dev
+  npx prisma migrate dev
   # dbml
 }
 
@@ -69,14 +69,14 @@ function db:reset() {
 
 function db:init() {
   db:reset
-  yarn cli initials:seed
+  npm run cli initials:seed
 }
 
 # Only run this after cloning project
 function initproject() {
   cat .env.example > .env
   up
-  yarn
+  npm i
   waitpg
   db:init
 }

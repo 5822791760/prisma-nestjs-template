@@ -106,7 +106,7 @@ export async function startTestApp(module: TestingModule) {
   const { requireDbSetup } = getTestState();
 
   if (requireDbSetup) {
-    execSync('yarn db:deploy');
+    execSync('npm run db:deploy');
     await app.get(InitialsCliSeed).run([]);
     updateTestState({ requireDbSetup: false });
   }

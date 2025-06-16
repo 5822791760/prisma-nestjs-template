@@ -16,8 +16,8 @@ model Posts {
   id        Int      @id @default(autoincrement())
   title     String?  @db.VarChar(250)
   details   String   @default("") @db.VarChar(250)
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
   createdBy Int?     @map("created_by")
   users     Users?   @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -26,11 +26,11 @@ model Posts {
 
 model Users {
   id             Int       @id @default(autoincrement())
-  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt      DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @default(now()) @map("updated_at")
   email          String    @unique @db.VarChar(250)
   password       String    @db.VarChar(250)
-  lastSignedInAt DateTime? @map("last_signed_in_at") @db.Timestamptz(6)
+  lastSignedInAt DateTime? @map("last_signed_in_at")
   posts          Posts[]
 
   @@map("users")

@@ -11,16 +11,16 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) project, is using primsa & kyselyDB ORM. Yarn as package manager. This project is design to run as 2 entry point **main(api)** **worker(process task)**. Steps to perform deploy will is in Note section.
+[Nest](https://github.com/nestjs/nest) project, is using primsa & kyselyDB ORM. NPM as package manager. This project is design to run as 2 entry point **main(api)** **worker(process task)**. Steps to perform deploy will is in Note section.
 
 ## Quick Start
 ```bash
 # Stop all running docker (incase conflicting port)
 $ docker stop $(docker ps -q)
 
-$ yarn cmd initproject
+$ npm run cmd initproject
 
-$ yarn dev
+$ npm run dev
 ```
 
 ## API Documentation
@@ -32,32 +32,32 @@ $ yarn dev
 ## Installation
 
 ```bash
-$ yarn
+$ npm run
 ```
 
 ## Running the app
 
 ```bash
 # development & watch mode
-$ yarn dev
+$ npm run dev
 
 # worker development & watch mode
-$ yarn dev:worker
+$ npm run dev:worker
 ```
 
 ## Database Management
 ```bash
 # new migrations (based on prisma sche changes)
-$ yarn db:make
+$ npm run db:make
 
 # run migrations
-$ yarn db:up
+$ npm run db:up
 
 # make and up together
-$ yarn db:push
+$ npm run db:push
 
 # reseting all migration and run seed
-$ yarn db:init
+$ npm run db:init
 ```
 
 ## Test
@@ -84,10 +84,10 @@ There're  2 types of test avaliable, unit and mutation. We don't care about test
 
 ```bash
 # unit tests
-$ yarn test
+$ npm run test
 
 # mutation test
-$ yarn test:mutation
+$ npm run test:mutation
 ```
 
 Report will be generate at *test-report/stryker.html* you can look at your issue and score there. threshold for coverage is set to **>70%**
@@ -98,10 +98,10 @@ You can write your own cli command. NestjsCommander has already been setup. You 
 
 ```bash
 # running custom cli
-$ yarn cli ${name}
+$ npm run cli ${name}
 
 # example
-$ yarn cli users:seed
+$ npm run cli users:seed
 ```
 
 
@@ -109,10 +109,10 @@ $ yarn cli users:seed
 
 ```bash
 # developing react email
-$ yarn dev:email
+$ npm run dev:email
 
 # running repl
-$ yarn repl
+$ npm run repl
 ```
 
 
@@ -284,8 +284,8 @@ private _updateUser(user: Users, data: UpdateUserData): Users {
     - you can see inside [setup.sh](scripts/setup.sh) there's a function called _dbdoc() inside the build step.
     ```bash
     function build() {
-        yarn
-        yarn test:mutation
+        npm i
+        npm run test:mutation
         # _dbdoc
     }
     ```

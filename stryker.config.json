@@ -2,7 +2,7 @@
   "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
   "_comment": "This config was generated using 'stryker init'. Please take a look at: https://stryker-mutator.io/docs/stryker-js/configuration/ for more information.",
   "checkers": ["typescript"],
-  "packageManager": "yarn",
+  "packageManager": "npm",
   "reporters": ["html", "clear-text", "progress"],
   "testRunner": "jest",
   "htmlReporter": { "fileName": "test-report/stryker.html" },

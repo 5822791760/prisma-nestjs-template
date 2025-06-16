@@ -4,9 +4,9 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { nanoid } from 'nanoid';
 import { Observable } from 'rxjs';
 
+import { generateUID } from '@core/shared/common/common.crypto';
 import myDayjs from '@core/shared/common/common.dayjs';
 
 import { CORE_CONTEXT, ICoreContext } from './core-context.common';
@@ -20,7 +20,7 @@ export class CoreContextInterceptor implements NestInterceptor {
     const request = ctx.getRequest();
 
     const coreCtx: ICoreContext = {
-      traceId: nanoid(),
+      traceId: generateUID(),
       requestTime: myDayjs().toISOString(),
     };
     request[CORE_CONTEXT] = coreCtx;

@@ -9,16 +9,16 @@ if [ -f ./.env ]; then
 fi
 
 function build() {
-    yarn
-    yarn test:mutation
+    npm i
+    npm run test:mutation
     # _dbdoc
 }
 
 function merge() {
-    yarn
-    yarn lint
-    yarn tsc --noEmit
-    yarn test:mutation
+    npm i
+    npm run lint
+    npx tsc --noEmit
+    npm run test:mutation
 }
 
 function _dbdoc() {
@@ -26,7 +26,7 @@ function _dbdoc() {
         echo "Error: DBDOCS_TOKEN is not set."
         exit 1
     fi
-    yarn add -D dbdocs
+    npm install dbdocs --save-dev
     DBDOCS_TOKEN="$DBDOCS_TOKEN" dbdocs build ./schema.dbml --project nestjs
 }
 
