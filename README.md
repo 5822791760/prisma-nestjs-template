@@ -60,6 +60,21 @@ $ npm run db:push
 $ npm run db:init
 ```
 
+## i18n
+I use [typesafe-i18n](https://github.com/ivanhofer/typesafe-i18n?tab=readme-ov-file) for translating you can add your translation inside the language sub folder of [i18n](src/core/i18n).
+
+After adding translation run this command to generate the compiled translation.
+```bash
+$ npm run lang
+```
+
+To use just called the object globally
+```ts
+import L from '@core/i18n/i18n-node';
+
+L.th.HI({ name: 'robert' })
+```
+
 ## Test
 
 **WE WILL ONLY TEST .service.ts FILE**
