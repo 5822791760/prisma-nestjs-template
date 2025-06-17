@@ -5,6 +5,11 @@ export const CORE_CONTEXT = 'coreCtx';
 export interface ICoreContext {
   traceId: string;
   requestTime: string;
+  agent: string;
+  browser: string;
+  device: UAParser.IDevice;
+  os: string;
+  ip: string;
 }
 
 // ===== Util =====
