@@ -75,35 +75,49 @@ import L from '@core/i18n/i18n-node';
 L.th.HI({ name: 'robert' })
 ```
 
+**IMPORTANT ONLY TRANSLATE FOR REPORT ONLY**
+
+Don't translate anything to Frontend, it'll cause confusion we're trying not to have UI logic in backend. We only communicate to frontend using code. *See more in notes at the bottom.*
+
 ## Test
 
-**WE WILL ONLY TEST .service.ts FILE**
+**WE WILL ONLY DO E2E TEST**
 
-Repository testing is turned off my default since we're using a typesafe orm. In my opinion its a waste of time to test repository. We let typescript handle our sql bug.
+With our workflow from my experiece we're better off doing e2e test, this will make sure our api will not fail.
 
-**Our test will not connect to DB by default**
+I'm using package.json as config **Do not use jest.config.ts** it will cause bug with some test setup.
 
-**If you really want to test Repo (With DB)**
+**ALL TEST RUN INSIDE TRANSACTION**
 
-you can add this config into jest config in package.json to connect db in test. This will setup the db and run the default seed located in *src/core/db/seeds*. when writing use the util function *createRepoTestingModule*.
-```json
-"globalSetup": "<rootDir>/jest-global.setup.ts",
-"globalTeardown": "<rootDir>/jest-global.teardown.ts",
+make sure to start every e2e test with this function.
+```ts
+app = await startTestApp(module);
 ```
 
-I'm using package.json as config **Do not use jest.config.ts** it will cause bug with the repo setup.
+You can do as many post or delete request as you want, it will rollback at the end of each this using.
+```ts
+afterAll(async () => {
+    await endTestApp(app);
+  });
+```
+
+We test based on seed data, so make sure every feature is seeded and playable, before each test initalSeed will be run you will have to write it in this file.
+[INITAL SEED](src/cli/initials/cmd/initials.cli.seed.ts)
 
 **Running the test**
 
-There're  2 types of test avaliable, unit and mutation. We don't care about test coverage score because it doesn't really help locate bug. But **WE DO CARE** about **mutation score** so in **pipeline CI please use mutation test**.
+We don't care about test coverage score because it doesn't really help locate bug. **JUST MAKE SURE** every endpoint is tested.
+
+*Mutation test might not work well for since it's better to mutate on unittest but we're doing e2e. I will leave the library in just in case.*
 
 ```bash
-# unit tests
+# e2e test
 $ npm run test
 
-# mutation test
+# mutation test (can skip)
 $ npm run test:mutation
 ```
+**For mutation test (can skip because we don't do unit test)**
 
 Report will be generate at *test-report/stryker.html* you can look at your issue and score there. threshold for coverage is set to **>70%**
 
@@ -188,6 +202,31 @@ $ npm run repl
   }
   ```
 
+### Let the Frontend Handle Presentation
+**Avoid embedding UI logic in backend APIs**
+
+It's tempting to design APIs specifically around how the frontend displays data — such as tailoring a response for a table view. However, this tightly couples backend logic to frontend presentation and limits reusability.
+
+Instead, design APIs around business logic, not UI requirements.
+
+**Design Principle**
+
+A single endpoint like GET /users should serve multiple frontend use cases:
+- Table view (e.g., pagination, sorting)
+- Dropdowns (minimal fields like id, name)
+- Modals or detailed views (full relational context)
+
+The backend should expose a rich, normalized dataset, and let the frontend choose what and how to display it.
+
+Use query parameters (e.g., ?include=roles,profile) to allow clients to request additional related resources. This pattern is standardized in [JSON API](https://jsonapi.org/examples/)
+
+**Note**
+- Frontend controls projection/filtering, not backend.
+- Avoid building separate endpoints for each frontend view unless justified by distinct business operations.
+- Query param-based expansion of relations keeps endpoints flexible and maintainable.
+
+*If your app implements permission-based access control, be cautious. Always ensure only authorized fields and relations are exposed, regardless of frontend requests.*
+
 ### DB setup
 - all db setup is inside [db.provider](src/core/db/db.provider.ts) you can uncomment and add database replicas there
 
@@ -215,48 +254,6 @@ await this.repo.transaction(async () => {
 ```ts
 // Link users queue with UsersTaskHandler
 createTaskHandler(QUEUE.users, UsersTaskHandler)
-```
-
-### Using Helpers
-- The meaing of [Helper Folder](src/helper) is to create a service that allow shared service functionality that can be used across different module.
-- **IMPORTANT** Helper is designed to not have any dependency **SO DON'T IMPORT OTHER HELPER INTO IT**.
-- I would also encourage dev to make helper function do only 1 thing (if possible). Meaning it only does 1 logic so function will be quite short, it will be easier to test and dedug.
-- Example: EmailHelperService send function only send email and do nothing else
-```ts
-async send(
-  email: string,
-  subject: string,
-  template: React.JSX.Element,
-): Promise<Res<null, 'failSend'>> {
-  try {
-    await this._sendMail(email, subject, template);
-
-    return Ok(null);
-  } catch (e: any) {
-    return Err('failSend', { context: { message: e.message } });
-  }
-}
-```
-
-- Example: using the EmailHelperService inside users.v1.module
-```ts
-@Module({
-  // Import the EmailHelperModule first
-  imports: [EmailHelperModule],
-  providers: [UsersV1Service, UsersV1Repo],
-  controllers: [UsersV1HttpController],
-})
-export class UsersV1Module {}
-```
-```ts
-export class UsersV1Service {
-  constructor(
-    private repo: UsersV1Repo,
-    private usersQueueService: UsersQueueService,
-    // Then use the service inside
-    private emailHelperService: EmailHelperService,
-  ) {}
-}
 ```
 
 ### Writing pure function
