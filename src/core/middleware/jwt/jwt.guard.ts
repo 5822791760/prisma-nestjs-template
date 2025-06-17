@@ -39,7 +39,7 @@ export class JwtGuard implements CanActivate {
 
     const rClaims = decodeUserJwt(token, jwtConfig.salt);
     if (rClaims.isErr()) {
-      throw new ApiException(rClaims.error, 400);
+      throw new ApiException(rClaims.error, 400, 'invalidToken');
     }
 
     request[USER_CONTEXT] = rClaims.value;
