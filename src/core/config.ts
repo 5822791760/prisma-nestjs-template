@@ -27,6 +27,7 @@ export interface AppConfig {
   };
   jwt: {
     salt: string;
+    noExpire: boolean;
   };
   redis: {
     url: string;
@@ -60,6 +61,7 @@ export const config = (): AppConfig => ({
   },
   jwt: {
     salt: get('JWT_SALT').required().asString(),
+    noExpire: get('JWT_NO_EXPIRE').default('false').asBool(),
   },
   redis: {
     url: get('REDIS_URL').default('redis://localhost:6379').asString(),

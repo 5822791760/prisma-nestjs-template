@@ -13,6 +13,8 @@ export class AuthsService {
 
   generateToken(user: Read<TokenInput>): string {
     const jwtConfig = this.configService.getOrThrow<AppConfig['jwt']>('jwt');
-    return encodeUserJwt({ id: user.id }, jwtConfig.salt);
+    return encodeUserJwt({ id: user.id }, jwtConfig.salt, {
+      noExpire: jwtConfig.noExpire,
+    });
   }
 }

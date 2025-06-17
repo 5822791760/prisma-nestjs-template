@@ -18,8 +18,17 @@ interface DecodedJwt<T> {
   } | null;
 }
 
-function encodeJwt(obj: Record<string, any>, salt: string) {
-  return sign({ message: obj }, salt, { expiresIn: '1h' });
+export interface EncodeJwtOptions {
+  noExpire?: boolean;
+}
+function encodeJwt(
+  obj: Record<string, any>,
+  salt: string,
+  opts?: EncodeJwtOptions,
+) {
+  return sign({ message: obj }, salt, {
+    expiresIn: opts?.noExpire ? '100y' : '1h',
+  });
 }
 
 function decodeJwt<T>(
@@ -48,8 +57,12 @@ export function isMatchedHash(raw: string, hashed: string) {
   return isMatch;
 }
 
-export function encodeUserJwt(user: UserClaims, salt: string) {
-  return encodeJwt(user, salt);
+export function encodeUserJwt(
+  user: UserClaims,
+  salt: string,
+  opts?: EncodeJwtOptions,
+) {
+  return encodeJwt(user, salt, opts);
 }
 
 export function decodeUserJwt(token: string, salt: string) {
