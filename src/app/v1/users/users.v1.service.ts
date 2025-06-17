@@ -37,6 +37,8 @@ export class UsersV1Service {
         id: user.id,
         email: user.email,
         createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        lastSignedInAt: user.lastSignedInAt,
       })),
       totalItems,
     });
@@ -52,6 +54,8 @@ export class UsersV1Service {
       id: user.id,
       email: user.email,
       createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      lastSignedInAt: user.lastSignedInAt,
     });
   }
 
@@ -79,6 +83,8 @@ export class UsersV1Service {
       id: user.id,
       email: user.email,
       createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      lastSignedInAt: user.lastSignedInAt,
     });
   }
 
@@ -113,6 +119,8 @@ export class UsersV1Service {
       id: updatedUser.id,
       email: updatedUser.email,
       createdAt: updatedUser.createdAt,
+      updatedAt: updatedUser.updatedAt,
+      lastSignedInAt: updatedUser.lastSignedInAt,
     });
   }
 }

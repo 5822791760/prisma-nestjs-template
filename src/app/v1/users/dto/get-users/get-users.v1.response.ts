@@ -1,21 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import myDayjs from '@core/shared/common/common.dayjs';
+import { UserResponseData } from '@core/domain/users/users.response';
 import {
   PaginationMetaResponse,
   StandardResponse,
 } from '@core/shared/http/http.response.dto';
 
-export class GetUsersV1Data {
-  @ApiProperty({ example: 1 })
-  id: number;
-
-  @ApiProperty({ example: 'test@example.com' })
-  email: string;
-
-  @ApiProperty({ example: myDayjs().toDate() })
-  createdAt: Date;
-}
+export class GetUsersV1Data extends UserResponseData {}
 
 export class GetUsersV1Output {
   data: GetUsersV1Data[];
