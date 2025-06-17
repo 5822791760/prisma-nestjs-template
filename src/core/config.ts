@@ -32,6 +32,9 @@ export interface AppConfig {
   redis: {
     url: string;
   };
+  crypto: {
+    aesKey: string;
+  };
 }
 
 export const config = (): AppConfig => ({
@@ -65,5 +68,8 @@ export const config = (): AppConfig => ({
   },
   redis: {
     url: get('REDIS_URL').default('redis://localhost:6379').asString(),
+  },
+  crypto: {
+    aesKey: get('AES_KEY').required().asString(),
   },
 });

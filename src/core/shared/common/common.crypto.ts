@@ -1,13 +1,18 @@
 import * as bcrypt from 'bcrypt';
+import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 import { TokenExpiredError, sign, verify } from 'jsonwebtoken';
 import { customAlphabet } from 'nanoid';
 
+import { config } from '@core/config';
 import { UserClaims } from '@core/middleware/jwt/jwt.common';
 
 import myDayjs from './common.dayjs';
-import { Err, Ok, Res } from './common.neverthrow';
+import { Err, ExceptionErr, Ok, Res } from './common.neverthrow';
 
 const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8);
+const cryptoConfig = config().crypto;
+const encryptkey = Buffer.from(cryptoConfig.aesKey, 'base64');
+const encryptAlgo = 'aes-256-gcm';
 
 interface DecodedJwt<T> {
   status: string;
@@ -67,6 +72,53 @@ export function encodeUserJwt(
 
 export function decodeUserJwt(token: string, salt: string) {
   return decodeJwt<UserClaims>(token, salt);
+}
+
+export function encryptMessage(text: string): string {
+  const iv = randomBytes(12);
+  const cipher = createCipheriv(encryptAlgo, encryptkey, iv);
+  const encrypted = Buffer.concat([
+    cipher.update(text, 'utf8'),
+    cipher.final(),
+  ]);
+  const tag = cipher.getAuthTag();
+
+  return Buffer.concat([iv, tag, encrypted]).toString('base64');
+}
+
+export function decryptMessage(
+  encryptedBase64: string,
+): Res<string, 'invalid'> {
+  try {
+    const data = Buffer.from(encryptedBase64, 'base64');
+    const iv = data.subarray(0, 12);
+    const tag = data.subarray(12, 28);
+    const encrypted = data.subarray(28);
+
+    const decipher = createDecipheriv(encryptAlgo, encryptkey, iv);
+    decipher.setAuthTag(tag);
+
+    const decrypted = Buffer.concat([
+      decipher.update(encrypted),
+      decipher.final(),
+    ]);
+    return Ok(decrypted.toString('utf8'));
+  } catch (e: any) {
+    return ExceptionErr('invalid', e);
+  }
+}
+
+export function encryptObject(obj: Record<string, any>): string {
+  return encryptMessage(JSON.stringify(obj));
+}
+
+export function decryptObject<T>(encrypted: string): Res<T, 'invalid'> {
+  const rDecrypted = decryptMessage(encrypted);
+  if (rDecrypted.isErr()) {
+    return Err('invalid', rDecrypted.error);
+  }
+
+  return Ok(JSON.parse(rDecrypted.value));
 }
 
 export function generateUID() {
