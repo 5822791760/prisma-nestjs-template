@@ -32,7 +32,7 @@ $ npm run dev
 ## Installation
 
 ```bash
-$ npm run
+$ npm i
 ```
 
 ## Running the app
