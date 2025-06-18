@@ -5,6 +5,9 @@
   "author": "Khunakorn Johnson",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": "20.19.1"
+  },
   "scripts": {
     "cmd": "./cmd.sh",
     "start": "node dist/main",
