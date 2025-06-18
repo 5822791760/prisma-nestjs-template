@@ -13,6 +13,13 @@
 
 [Nest](https://github.com/nestjs/nest) project, is using primsa & kyselyDB ORM. NPM as package manager. This project is design to run as 2 entry point **main(api)** **worker(process task)**. Steps to perform deploy will is in Note section.
 
+## Make SURE Your node version is the same as project
+```json
+"engines": {
+  "node": "20.19.1"
+}
+```
+
 ## Quick Start
 ```bash
 # Stop all running docker (incase conflicting port)
