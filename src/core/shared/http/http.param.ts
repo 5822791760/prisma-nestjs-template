@@ -43,7 +43,7 @@ export const CsvParam = createParamDecorator(
     }
 
     return {
-      acceptCsv: acceptHeader === 'text/csv',
+      acceptCsv: acceptHeader === 'csv',
       writeCsv,
       t: getTransaltionFunc(req.headers[LANG_HEADER] as string),
     };

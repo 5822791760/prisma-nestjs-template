@@ -21,8 +21,7 @@ export function HeaderCsv() {
     ApiHeader({
       name: CSV_HEADER,
       required: false,
-      example: 'text/csv',
-      description: 'Use `text/csv` to receive the response as CSV',
+      description: 'Use `csv` to receive the response as CSV',
     }),
     HeaderLang(),
   );
