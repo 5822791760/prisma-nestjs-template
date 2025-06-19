@@ -19,7 +19,7 @@ import { PostAuthsSignUpsV1Response } from '../dto/post-auths-sign-ups/post-auth
 export class AuthsV1Http {
   constructor(private service: AuthsV1Service) {}
 
-  @Post('sign-ups')
+  @Post('sign-up')
   @UsePublic()
   async postAuthsSignUps(
     @Body() body: PostAuthsSignUpsV1Dto,
@@ -46,7 +46,7 @@ export class AuthsV1Http {
     );
   }
 
-  @Post('sign-ins')
+  @Post('sign-in')
   @UsePublic()
   async postAuthsSignIns(
     @Body() body: PostAuthsSignInsV1Dto,
