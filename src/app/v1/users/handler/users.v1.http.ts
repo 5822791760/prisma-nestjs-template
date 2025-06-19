@@ -10,9 +10,15 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+import {
+  getCsvDateDisplay,
+  getCsvFileSuffix,
+} from '@core/shared/common/common.csv';
 import { errIs } from '@core/shared/common/common.neverthrow';
 import { getPagination } from '@core/shared/common/common.pagintaion';
+import { HeaderCsv } from '@core/shared/http/http.decorator';
 import { ApiException } from '@core/shared/http/http.exception';
+import { CsvParam } from '@core/shared/http/http.param';
 
 import { GetUsersIdV1Response } from '../dto/get-users-id/get-users-id.v1.response';
 import { GetUsersV1Dto } from '../dto/get-users/get-users.v1.dto';
@@ -33,18 +39,43 @@ export class UsersV1Http {
   constructor(private service: UsersV1Service) {}
 
   @Get()
-  async getUsers(@Query() options: GetUsersV1Dto): Promise<GetUsersV1Response> {
+  @HeaderCsv()
+  async getUsers(
+    @Query() options: GetUsersV1Dto,
+    @CsvParam() c: CsvParam,
+  ): Promise<GetUsersV1Response> {
     const r = await this.service.getUsers(options);
 
     return r.match(
-      ({ data, totalItems }) => ({
-        success: true,
-        key: '',
-        data,
-        meta: {
-          pagination: getPagination(data, totalItems, options),
-        },
-      }),
+      ({ data, totalItems }) => {
+        // csv
+        if (c.acceptCsv) {
+          return c.writeCsv({
+            filename: c.t.usersV1Reportfilename({
+              suffix: getCsvFileSuffix(),
+            }),
+            csv: data.map((d) => [
+              [c.t.id(), d.id],
+              [c.t.email(), d.email],
+              [c.t.createdAt(), getCsvDateDisplay(d.createdAt)],
+              [c.t.updatedAt(), getCsvDateDisplay(d.updatedAt)],
+              [
+                c.t.lastSignedInAt(),
+                d.lastSignedInAt ? getCsvDateDisplay(d.lastSignedInAt) : '-',
+              ],
+            ]),
+          });
+        }
+
+        return {
+          success: true,
+          key: '',
+          data,
+          meta: {
+            pagination: getPagination(data, totalItems, options),
+          },
+        };
+      },
       (e) => {
         throw new ApiException(e, 500);
       },

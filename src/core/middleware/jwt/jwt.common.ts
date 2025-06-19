@@ -4,7 +4,6 @@ import {
   createParamDecorator,
 } from '@nestjs/common';
 
-export const AUTH_HEADER = 'authorization';
 export const USER_CONTEXT = 'user';
 
 export interface UserClaims {

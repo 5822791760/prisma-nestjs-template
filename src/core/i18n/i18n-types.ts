@@ -15,17 +15,57 @@ export type Translations = RootTranslation
 
 type RootTranslation = {
 	/**
-	 * H​i​ ​{​n​a​m​e​}​!​ ​H​o​w​ ​a​r​e​ ​y​o​u
-	 * @param {string} name
+	 * u​s​e​r​s​_​r​e​p​o​r​t​_​{​s​u​f​f​i​x​}​.​c​s​v
+	 * @param {string} suffix
 	 */
-	HI: RequiredParams<'name'>
+	usersV1Reportfilename: RequiredParams<'suffix'>
+	/**
+	 * I​D
+	 */
+	id: string
+	/**
+	 * E​m​a​i​l
+	 */
+	email: string
+	/**
+	 * C​r​e​a​t​e​d​ ​A​t
+	 */
+	createdAt: string
+	/**
+	 * U​p​d​a​t​e​d​ ​A​t
+	 */
+	updatedAt: string
+	/**
+	 * L​a​s​t​ ​A​c​t​i​v​e
+	 */
+	lastSignedInAt: string
 }
 
 export type TranslationFunctions = {
 	/**
-	 * Hi {name}! How are you
+	 * users_report_{suffix}.csv
 	 */
-	HI: (arg: { name: string }) => LocalizedString
+	usersV1Reportfilename: (arg: { suffix: string }) => LocalizedString
+	/**
+	 * ID
+	 */
+	id: () => LocalizedString
+	/**
+	 * Email
+	 */
+	email: () => LocalizedString
+	/**
+	 * Created At
+	 */
+	createdAt: () => LocalizedString
+	/**
+	 * Updated At
+	 */
+	updatedAt: () => LocalizedString
+	/**
+	 * Last Active
+	 */
+	lastSignedInAt: () => LocalizedString
 }
 
 export type Formatters = {}

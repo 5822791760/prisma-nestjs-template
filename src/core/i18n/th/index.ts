@@ -1,7 +1,12 @@
 import type { Translation } from '../i18n-types';
 
 const th = {
-  HI: 'สวัสดี {name}! เป็นไงบ้าง',
+  usersV1Reportfilename: 'รายงานผู้ใช้_{suffix}.csv',
+  id: 'รหัส',
+  email: 'อีเมล',
+  createdAt: 'สร้างเมื่อ',
+  updatedAt: 'แก้ไขล่าสุดเมื่อ',
+  lastSignedInAt: 'ใช้งานล่าสุด',
 } satisfies Translation;
 
 export default th;

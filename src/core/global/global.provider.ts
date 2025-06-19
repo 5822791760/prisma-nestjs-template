@@ -4,6 +4,7 @@ import { RedisCacheProvider } from './cache/cache.provider';
 import { CacheService } from './cache/cache.service';
 import { NodeMailerProvider } from './email/email.provider';
 import { EmailService } from './email/email.service';
+import { LangService } from './lang/lang.service';
 import { LoggerService } from './logger/logger.service';
 import { TransactionService } from './transaction/transaction.service';
 
@@ -17,4 +18,5 @@ export const GLOBAL_PROVIDER: Provider[] = [
   TransactionService,
   CacheService,
   EmailService,
+  LangService,
 ];

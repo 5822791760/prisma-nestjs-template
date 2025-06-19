@@ -8,8 +8,9 @@ import { decodeUserJwt } from '@core/shared/common/common.crypto';
 import { isTesting } from '@core/shared/common/common.func';
 import { newInfo } from '@core/shared/common/common.neverthrow';
 import { ApiException } from '@core/shared/http/http.exception';
+import { AUTH_HEADER } from '@core/shared/http/http.headers';
 
-import { AUTH_HEADER, IS_PUBLIC_KEY, USER_CONTEXT } from './jwt.common';
+import { IS_PUBLIC_KEY, USER_CONTEXT } from './jwt.common';
 
 @Injectable()
 export class JwtGuard implements CanActivate {
