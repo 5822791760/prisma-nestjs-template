@@ -1,11 +1,14 @@
 import { INestApplication, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as compression from 'compression';
 
 export function setupApp(app: INestApplication): void {
   // Set versioning
   app.enableVersioning({
     type: VersioningType.URI,
   });
+
+  app.use(compression());
 }
 
 export function setupSwagger(app: INestApplication) {
