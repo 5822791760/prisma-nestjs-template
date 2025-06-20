@@ -34,7 +34,7 @@ export class UsersCliSeed extends CommandRunner {
     }
 
     await this.repo.transaction(async () => {
-      this.repo.db.users.createMany({ data });
+      await this.repo.db.users.createMany({ data });
     });
   }
 

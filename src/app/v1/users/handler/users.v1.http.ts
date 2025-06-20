@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
@@ -16,13 +17,15 @@ import {
 } from '@core/shared/common/common.csv';
 import { errIs } from '@core/shared/common/common.neverthrow';
 import { getPagination } from '@core/shared/common/common.pagintaion';
-import { HeaderCsv } from '@core/shared/http/http.decorator';
+import { HeaderCsv, UseFile } from '@core/shared/http/http.decorator';
 import { ApiException } from '@core/shared/http/http.exception';
 import { CsvParam } from '@core/shared/http/http.param';
 
 import { GetUsersIdV1Response } from '../dto/get-users-id/get-users-id.v1.response';
 import { GetUsersV1Dto } from '../dto/get-users/get-users.v1.dto';
 import { GetUsersV1Response } from '../dto/get-users/get-users.v1.response';
+import { PostUsersImportCsvV1Dto } from '../dto/post-users-import-csv/post-users-import-csv..v1.dto';
+import { PostUsersImportCsvV1Response } from '../dto/post-users-import-csv/post-users-import-csv.v1.response';
 import { PostUsersV1Dto } from '../dto/post-users/post-users.v1.dto';
 import { PostUsersV1Response } from '../dto/post-users/post-users.v1.response';
 import { PutUsersIdV1Dto } from '../dto/put-users/put-users-id.v1.dto';
@@ -94,6 +97,31 @@ export class UsersV1Http {
       }),
       (e) => {
         if (errIs(e, 'validation')) {
+          throw new ApiException(e, 400);
+        }
+
+        throw new ApiException(e, 500);
+      },
+    );
+  }
+
+  @Post('import/csv')
+  @UseFile('file')
+  async postUsersImportCsv(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: PostUsersImportCsvV1Dto,
+  ): Promise<PostUsersImportCsvV1Response> {
+    body.file = file;
+
+    const r = await this.service.postUsersImportCsv(body);
+    return r.match(
+      (data) => ({
+        success: true,
+        key: '',
+        data,
+      }),
+      (e) => {
+        if (errIs(e, 'noFile')) {
           throw new ApiException(e, 400);
         }
 

@@ -2,12 +2,18 @@ import { Injectable } from '@nestjs/common';
 
 import { UsersService } from '@core/domain/users/users.service';
 import { UsersQueueService } from '@core/queue/users/users.queue.service';
-import { Err, Ok, Res } from '@core/shared/common/common.neverthrow';
+import { readCsv } from '@core/shared/common/common.csv';
+import { Err, Ok, Res, errIs } from '@core/shared/common/common.neverthrow';
 import { Read } from '@core/shared/common/common.type';
 
 import { GetUsersIdV1Output } from './dto/get-users-id/get-users-id.v1.response';
 import { GetUsersV1Input } from './dto/get-users/get-users.v1.dto';
 import { GetUsersV1Output } from './dto/get-users/get-users.v1.response';
+import {
+  PostUsersImportCsvV1Dto,
+  PostUsersImportCsvV1FileData,
+} from './dto/post-users-import-csv/post-users-import-csv..v1.dto';
+import { PostUsersImportCsvV1Output } from './dto/post-users-import-csv/post-users-import-csv.v1.response';
 import { PostUsersV1Input } from './dto/post-users/post-users.v1.dto';
 import { PostUsersV1Output } from './dto/post-users/post-users.v1.response';
 import { PutUsersIdV1Input } from './dto/put-users/put-users-id.v1.dto';
@@ -122,5 +128,35 @@ export class UsersV1Service {
       updatedAt: updatedUser.updatedAt,
       lastSignedInAt: updatedUser.lastSignedInAt,
     });
+  }
+
+  async postUsersImportCsv(
+    body: Read<PostUsersImportCsvV1Dto>,
+  ): Promise<Res<PostUsersImportCsvV1Output[], 'noFile'>> {
+    const data: PostUsersImportCsvV1Output[] = [];
+
+    const r = await readCsv(
+      (row) => {
+        // Insert data in db here
+        data.push({
+          // type safe !
+          id: row.id,
+          email: row.email,
+          createdAt: row.createdAt,
+          updatedAt: row.updatedAt,
+          lastActive: row.lastActive,
+        });
+      },
+      { file: body.file, zod: PostUsersImportCsvV1FileData, skipRows: 1 },
+    );
+    if (r.isErr()) {
+      const e = r.error;
+
+      if (errIs(e, 'noFile')) {
+        return Err('noFile', e);
+      }
+    }
+
+    return Ok(data);
   }
 }

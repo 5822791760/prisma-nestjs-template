@@ -1,4 +1,24 @@
 import { Err as IErr, Result, err, ok } from 'neverthrow';
+import { ZodError } from 'zod';
+
+function setNestedKey(
+  target: Record<string, any>,
+  path: (string | number)[],
+  message: string,
+): void {
+  let curr = target;
+
+  for (let i = 0; i < path.length; i++) {
+    const key = path[i];
+
+    if (i === path.length - 1) {
+      curr[key] = [message];
+    } else {
+      curr[key] ||= {};
+      curr = curr[key];
+    }
+  }
+}
 
 export type ValidateFields<T> = Record<keyof T, any>;
 
@@ -45,8 +65,22 @@ export function Err<K extends string>(
 export function ExceptionErr<K extends string>(key: K, e: Error) {
   return Err(key, {
     context: {
-      message: e.message,
-      stack: e.stack || '',
+      message: e?.message || 'noMessage',
+      stack: e?.stack || '',
+    },
+  });
+}
+
+export function ExceptionZod<K extends string>(key: K, zodErr: ZodError) {
+  const fields = {};
+  for (const err of zodErr.errors) {
+    setNestedKey(fields, err.path, err.message);
+  }
+  return Err(key, {
+    fields,
+    context: {
+      message: zodErr?.message || 'noMessage',
+      stack: zodErr?.stack || '',
     },
   });
 }

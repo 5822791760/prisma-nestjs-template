@@ -39,7 +39,7 @@ export function coreLogger(appConfig: AppConfig['app']) {
 }
 
 export function prettyLogError(error: Error) {
-  let message = error.message;
+  let message = error?.message || 'noMessage';
   if (error instanceof HttpBaseException) {
     const baseException = error as HttpBaseException;
     if (baseException?.key !== 'internal') {

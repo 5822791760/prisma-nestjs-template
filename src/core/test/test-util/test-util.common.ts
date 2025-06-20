@@ -5,9 +5,10 @@ import {
   Type,
 } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test, TestingModule, TestingModuleBuilder } from '@nestjs/testing';
 import { execSync } from 'child_process';
 import { Dayjs } from 'dayjs';
+import * as request from 'supertest';
 
 import { config } from '@core/config';
 import { CORE_DB, CoreDB } from '@core/db/db.common';
@@ -20,6 +21,9 @@ import { QueueModule } from '@core/queue/queue.module';
 import { getConfigOptions } from '@core/shared/common/common.dotenv';
 import { Ok } from '@core/shared/common/common.neverthrow';
 import { setupApp } from '@core/shared/http/http.setup';
+
+import { AuthsV1Module } from '@app/v1/auths/auths.v1.module';
+import { PostAuthsSignInsV1Response } from '@app/v1/auths/dto/post-auths-sign-in/post-auths-sign-in.v1.response';
 
 import { InitialsCliSeed } from '../../../cli/initials/cmd/initials.cli.seed';
 import { InitialsCliModule } from '../../../cli/initials/initials.cli.module';
@@ -76,18 +80,27 @@ export async function createRepoTestingModule(repo: Provider) {
 
 export function createBackendTestingModule(
   testModule: DynamicModule | Type<any>,
+): TestingModuleBuilder;
+export function createBackendTestingModule(
+  testModule: Array<DynamicModule | Type<any>>,
+): TestingModuleBuilder;
+export function createBackendTestingModule(
+  testModule: DynamicModule | Type<any> | Array<DynamicModule | Type<any>>,
 ) {
+  const testModules = Array.isArray(testModule) ? testModule : [testModule];
+
   const module = Test.createTestingModule({
     imports: [
       ConfigModule.forRoot(getConfigOptions()),
 
-      testModule,
       DBModule,
       GlobalModule,
       DomainModule,
       MiddlewareModule,
       QueueModule,
       InitialsCliModule,
+      AuthsV1Module,
+      ...testModules,
     ],
   });
 
@@ -130,4 +143,24 @@ export async function endTestApp(app: INestApplication<any>) {
   await app.close();
 
   return;
+}
+
+type SeededUser = 'superadmin' | 'general';
+export async function getBaseTestHeader(
+  app: INestApplication<any>,
+  user: SeededUser = 'superadmin',
+): Promise<Record<string, string>> {
+  const res = await request(app.getHttpServer())
+    .post('/v1/auths/sign-in')
+    .send({
+      email: `${user}@example.com`,
+      password: 'password',
+    });
+
+  const body: PostAuthsSignInsV1Response = res.body;
+  const token = body.data.token;
+
+  return {
+    authorization: `Bearer ${token}`,
+  };
 }
