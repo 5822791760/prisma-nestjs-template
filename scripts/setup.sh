@@ -10,7 +10,7 @@ fi
 
 function build() {
     npm i
-    npm run test:mutation
+    npm run test
     # _dbdoc
 }
 
@@ -18,7 +18,7 @@ function merge() {
     npm i
     npm run lint
     npx tsc --noEmit
-    npm run test:mutation
+    npm run test
 }
 
 function _dbdoc() {

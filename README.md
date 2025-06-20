@@ -304,7 +304,7 @@ private _updateUser(user: Users, data: UpdateUserData): Users {
     ```bash
     function build() {
         npm i
-        npm run test:mutation
+        npm run test
         # _dbdoc
     }
     ```
