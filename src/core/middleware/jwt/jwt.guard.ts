@@ -43,7 +43,7 @@ export class JwtGuard implements CanActivate {
       throw new ApiException(rClaims.error, 400, 'invalidToken');
     }
 
-    request[USER_CONTEXT] = rClaims.value;
+    request[USER_CONTEXT] = rClaims.value?.message;
 
     return true;
   }

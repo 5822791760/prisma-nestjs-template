@@ -13,7 +13,7 @@ export interface UserClaims {
 export const IS_PUBLIC_KEY = 'isPublic';
 export const UsePublic = () => SetMetadata(IS_PUBLIC_KEY, true);
 
-export const User = createParamDecorator(
+export const UserClaims = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): UserClaims => {
     const req = ctx.switchToHttp().getRequest();
     return req[USER_CONTEXT];
