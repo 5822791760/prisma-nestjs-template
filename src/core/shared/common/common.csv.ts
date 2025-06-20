@@ -22,7 +22,7 @@ export function getCsvDateDisplay(date: Date) {
 }
 
 export async function readCsv<TOutput>(
-  callback: (row: TOutput) => void,
+  callback: (row: TOutput) => void | Promise<void>,
   opts: {
     file: Express.Multer.File;
     zod: ZodType<TOutput, ZodTypeDef, unknown>;
@@ -37,18 +37,18 @@ export async function readCsv<TOutput>(
       return Err(rValidate.error.key, rValidate.error);
     }
 
-    return await new Promise<Res<null, 'invalid'>>((resolve, reject) => {
+    return await new Promise<Res<null, 'invalid'>>(async (resolve, reject) => {
       const stream = opts.file.buffer;
       const parser = parse({ headers: false, skipRows: opts.skipRows });
 
       parser
         .on('error', (e) => reject(e))
-        .on('data', (row) => {
+        .on('data', async (row) => {
           if (opts.zod) {
             row = opts.zod.parse(row);
           }
 
-          callback(row);
+          await callback(row);
         })
         .on('end', () => resolve(Ok(null)));
 
