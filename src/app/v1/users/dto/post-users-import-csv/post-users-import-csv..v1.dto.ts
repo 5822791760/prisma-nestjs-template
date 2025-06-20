@@ -5,9 +5,9 @@ import { zodDto } from '@core/shared/common/common.zod';
 
 export const PostUsersImportCsvV1FileData = z
   .array(z.any())
-  .transform(([id, email, createdAt, updatedAt, lastActive]) => {
-    if (lastActive === '-' || !lastActive) {
-      lastActive = null;
+  .transform(([id, email, createdAt, updatedAt, lastSignedInAt]) => {
+    if (lastSignedInAt === '-' || !lastSignedInAt) {
+      lastSignedInAt = null;
     }
 
     return {
@@ -15,7 +15,7 @@ export const PostUsersImportCsvV1FileData = z
       email: z.string().parse(email),
       createdAt: z.coerce.date().parse(createdAt),
       updatedAt: z.coerce.date().parse(updatedAt),
-      lastActive: z.coerce.date().nullable().parse(lastActive),
+      lastSignedInAt: z.coerce.date().nullable().parse(lastSignedInAt),
     };
   });
 

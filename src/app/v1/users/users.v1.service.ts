@@ -132,7 +132,7 @@ export class UsersV1Service {
 
   async postUsersImportCsv(
     body: Read<PostUsersImportCsvV1Dto>,
-  ): Promise<Res<PostUsersImportCsvV1Output[], 'noFile'>> {
+  ): Promise<Res<PostUsersImportCsvV1Output[], 'noFile' | 'invalid'>> {
     const data: PostUsersImportCsvV1Output[] = [];
 
     const r = await readCsv(
@@ -144,7 +144,7 @@ export class UsersV1Service {
           email: row.email,
           createdAt: row.createdAt,
           updatedAt: row.updatedAt,
-          lastActive: row.lastActive,
+          lastSignedInAt: row.lastSignedInAt,
         });
       },
       { file: body.file, zod: PostUsersImportCsvV1FileData, skipRows: 1 },
@@ -155,6 +155,8 @@ export class UsersV1Service {
       if (errIs(e, 'noFile')) {
         return Err('noFile', e);
       }
+
+      return Err('invalid', e);
     }
 
     return Ok(data);
