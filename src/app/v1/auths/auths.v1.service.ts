@@ -8,10 +8,10 @@ import { Err, Ok, Res } from '@core/shared/common/common.neverthrow';
 import { Read } from '@core/shared/common/common.type';
 
 import { AuthsV1Repo } from './auths.v1.repo';
-import { PostAuthsSignInsV1Input } from './dto/post-auths-sign-in/post-auths-sign-in.v1.dto';
-import { PostAuthsSignInsV1Output } from './dto/post-auths-sign-in/post-auths-sign-in.v1.response';
-import { PostAuthsSignUpsV1Input } from './dto/post-auths-sign-up/post-auths-sign-up.v1.dto';
-import { PostAuthsSignUpsV1Output } from './dto/post-auths-sign-up/post-auths-sign-up.v1.response';
+import { PostAuthsSignInV1Input } from './dto/post-auths-sign-in/post-auths-sign-in.v1.dto';
+import { PostAuthsSignInV1Output } from './dto/post-auths-sign-in/post-auths-sign-in.v1.response';
+import { PostAuthsSignUpV1Input } from './dto/post-auths-sign-up/post-auths-sign-up.v1.dto';
+import { PostAuthsSignUpV1Output } from './dto/post-auths-sign-up/post-auths-sign-up.v1.response';
 
 @Injectable()
 export class AuthsV1Service {
@@ -22,8 +22,8 @@ export class AuthsV1Service {
   ) {}
 
   async postAuthsSignIn(
-    data: Read<PostAuthsSignInsV1Input>,
-  ): Promise<Res<PostAuthsSignInsV1Output, 'notFound' | 'invalidPassword'>> {
+    data: Read<PostAuthsSignInV1Input>,
+  ): Promise<Res<PostAuthsSignInV1Output, 'notFound' | 'invalidPassword'>> {
     const user = await this.repo.db.users.findFirst({
       where: { email: data.email },
     });
@@ -52,8 +52,8 @@ export class AuthsV1Service {
   }
 
   async postAuthsSignUp(
-    data: Read<PostAuthsSignUpsV1Input>,
-  ): Promise<Res<PostAuthsSignUpsV1Output, 'validation' | 'internal'>> {
+    data: Read<PostAuthsSignUpV1Input>,
+  ): Promise<Res<PostAuthsSignUpV1Output, 'validation' | 'internal'>> {
     const r = await this.usersService.dbValidate({ email: data.email });
     if (r.isErr()) {
       return Err('validation', r.error);

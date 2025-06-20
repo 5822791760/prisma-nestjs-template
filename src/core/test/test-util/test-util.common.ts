@@ -23,7 +23,7 @@ import { Ok } from '@core/shared/common/common.neverthrow';
 import { setupApp } from '@core/shared/http/http.setup';
 
 import { AuthsV1Module } from '@app/v1/auths/auths.v1.module';
-import { PostAuthsSignInsV1Response } from '@app/v1/auths/dto/post-auths-sign-in/post-auths-sign-in.v1.response';
+import { PostAuthsSignInV1Response } from '@app/v1/auths/dto/post-auths-sign-in/post-auths-sign-in.v1.response';
 
 import { InitialsCliSeed } from '../../../cli/initials/cmd/initials.cli.seed';
 import { InitialsCliModule } from '../../../cli/initials/initials.cli.module';
@@ -157,7 +157,7 @@ export async function getBaseTestHeader(
       password: 'password',
     });
 
-  const body: PostAuthsSignInsV1Response = res.body;
+  const body: PostAuthsSignInV1Response = res.body;
   const token = body.data.token;
 
   return {

@@ -2,11 +2,11 @@ import { z } from 'zod';
 
 import { zodDto } from '@core/shared/common/common.zod';
 
-export const PostAuthsSignUpsV1Input = z.object({
+export const PostAuthsSignUpV1Input = z.object({
   email: z.string().email(),
   password: z.string(),
 });
 
-export type PostAuthsSignUpsV1Input = z.infer<typeof PostAuthsSignUpsV1Input>;
+export type PostAuthsSignUpV1Input = z.infer<typeof PostAuthsSignUpV1Input>;
 
-export class PostAuthsSignUpsV1Dto extends zodDto(PostAuthsSignUpsV1Input) {}
+export class PostAuthsSignUpV1Dto extends zodDto(PostAuthsSignUpV1Input) {}
