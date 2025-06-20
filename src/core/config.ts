@@ -17,6 +17,15 @@ export interface AppConfig {
     url: string;
     enableLog: boolean;
   };
+  storage: {
+    enable: boolean;
+    region: string;
+    accessKey: string;
+    secretKey: string;
+    endpoint: string;
+    enableforcePath: boolean;
+    defaultBucket: string;
+  };
   email: {
     host: string;
     port: number;
@@ -53,6 +62,17 @@ export const config = (): AppConfig => ({
   database: {
     url: get('DATABASE_URL').required().asString(),
     enableLog: get('ENABLE_DB_LOG').default('false').asBool(),
+  },
+  storage: {
+    enable: get('ENABLE_STORAGE').default('false').asBool(),
+    region: get('STORAGE_REGION').default('auto').asString(),
+    accessKey: get('STORAGE_ACCESS_KEY').required().asString(),
+    secretKey: get('STORAGE_SECRET_KEY').required().asString(),
+    endpoint: get('STORAGE_ENDPOINT').default('').asString(),
+    defaultBucket: get('STORAGE_DEFAULT_BUCKET').default('app').asString(),
+    enableforcePath: get('ENALBLE_STORAGE_FORCE_PATH')
+      .default('false')
+      .asBool(),
   },
   email: {
     host: get('EMAIL_HOST').default('localhost').asString(),
