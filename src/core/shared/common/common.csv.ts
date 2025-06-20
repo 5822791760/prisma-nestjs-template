@@ -31,35 +31,42 @@ export async function readCsv<TOutput>(
 ): Promise<
   Res<null, 'invalid' | 'noFile' | 'tooLarge' | 'invalidType' | 'invalidExt'>
 > {
-  try {
-    const rValidate = validateCsvFile(opts.file);
-    if (rValidate.isErr()) {
-      return Err(rValidate.error.key, rValidate.error);
-    }
+  const rValidate = validateCsvFile(opts.file);
+  if (rValidate.isErr()) {
+    return Err(rValidate.error.key, rValidate.error);
+  }
 
-    return await new Promise<Res<null, 'invalid'>>(async (resolve, reject) => {
-      const stream = opts.file.buffer;
+  const promises: Promise<void>[] = [];
+
+  const processRow = (raw: unknown): void => {
+    const parsed = opts.zod.parse(raw);
+    const res = callback(parsed);
+    if (res instanceof Promise) promises.push(res);
+  };
+
+  try {
+    await new Promise<void>((resolve, reject) => {
       const parser = parse({ headers: false, skipRows: opts.skipRows });
 
       parser
-        .on('error', (e) => reject(e))
-        .on('data', async (row) => {
-          if (opts.zod) {
-            row = opts.zod.parse(row);
+        .on('error', reject)
+        .on('data', (row) => {
+          try {
+            processRow(row);
+          } catch (e) {
+            reject(e);
           }
-
-          await callback(row);
         })
-        .on('end', () => resolve(Ok(null)));
+        .on('end', resolve);
 
-      parser.write(stream);
+      parser.write(opts.file.buffer);
       parser.end();
     });
-  } catch (e: any) {
-    if (e instanceof ZodError) {
-      return ExceptionZod('invalid', e);
-    }
 
+    await Promise.all(promises);
+    return Ok(null);
+  } catch (e: any) {
+    if (e instanceof ZodError) return ExceptionZod('invalid', e);
     return ExceptionErr('invalid', e);
   }
 }

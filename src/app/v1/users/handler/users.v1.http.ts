@@ -125,6 +125,10 @@ export class UsersV1Http {
           throw new ApiException(e, 400);
         }
 
+        if (errIs(e, 'invalid')) {
+          throw new ApiException(e, 400);
+        }
+
         throw new ApiException(e, 500);
       },
     );
