@@ -11,6 +11,7 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { lookup as mimeLookup } from 'mime-types';
 import { Readable } from 'stream';
 
 import { AppConfig } from '@core/config';
@@ -64,6 +65,32 @@ export class StorageService implements OnModuleInit {
         }),
       );
 
+      return Ok(null);
+    } catch (e: any) {
+      return ExceptionErr('failed', e);
+    }
+  }
+
+  async putBuffer(
+    buffer: Buffer,
+    key: string,
+    opts?: StorageOptions,
+  ): Promise<Res<null, 'failed' | 'disabled'>> {
+    if (!this.enable) {
+      return Err('disabled');
+    }
+
+    const contentType = mimeLookup(key) || 'application/octet-stream';
+
+    try {
+      await this.s3.send(
+        new PutObjectCommand({
+          Bucket: opts?.bucket || this.defaultBucket,
+          Key: key,
+          Body: buffer,
+          ContentType: contentType,
+        }),
+      );
       return Ok(null);
     } catch (e: any) {
       return ExceptionErr('failed', e);
