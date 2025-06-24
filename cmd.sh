@@ -42,6 +42,7 @@ function dbml() {
 }
 
 function db:up() {
+  git clean -fd src/core/db/migrations
   npx prisma migrate deploy
   npx prisma generate
   # dbml

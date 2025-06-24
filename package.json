@@ -20,6 +20,7 @@
     "format:prisma": "prisma-case-format -f src/core/db/schema.prisma",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest --maxWorkers=1",
+    "test-db:deploy": "git clean -fd src/core/db/migrations && prisma migrate deploy --schema src/core/db/schema.prisma",
     "test:mutation": "npx stryker run",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",

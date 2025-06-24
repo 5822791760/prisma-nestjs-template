@@ -119,7 +119,7 @@ export async function startTestApp(module: TestingModule) {
   const { requireDbSetup } = getTestState();
 
   if (requireDbSetup) {
-    execSync('npm run db:deploy');
+    execSync('npm run test-db:deploy');
     await app.get(InitialsCliSeed).run([]);
     updateTestState({ requireDbSetup: false });
   }
