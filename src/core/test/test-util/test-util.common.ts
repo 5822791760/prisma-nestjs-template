@@ -128,17 +128,20 @@ export async function startTestApp(module: TestingModule) {
   const transactionService = app.get<TransactionService>(TransactionService);
 
   const tx = await db.$begin();
-  transactionService.setTransaction(tx);
+  transactionService.__setTestTransaction(tx);
 
   return app;
 }
 
 export async function endTestApp(app: INestApplication<any>) {
   const transactionService = app.get<TransactionService>(TransactionService);
-  const tx = transactionService.getTransaction();
+  const tx = transactionService.__getTestTransaction();
 
+  if (!tx) {
+    throw new Error('tx is lost');
+  }
   await tx.$rollback();
-  transactionService.clearTransaction();
+  transactionService.__clearTestTransaction();
 
   await app.close();
 
