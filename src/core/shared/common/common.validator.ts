@@ -19,7 +19,7 @@ export function isNotNil(value: Nil) {
   return !isNil(value);
 }
 
-export function chainTilValid<T>(...funcs: ((value: T) => boolean)[]) {
+export function isAnyValidFunc<T>(...funcs: ((value: T) => boolean)[]) {
   return function validate(v: T) {
     for (const func of funcs) {
       const res = func(v);
@@ -32,7 +32,7 @@ export function chainTilValid<T>(...funcs: ((value: T) => boolean)[]) {
   };
 }
 
-export function chainTilInvalid<T>(...funcs: ((value: T) => boolean)[]) {
+export function isAllValidFunc<T>(...funcs: ((value: T) => boolean)[]) {
   return (v: T) => {
     for (const func of funcs) {
       const res = func(v);

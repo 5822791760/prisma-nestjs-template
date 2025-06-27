@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import {
-  chainTilValid,
+  isAnyValidFunc,
   isEmail,
   isNil,
 } from '@core/shared/common/common.validator';
@@ -11,7 +11,7 @@ export const PostUsersImportCsvV1FileData = z
     z.string().min(1, 'ID_REQUIRED'),
     z
       .string()
-      .refine(chainTilValid(isNil, isEmail), { message: 'EMAIL_INVALID' }),
+      .refine(isAnyValidFunc(isNil, isEmail), { message: 'EMAIL_INVALID' }),
     z.string(),
     z.string(),
     z.string().optional().nullable(),
