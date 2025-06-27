@@ -11,6 +11,6 @@ dayjs.extend(dayOfYear);
 
 dayjs.tz.setDefault('Asia/Bangkok');
 
-export default function myDayjs(date?: dayjs.ConfigType) {
-  return dayjs(date);
-}
+const myDayjs = dayjs;
+
+export default myDayjs;
