@@ -3,8 +3,16 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from '@core/domain/users/users.service';
 import { UsersQueueService } from '@core/queue/users/users.queue.service';
 import { readCsv } from '@core/shared/common/common.csv';
-import { Err, Ok, Res, errIs } from '@core/shared/common/common.neverthrow';
+import {
+  Err,
+  Ok,
+  Res,
+  ValidateFields,
+  errIs,
+  validateSuccess,
+} from '@core/shared/common/common.neverthrow';
 import { Read } from '@core/shared/common/common.type';
+import { getZodErrorFields } from '@core/shared/common/common.zod';
 
 import { GetUsersIdV1Output } from './dto/get-users-id/get-users-id.v1.response';
 import { GetUsersV1Input } from './dto/get-users/get-users.v1.dto';
@@ -134,21 +142,33 @@ export class UsersV1Service {
     body: Read<PostUsersImportCsvV1Dto>,
   ): Promise<Res<PostUsersImportCsvV1Output[], 'noFile' | 'invalid'>> {
     const data: PostUsersImportCsvV1Output[] = [];
+    let fields: ValidateFields<any> = {};
 
-    const r = await readCsv(
-      (row) => {
-        // Insert data in db here
+    const r = await readCsv(body.file, {
+      skipRows: 1,
+      headers: false,
+      onRow: ({ row }) => {
+        const parsed = PostUsersImportCsvV1FileData.safeParse(row);
+        if (!parsed.success) {
+          fields = { ...fields, ...getZodErrorFields(parsed.error) };
+          return;
+        }
+
+        const rowData = parsed.data;
         data.push({
-          // type safe !
-          id: row.id,
-          email: row.email,
-          createdAt: row.createdAt,
-          updatedAt: row.updatedAt,
-          lastSignedInAt: row.lastSignedInAt,
+          id: rowData.id,
+          email: rowData.email,
+          createdAt: rowData.createdAt,
+          updatedAt: rowData.updatedAt,
+          lastSignedInAt: rowData.lastSignedInAt,
         });
       },
-      { file: body.file, zod: PostUsersImportCsvV1FileData, skipRows: 1 },
-    );
+    });
+
+    if (!validateSuccess(fields)) {
+      return Err('invalid', { fields });
+    }
+
     if (r.isErr()) {
       const e = r.error;
 

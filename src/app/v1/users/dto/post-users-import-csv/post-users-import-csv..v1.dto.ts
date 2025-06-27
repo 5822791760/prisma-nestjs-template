@@ -1,10 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { z } from 'zod';
 
+import {
+  chainTilValid,
+  isEmail,
+  isNil,
+} from '@core/shared/common/common.validator';
 import { zodDto } from '@core/shared/common/common.zod';
 
 export const PostUsersImportCsvV1FileData = z
-  .array(z.any())
+  .tuple([
+    z.string().min(1, 'ID_REQUIRED'),
+    z
+      .string()
+      .refine(chainTilValid(isNil, isEmail), { message: 'EMAIL_INVALID' }),
+    z.string(),
+    z.string(),
+    z.string().optional().nullable(),
+  ])
   .transform(([id, email, createdAt, updatedAt, lastSignedInAt]) => {
     if (lastSignedInAt === '-' || !lastSignedInAt) {
       lastSignedInAt = null;

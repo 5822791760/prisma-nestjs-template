@@ -61,3 +61,22 @@ export function validateCsvFile(
 
   return Ok(null);
 }
+
+export function setNestedKey(
+  target: Record<string, any>,
+  path: (string | number)[],
+  message: string,
+): void {
+  let curr = target;
+
+  for (let i = 0; i < path.length; i++) {
+    const key = path[i];
+
+    if (i === path.length - 1) {
+      curr[key] = [message];
+    } else {
+      curr[key] ||= {};
+      curr = curr[key];
+    }
+  }
+}

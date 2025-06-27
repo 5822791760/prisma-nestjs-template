@@ -3,7 +3,9 @@ import {
   SchemaObject,
 } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import { ZodDto, zodToOpenAPI } from 'nestjs-zod';
-import { ZodArray, ZodSchema, ZodTypeDef, z } from 'zod';
+import { ZodArray, ZodError, ZodSchema, ZodTypeDef, z } from 'zod';
+
+import { setNestedKey } from './common.func';
 
 const isSchemaObject = (
   input: SchemaObject | ReferenceObject,
@@ -81,4 +83,13 @@ export function getPaginationZod() {
       totalPages: z.number(),
     }),
   });
+}
+
+export function getZodErrorFields(zodErr: ZodError) {
+  const fields = {};
+  for (const err of zodErr.errors) {
+    setNestedKey(fields, err.path, err.message);
+  }
+
+  return fields;
 }

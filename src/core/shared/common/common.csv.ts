@@ -1,9 +1,8 @@
 import { format, parse } from 'fast-csv';
-import { ZodError, ZodType, ZodTypeDef } from 'zod';
 
 import myDayjs from './common.dayjs';
 import { validateCsvFile } from './common.func';
-import { Err, ExceptionErr, ExceptionZod, Ok, Res } from './common.neverthrow';
+import { Err, ExceptionErr, Ok, Res } from './common.neverthrow';
 
 export function writeCsv(data: [string, string | number][][]) {
   const csvStream = format({ headers: true, alwaysWriteHeaders: true });
@@ -21,52 +20,74 @@ export function getCsvDateDisplay(date: Date) {
   return myDayjs(date).format('YYYY/MM/DD');
 }
 
-export async function readCsv<TOutput>(
-  callback: (row: TOutput) => void | Promise<void>,
-  opts: {
-    file: Express.Multer.File;
-    zod: ZodType<TOutput, ZodTypeDef, unknown>;
-    skipRows?: number;
-  },
+type CsvOpts<T extends string> =
+  | {
+      skipRows?: number;
+      headers: true;
+      onRow: (info: {
+        row: Record<T, string>;
+        rowNum: number;
+      }) => void | Promise<void>;
+    }
+  | {
+      skipRows?: number;
+      headers: false;
+      onRow: (info: { row: string[]; rowNum: number }) => void | Promise<void>;
+    };
+
+export async function readCsv<T extends string>(
+  file: Express.Multer.File,
+  opts: CsvOpts<T>,
 ): Promise<
   Res<null, 'invalid' | 'noFile' | 'tooLarge' | 'invalidType' | 'invalidExt'>
 > {
-  const rValidate = validateCsvFile(opts.file);
+  const rValidate = validateCsvFile(file);
   if (rValidate.isErr()) {
     return Err(rValidate.error.key, rValidate.error);
   }
 
-  const promises: Promise<void>[] = [];
+  let rowNum = 0;
+  if (opts?.headers) {
+    // skip header
+    rowNum++;
+  }
+  if (opts?.skipRows) {
+    // skip header
+    rowNum = rowNum + opts.skipRows;
+  }
 
-  const processRow = (raw: unknown): void => {
-    const parsed = opts.zod.parse(raw);
-    const res = callback(parsed);
+  const promises: Promise<void>[] = [];
+  const processRow = (info: { row: any; rowNum: number }): void => {
+    const res = opts.onRow(info);
     if (res instanceof Promise) promises.push(res);
   };
 
   try {
     await new Promise<void>((resolve, reject) => {
-      const parser = parse({ headers: false, skipRows: opts.skipRows });
+      const parser = parse({
+        headers: opts.headers,
+        skipRows: opts.skipRows ?? 0,
+      });
 
       parser
         .on('error', reject)
         .on('data', (row) => {
           try {
-            processRow(row);
+            processRow({ row, rowNum });
+            rowNum++;
           } catch (e) {
             reject(e);
           }
         })
         .on('end', resolve);
 
-      parser.write(opts.file.buffer);
+      parser.write(file.buffer);
       parser.end();
     });
 
     await Promise.all(promises);
     return Ok(null);
   } catch (e: any) {
-    if (e instanceof ZodError) return ExceptionZod('invalid', e);
     return ExceptionErr('invalid', e);
   }
 }
