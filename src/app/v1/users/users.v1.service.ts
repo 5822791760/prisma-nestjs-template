@@ -17,16 +17,14 @@ import { getZodErrorFields } from '@core/shared/common/common.zod';
 import { GetUsersIdV1Output } from './dto/get-users-id/get-users-id.v1.response';
 import { GetUsersV1Input } from './dto/get-users/get-users.v1.dto';
 import { GetUsersV1Output } from './dto/get-users/get-users.v1.response';
-import {
-  PostUsersImportCsvV1Dto,
-  PostUsersImportCsvV1FileData,
-} from './dto/post-users-import-csv/post-users-import-csv..v1.dto';
+import { PostUsersImportCsvV1Dto } from './dto/post-users-import-csv/post-users-import-csv..v1.dto';
 import { PostUsersImportCsvV1Output } from './dto/post-users-import-csv/post-users-import-csv.v1.response';
 import { PostUsersV1Input } from './dto/post-users/post-users.v1.dto';
 import { PostUsersV1Output } from './dto/post-users/post-users.v1.response';
 import { PutUsersIdV1Input } from './dto/put-users/put-users-id.v1.dto';
 import { PutUsersIdV1Output } from './dto/put-users/put-users-id.v1.response';
 import { UsersV1Repo } from './users.v1.repo';
+import { PostUsersImportCsvV1FileData } from './users.v1.util';
 
 @Injectable()
 export class UsersV1Service {
