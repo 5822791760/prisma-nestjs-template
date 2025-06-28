@@ -121,7 +121,7 @@ export class UsersV1Service {
     }
 
     const rUser = await this.repo.transaction(async () => {
-      return this.usersRepo.save(user);
+      return this.usersRepo.update(user);
     });
 
     if (rUser.isErr()) {

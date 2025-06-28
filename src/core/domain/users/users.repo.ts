@@ -44,7 +44,7 @@ export class UsersRepo extends BaseRepo {
     });
   }
 
-  async save<T extends Users>(user: T) {
+  async update<T extends Users>(user: T) {
     const { id, ...data } = user;
 
     await this.db.users.update({

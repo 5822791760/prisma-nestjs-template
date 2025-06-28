@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
 import { Users } from '@core/db/prisma';
-import { AuthsService } from '@core/domain/auths/auths.service';
 import { UsersRepo } from '@core/domain/users/users.repo';
 import { UsersService } from '@core/domain/users/users.service';
 import { SignedIn } from '@core/domain/users/users.type';
+import { encodeUserJwt } from '@core/shared/common/common.crypto';
 import { Err, Ok, Res } from '@core/shared/common/common.neverthrow';
 import { Read } from '@core/shared/common/common.type';
 
@@ -18,7 +18,6 @@ import { PostAuthsSignUpV1Output } from './dto/post-auths-sign-up/post-auths-sig
 export class AuthsV1Service {
   constructor(
     private repo: AuthsV1Repo,
-    private authsService: AuthsService,
     private usersService: UsersService,
     private usersRepo: UsersRepo,
   ) {}
@@ -40,10 +39,10 @@ export class AuthsV1Service {
 
     const authenUser = rAuthenUser.value;
 
-    await this.repo.transaction(async () => this.usersRepo.save(authenUser));
+    await this.repo.transaction(async () => this.usersRepo.update(authenUser));
 
     return Ok({
-      token: this.authsService.generateToken(authenUser),
+      token: encodeUserJwt(user),
       lastSignedInAt: authenUser.lastSignedInAt,
     });
   }
@@ -76,7 +75,7 @@ export class AuthsV1Service {
     const user = rUser.value as SignedIn<Users>;
 
     return Ok({
-      token: this.authsService.generateToken(user),
+      token: encodeUserJwt(user),
       lastSignedInAt: user.lastSignedInAt,
     });
   }

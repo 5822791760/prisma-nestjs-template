@@ -1,10 +1,14 @@
-import { AuthsModule } from './auths/auths.module';
-import { PostsModule } from './posts/posts.module';
-import { UsersModule } from './users/users.module';
+import { PostsRepo } from './posts/posts.repo';
+import { PostsService } from './posts/posts.service';
+import { UsersRepo } from './users/users.repo';
+import { UsersService } from './users/users.service';
 
 export const DOMAIN_PROVIDER = [
-  //
-  UsersModule,
-  AuthsModule,
-  PostsModule,
+  // Users
+  UsersService,
+  UsersRepo,
+
+  // Auths
+  PostsRepo,
+  PostsService,
 ];

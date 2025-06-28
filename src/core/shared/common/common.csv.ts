@@ -52,7 +52,7 @@ export async function readCsv<T extends string>(
     rowNum++;
   }
   if (opts?.skipRows) {
-    // skip header
+    // skip rows
     rowNum = rowNum + opts.skipRows;
   }
 

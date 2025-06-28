@@ -4,7 +4,7 @@ import { DOMAIN_PROVIDER } from './domain.provider';
 
 @Global()
 @Module({
-  imports: DOMAIN_PROVIDER,
+  providers: DOMAIN_PROVIDER,
   exports: DOMAIN_PROVIDER,
 })
 export class DomainModule {}

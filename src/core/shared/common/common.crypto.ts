@@ -10,8 +10,8 @@ import myDayjs from './common.dayjs';
 import { Err, ExceptionErr, Ok, Res } from './common.neverthrow';
 
 const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8);
-const cryptoConfig = config().crypto;
-const encryptkey = Buffer.from(cryptoConfig.aesKey, 'base64');
+const encryptkey = Buffer.from(config().crypto.aesKey, 'base64');
+const jwtConfig = config().jwt;
 const encryptAlgo = 'aes-256-gcm';
 
 interface DecodedJwt<T> {
@@ -62,12 +62,10 @@ export function isMatchedHash(raw: string, hashed: string) {
   return isMatch;
 }
 
-export function encodeUserJwt(
-  user: UserClaims,
-  salt: string,
-  opts?: EncodeJwtOptions,
-) {
-  return encodeJwt(user, salt, opts);
+export function encodeUserJwt(user: UserClaims) {
+  return encodeJwt({ id: user.id }, jwtConfig.salt, {
+    noExpire: jwtConfig.noExpire,
+  });
 }
 
 export function decodeUserJwt(token: string, salt: string) {
