@@ -1,12 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { Command, CommandRunner, Option } from 'nest-commander';
 
+import { UsersRepo } from '@core/domain/users/users.repo';
+import { UsersService } from '@core/domain/users/users.service';
+import { UserData } from '@core/domain/users/users.type';
 import { DEFAULT_PASSWORD } from '@core/shared/common/common.constant';
-import { hashString } from '@core/shared/common/common.crypto';
-import myDayjs from '@core/shared/common/common.dayjs';
 
 import { UsersCliRepo } from '../users.cli.repo';
-import { NewUser } from '../users.cli.type';
 
 interface CommandOptions {
   amount: number;
@@ -17,24 +17,28 @@ interface CommandOptions {
   description: 'Create record in users table',
 })
 export class UsersCliSeed extends CommandRunner {
-  constructor(private repo: UsersCliRepo) {
+  constructor(
+    private repo: UsersCliRepo,
+    private usersRepo: UsersRepo,
+    private usersService: UsersService,
+  ) {
     super();
   }
 
   async run(_passedParams: string[], options: CommandOptions): Promise<void> {
-    const data: NewUser[] = [];
+    const data: UserData[] = [];
 
     for (let i = 0; i < options.amount; i++) {
-      data.push({
-        email: faker.internet.email(),
-        password: hashString(DEFAULT_PASSWORD),
-        createdAt: myDayjs().toDate(),
-        updatedAt: myDayjs().toDate(),
-      });
+      data.push(
+        this.usersService.new({
+          email: faker.internet.email(),
+          password: DEFAULT_PASSWORD,
+        }),
+      );
     }
 
     await this.repo.transaction(async () => {
-      await this.repo.db.users.createMany({ data });
+      await this.usersRepo.createMany(data);
     });
   }
 

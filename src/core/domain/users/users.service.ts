@@ -3,23 +3,11 @@ import { Injectable } from '@nestjs/common';
 import { hashString, isMatchedHash } from '@core/shared/common/common.crypto';
 import myDayjs from '@core/shared/common/common.dayjs';
 import { clone } from '@core/shared/common/common.func';
-import {
-  Err,
-  Ok,
-  Res,
-  ValidateFields,
-  validateSuccess,
-} from '@core/shared/common/common.neverthrow';
+import { Err, Ok, Res } from '@core/shared/common/common.neverthrow';
 import { Read } from '@core/shared/common/common.type';
 
 import { UsersRepo } from './users.repo';
-import {
-  NewUserData,
-  SignedIn,
-  UpdateUserData,
-  UserData,
-  ValidateUserData,
-} from './users.type';
+import { NewUserData, SignedIn, UpdateUserData, UserData } from './users.type';
 
 @Injectable()
 export class UsersService {
@@ -71,30 +59,5 @@ export class UsersService {
     user.updatedAt = myDayjs().toDate();
 
     return user;
-  }
-
-  // Query helper
-
-  async dbValidate(
-    data: Read<ValidateUserData>,
-    excludeId?: number,
-  ): Promise<Res<null, 'validation'>> {
-    const fields: ValidateFields<ValidateUserData> = {
-      email: [],
-    };
-
-    const emailExists = await this.repo.db.users.exists({
-      email: data.email,
-      id: { not: excludeId },
-    });
-    if (emailExists) {
-      fields.email.push('exists');
-    }
-
-    if (!validateSuccess(fields)) {
-      return Err('validation', { fields });
-    }
-
-    return Ok(null);
   }
 }

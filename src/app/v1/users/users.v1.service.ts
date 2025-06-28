@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { UsersRepo } from '@core/domain/users/users.repo';
 import { UsersService } from '@core/domain/users/users.service';
 import { UsersQueueService } from '@core/queue/users/users.queue.service';
 import { readCsv } from '@core/shared/common/common.csv';
@@ -32,12 +33,14 @@ export class UsersV1Service {
     private repo: UsersV1Repo,
     private usersQueueService: UsersQueueService,
     private usersService: UsersService,
+    private usersRepo: UsersRepo,
   ) {}
 
   async getUsers(
     options: Read<GetUsersV1Input>,
   ): Promise<Res<GetUsersV1Output, ''>> {
-    const { data, totalItems } = await this.repo.db.users.paginate(options, {
+    const { data, totalItems } = await this.usersRepo.paginate({
+      paginate: options,
       orderBy: { id: 'asc' },
     });
 
@@ -57,7 +60,7 @@ export class UsersV1Service {
   }
 
   async getUsersId(id: number): Promise<Res<GetUsersIdV1Output, 'notFound'>> {
-    const user = await this.repo.db.users.findFirst({ where: { id } });
+    const user = await this.usersRepo.findFirst({ where: { id } });
     if (!user) {
       return Err('notFound');
     }
@@ -76,13 +79,13 @@ export class UsersV1Service {
   ): Promise<Res<PostUsersV1Output, 'validation' | 'internal'>> {
     const newUser = this.usersService.new(body);
 
-    const r = await this.usersService.dbValidate(newUser);
+    const r = await this.usersRepo.isExists(newUser);
     if (r.isErr()) {
       return Err('validation', r.error);
     }
 
     const rUser = await this.repo.transaction(async () => {
-      return this.repo.db.users.create({ data: newUser });
+      return this.usersRepo.create(newUser);
     });
 
     if (rUser.isErr()) {
@@ -104,7 +107,7 @@ export class UsersV1Service {
     body: Read<PutUsersIdV1Input>,
     id: number,
   ): Promise<Res<PutUsersIdV1Output, 'validation' | 'notFound' | 'internal'>> {
-    let user = await this.repo.db.users.findFirst({
+    let user = await this.usersRepo.findFirst({
       where: { id },
     });
     if (!user) {
@@ -112,13 +115,13 @@ export class UsersV1Service {
     }
     user = this.usersService.update(user, body);
 
-    const r = await this.usersService.dbValidate(user, id);
+    const r = await this.usersRepo.isExists(user);
     if (r.isErr()) {
       return Err('validation', r.error);
     }
 
     const rUser = await this.repo.transaction(async () => {
-      return this.repo.db.users.update({ data: user, where: { id } });
+      return this.usersRepo.save(user);
     });
 
     if (rUser.isErr()) {

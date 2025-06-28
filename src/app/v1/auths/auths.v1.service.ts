@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { Users } from '@core/db/prisma';
 import { AuthsService } from '@core/domain/auths/auths.service';
+import { UsersRepo } from '@core/domain/users/users.repo';
 import { UsersService } from '@core/domain/users/users.service';
 import { SignedIn } from '@core/domain/users/users.type';
 import { Err, Ok, Res } from '@core/shared/common/common.neverthrow';
@@ -17,14 +18,15 @@ import { PostAuthsSignUpV1Output } from './dto/post-auths-sign-up/post-auths-sig
 export class AuthsV1Service {
   constructor(
     private repo: AuthsV1Repo,
-    private usersService: UsersService,
     private authsService: AuthsService,
+    private usersService: UsersService,
+    private usersRepo: UsersRepo,
   ) {}
 
   async postAuthsSignIn(
     data: Read<PostAuthsSignInV1Input>,
   ): Promise<Res<PostAuthsSignInV1Output, 'notFound' | 'invalidPassword'>> {
-    const user = await this.repo.db.users.findFirst({
+    const user = await this.usersRepo.findFirst({
       where: { email: data.email },
     });
     if (!user) {
@@ -38,12 +40,7 @@ export class AuthsV1Service {
 
     const authenUser = rAuthenUser.value;
 
-    await this.repo.transaction(async () =>
-      this.repo.db.users.update({
-        where: { id: authenUser.id },
-        data: authenUser,
-      }),
-    );
+    await this.repo.transaction(async () => this.usersRepo.save(authenUser));
 
     return Ok({
       token: this.authsService.generateToken(authenUser),
@@ -54,12 +51,12 @@ export class AuthsV1Service {
   async postAuthsSignUp(
     data: Read<PostAuthsSignUpV1Input>,
   ): Promise<Res<PostAuthsSignUpV1Output, 'validation' | 'internal'>> {
-    const r = await this.usersService.dbValidate({ email: data.email });
+    const newUser = this.usersService.new(data);
+    const r = await this.usersRepo.isExists(newUser);
     if (r.isErr()) {
       return Err('validation', r.error);
     }
 
-    const newUser = this.usersService.new(data);
     const rNewSignedInUser = this.usersService.signIn(newUser, data.password);
     if (rNewSignedInUser.isErr()) {
       return Err('validation', rNewSignedInUser.error);
@@ -68,7 +65,7 @@ export class AuthsV1Service {
     const newSignedInUser = rNewSignedInUser.value;
 
     const rUser = await this.repo.transaction(async () => {
-      const user = await this.repo.db.users.create({ data: newSignedInUser });
+      const user = await this.usersRepo.create(newSignedInUser);
       return user;
     });
 
