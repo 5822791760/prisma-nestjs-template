@@ -158,7 +158,7 @@ export class UsersV1Service {
         const rowData = parsed.data;
         data.push({
           id: rowData.id,
-          email: rowData.email,
+          email: rowData.email || '',
           createdAt: rowData.createdAt,
           updatedAt: rowData.updatedAt,
           lastSignedInAt: rowData.lastSignedInAt,

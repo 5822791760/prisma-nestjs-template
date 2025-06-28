@@ -23,3 +23,5 @@ export type ReadSet<T> = ReadonlySet<Read<T>>;
 export type ReadObject<T> = { readonly [K in keyof T]: Read<T[K]> };
 
 export type Saved<T> = T & { id: number };
+
+export type Nilable = unknown | undefined | null | string;

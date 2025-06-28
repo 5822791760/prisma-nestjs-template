@@ -1,5 +1,14 @@
-type Nil = unknown | undefined | null | string;
-export function isNil(value: Nil): value is null | undefined {
+import { Nilable } from './common.type';
+
+export function isNull(value: any) {
+  if (value === null) {
+    return true;
+  }
+
+  return false;
+}
+
+export function isNil(value: Nilable): value is null | undefined {
   if (value === undefined) {
     return true;
   }
@@ -15,7 +24,15 @@ export function isNil(value: Nil): value is null | undefined {
   return false;
 }
 
-export function isNotNil(value: Nil) {
+export function isCsvNil(value: Nilable): value is null | undefined {
+  if (value === '-') {
+    return true;
+  }
+
+  return isNil(value);
+}
+
+export function isNotNil(value: Nilable) {
   return !isNil(value);
 }
 
@@ -45,10 +62,31 @@ export function isAllValidFunc<T>(...funcs: ((value: T) => boolean)[]) {
   };
 }
 
-export function isNumericString(value: string): boolean {
+export function isNumericString(value: string | null): boolean {
+  if (isNil(value)) {
+    return false;
+  }
+
   return /^-?\d+(\.\d+)?$/.test(value.trim());
 }
 
-export function isEmail(value: string): boolean {
+export function isEmail(value: string | null): boolean {
+  if (isNil(value)) {
+    return false;
+  }
+
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+export function isISOString(value: string | null): boolean {
+  if (isNil(value)) {
+    return false;
+  }
+
+  try {
+    new Date(value);
+    return true;
+  } catch {
+    return false;
+  }
 }

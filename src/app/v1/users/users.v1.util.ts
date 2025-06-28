@@ -1,31 +1,38 @@
 import { z } from 'zod';
 
+import { parseCsvNil } from '@core/shared/common/common.parser';
 import {
   isAnyValidFunc,
+  isCsvNil,
   isEmail,
-  isNil,
+  isISOString,
+  isNull,
 } from '@core/shared/common/common.validator';
 
 export const PostUsersImportCsvV1FileData = z
   .tuple([
-    z.string().min(1, 'ID_REQUIRED'),
+    z.string().min(1, 'ID_REQUIRED').transform(z.coerce.number().parse),
     z
       .string()
-      .refine(isAnyValidFunc(isNil, isEmail), { message: 'EMAIL_INVALID' }),
-    z.string(),
-    z.string(),
-    z.string().optional().nullable(),
+      .nullable()
+      .refine(isAnyValidFunc(isCsvNil, isEmail), { message: 'EMAIL_INVALID' })
+      .transform(parseCsvNil),
+    z.string().refine(isISOString).transform(z.coerce.date().parse),
+    z.string().refine(isISOString).transform(z.coerce.date().parse),
+    z
+      .string()
+      .nullable()
+      .refine(isAnyValidFunc(isNull, isISOString), {
+        message: 'LAST_SIGNED_IN_AT_INVALID',
+      })
+      .transform((v) => z.coerce.date().nullable().parse(parseCsvNil(v))),
   ])
   .transform(([id, email, createdAt, updatedAt, lastSignedInAt]) => {
-    if (lastSignedInAt === '-' || !lastSignedInAt) {
-      lastSignedInAt = null;
-    }
-
     return {
-      id: z.coerce.number().parse(id),
-      email: z.string().parse(email),
-      createdAt: z.coerce.date().parse(createdAt),
-      updatedAt: z.coerce.date().parse(updatedAt),
-      lastSignedInAt: z.coerce.date().nullable().parse(lastSignedInAt),
+      id,
+      email,
+      createdAt,
+      updatedAt,
+      lastSignedInAt,
     };
   });
