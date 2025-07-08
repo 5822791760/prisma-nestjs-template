@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { sql } from 'kysely';
 
 import { Users } from '@core/db/prisma';
 import {
@@ -78,5 +79,38 @@ export class UsersRepo extends BaseRepo {
     }
 
     return Ok(null);
+  }
+
+  async exampleComplexKysely() {
+    return this.db.$kysely
+      .selectFrom('users as u')
+      .leftJoin('posts as p', 'p.created_by', 'u.id')
+      .select(({ fn, eb }) => [
+        //
+        'u.id as id',
+        'u.email as email',
+        'u.created_at as createdAt',
+        'u.last_signed_in_at as lastSignedInAt',
+        fn
+          .coalesce(
+            sql<
+              {
+                id: number;
+                createdAt: Date;
+              }[]
+            >`${fn.jsonAgg(
+              fn('jsonb_build_object', [
+                sql.lit('id'),
+                'p.id',
+                sql.lit('createdAt'),
+                'p.created_at',
+              ]),
+            )} filter (where ${eb('p.id', 'is not', null)})`,
+            sql.lit('[]'),
+          )
+          .as('posts'),
+      ])
+      .groupBy('u.id')
+      .execute();
   }
 }
