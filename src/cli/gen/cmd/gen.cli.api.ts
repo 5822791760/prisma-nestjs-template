@@ -35,7 +35,7 @@ export class GenCliApi extends CommandRunner {
       },
       {
         file: `${featureName}.${versionDir}.repo.ts`,
-        content: this._repoTemplate(featureName),
+        content: this._repoTemplate(featureName, versionDir),
       },
     ];
     const subDirs = [
@@ -97,21 +97,31 @@ export class GenCliApi extends CommandRunner {
   private _moduleTemplate(name: string, versionDir: string) {
     const className =
       this._className(name) + this._className(versionDir) + 'Module';
-    const serviceName = this._className(name) + 'Service';
-    const repoName = this._className(name) + 'Repo';
-    return `import { Module } from '@nestjs/common';\n\nimport { ${serviceName} } from './${name}.${versionDir}.service';\nimport { ${repoName} } from './${name}.${versionDir}.repo';\n\n@Module({\n  providers: [${serviceName}, ${repoName}],\n})\nexport class ${className} {}\n`;
+    const serviceName =
+      this._className(name) + this._className(versionDir) + 'Service';
+    const repoName =
+      this._className(name) + this._className(versionDir) + 'Repo';
+    const handlerName =
+      this._className(name) + this._className(versionDir) + 'Http';
+    return `import { Module } from '@nestjs/common';\n\nimport { ${serviceName} } from './${name}.${versionDir}.service';\nimport { ${repoName} } from './${name}.${versionDir}.repo';\nimport { ${handlerName} } from './handler/${name}.${versionDir}.http';\n\n@Module({\n  controllers: [${handlerName}],\n  providers: [${serviceName}, ${repoName}],\n})\nexport class ${className} {}\n`;
   }
   private _serviceTemplate(name: string, versionDir: string) {
-    const repoName = this._className(name) + 'Repo';
-    const serviceName = this._className(name) + 'Service';
+    const repoName =
+      this._className(name) + this._className(versionDir) + 'Repo';
+    const serviceName =
+      this._className(name) + this._className(versionDir) + 'Service';
     return `import { Injectable } from '@nestjs/common';\nimport { ${repoName} } from './${name}.${versionDir}.repo';\n\n@Injectable()\nexport class ${serviceName} {\n  constructor(private readonly repo: ${repoName}) {}\n  // Service logic here\n}\n`;
   }
-  private _repoTemplate(name: string) {
-    return `import { Injectable } from '@nestjs/common';\nimport { BaseRepo } from '@core/shared/common/common.repo';\n\n@Injectable()\nexport class ${this._className(name)}Repo extends BaseRepo {\n  // Repo logic here\n}\n`;
+  private _repoTemplate(name: string, versionDir: string) {
+    const repoName =
+      this._className(name) + this._className(versionDir) + 'Repo';
+    return `import { Injectable } from '@nestjs/common';\nimport { BaseRepo } from '@core/shared/common/common.repo';\n\n@Injectable()\nexport class ${repoName} extends BaseRepo {\n  // Repo logic here\n}\n`;
   }
   private _handlerTemplate(name: string, versionDir: string) {
-    const serviceName = this._className(name) + 'Service';
-    const handlerName = this._className(name) + 'Handler';
+    const serviceName =
+      this._className(name) + this._className(versionDir) + 'Service';
+    const handlerName =
+      this._className(name) + this._className(versionDir) + 'Http';
     const versionNum = versionDir.replace(/^v/, '');
     return `import { Controller } from '@nestjs/common';\nimport { ApiTags } from '@nestjs/swagger';\nimport { ${serviceName} } from '../${name}.${versionDir}.service';\n\n@ApiTags('${versionDir}')\n@Controller({\n  path: '${name}',\n  version: '${versionNum}',\n})\nexport class ${handlerName} {\n  constructor(private readonly service: ${serviceName}) {}\n  // Handler logic here\n}\n`;
   }
